@@ -121,6 +121,10 @@ public class ASTBuilder extends MxBaseListener {
 
         treeNode.name = ctx.Identifier().getText();
         treeNode.funcStmt = (compoundStmt) property.get(ctx.compoundStatement());
+        for (MxParser.VariableDeclarationContext p : ctx.variableDeclaration()){
+            astNode node = property.get(p);
+            treeNode.parameters.add((varDec) node);
+        }
         property.get(ctx).loc = new location(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine());
     }
 

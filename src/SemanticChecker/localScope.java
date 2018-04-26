@@ -1,5 +1,7 @@
 package SemanticChecker;
 
+import Ast.location;
+import Exception.*;
 import Ast.astNode;
 
 import java.util.LinkedHashMap;
@@ -16,13 +18,13 @@ public class localScope extends scope {
         this.parent = parent;
     }
 
-    public astNode get(String name){
+    public astNode get(compilationError error, String name, location loc){
         astNode var = entities.get(name);
         if(var != null){
             return var;
         }
         else {
-            return parent.get(name);
+            return parent.get(error, name, loc);
         }
     }
 }

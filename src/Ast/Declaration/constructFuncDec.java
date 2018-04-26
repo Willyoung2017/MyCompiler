@@ -3,18 +3,24 @@ package Ast.Declaration;
 import Ast.BuildAST.ASTVisitor;
 import Ast.Statement.compoundStmt;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class constructFuncDec extends dec{
     //public String funcName;
     public compoundStmt funcStmt;
+    public List<varDec> parameters;
 
     public constructFuncDec(){
         name = null;
         funcStmt = null;
+        parameters = new LinkedList<>();
     }
 
-    public constructFuncDec(String funcName, compoundStmt funcStmt){
+    public constructFuncDec(String funcName, compoundStmt funcStmt, List<varDec> parameters){
         this.name = funcName;
         this.funcStmt = funcStmt;
+        this.parameters = parameters;
     }
 
     public void accept(ASTVisitor visitor){

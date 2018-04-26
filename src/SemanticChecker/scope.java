@@ -1,6 +1,7 @@
 package SemanticChecker;
 
 import Ast.astNode;
+import Ast.location;
 import Exception.*;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -21,15 +22,15 @@ abstract public class scope {
         this.entities = variables;
     }
 
-    public void declareEntity(astNode var){
+    public void declareEntity(compilationError error, astNode var){
         astNode findVar = entities.get(var.getName());
         if(findVar != null){
-            compilationError.exceptionList.add(new semanticException("duplicated declaration: "+
-                var.name+": "+
-                    var.loc.locString()+" and "+var.loc.locString()));
+            error.add(new semanticException("duplicated declaration: "+
+                var.name+" at "+
+                    var.loc.locString()+" and "+findVar.loc.locString()));
         }
         entities.put(var.name, var);
     }
 
-    public abstract astNode get(String name);
+    public abstract astNode get(compilationError error,String name, location loc);
 }

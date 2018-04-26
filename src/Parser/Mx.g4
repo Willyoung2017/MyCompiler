@@ -27,7 +27,7 @@ variableDeclaration
     ;
 
 constructFunctionDeclaration
-    :   Identifier '('')' compoundStatement
+    :   Identifier '(' (variableDeclaration (',' variableDeclaration)*)? ')' compoundStatement
     ;
 
 statement

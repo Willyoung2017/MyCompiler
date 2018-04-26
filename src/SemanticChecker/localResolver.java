@@ -19,35 +19,34 @@ import java.util.List;
 
 public class localResolver implements ASTVisitor {
     public LinkedList<scope> scopeStack;
+    public compilationError error;
 
     public localResolver(){
         scopeStack = new LinkedList<>();
+        error = new compilationError();
     }
 
     private void pushScope(List<varDec> vars){
         localScope scp = new localScope(scopeStack.peek());
         for (astNode var : vars){
-            scp.declareEntity(var);
+            scp.declareEntity(error, var);
         }
         scopeStack.push(scp);
     }
 
-    public void resolve(abstractSyntaxTree ast){
-        toplevelScope toplevel = new toplevelScope();
-        scopeStack.add(toplevel);
-        for (dec declaration: ast.declarations){
-            toplevel.declareEntity(declaration);
-
-        }
-        ast.setScope(toplevel);
-        for (dec declaration: ast.declarations){
-            visit(declaration);
-        }
-    }
-
     @Override
     public void visit(abstractSyntaxTree node) {
+        toplevelScope toplevel = new toplevelScope();
+        scopeStack.add(toplevel);
+        for (dec declaration: node.declarations){
+            if (!(declaration instanceof globalVarDec))
+                toplevel.declareEntity(error, declaration);
 
+        }
+        node.setScope(toplevel);
+        for (dec declaration: node.declarations){
+                visit(declaration);
+        }
     }
 
     @Override
@@ -60,7 +59,9 @@ public class localResolver implements ASTVisitor {
     public void visit(classDec node){
         if(node != null) {
             localScope scp = new localScope(scopeStack.peek());
-            node.classMems.stream().forEachOrdered(scp::declareEntity);
+            for(memberDec dec : node.classMems){
+                scp.declareEntity(error,dec.declaration);
+            }
             scopeStack.push(scp);
             node.setScope(scp);
             node.classMems.stream().forEachOrdered(this::visit);
@@ -71,6 +72,7 @@ public class localResolver implements ASTVisitor {
     @Override
     public void visit(funcDec node) {
         if(node != null) {
+            visit(node.functionType);
             pushScope(node.parameterList);
             visit(node.functionStmt);
             node.setScope(scopeStack.pop());
@@ -80,6 +82,7 @@ public class localResolver implements ASTVisitor {
     @Override
     public void visit(globalVarDec node) {
         if(node != null){
+            (scopeStack.peek()).declareEntity(error, node);
             visit(node.variableExpression);
         }
     }
@@ -87,8 +90,7 @@ public class localResolver implements ASTVisitor {
     @Override
     public void visit(constructFuncDec node) {
         if(node != null) {
-            List<varDec> para = null;
-            pushScope(para);
+            pushScope(node.parameters);
             visit(node.funcStmt);
             node.setScope(scopeStack.pop());
         }
@@ -122,8 +124,8 @@ public class localResolver implements ASTVisitor {
     @Override
     public void visit(compoundStmt node) {
         if(node != null){
-            localScope scp = new localScope(scopeStack.peek());
-            node.setScope(scp);
+            //localScope scp = new localScope(scopeStack.peek());
+            node.setScope(scopeStack.peek());
             node.stmtList.stream().forEachOrdered(this::visit);
         }
     }
@@ -148,6 +150,7 @@ public class localResolver implements ASTVisitor {
             visit(node.step);
             if(node.forBody != null){
                 localScope scp = new localScope(scopeStack.peek());
+                scopeStack.push(scp);
                 node.forBody.setScope(scp);
                 visit(node.forBody);
                 scopeStack.pop();
@@ -161,12 +164,14 @@ public class localResolver implements ASTVisitor {
             visit(node.cond);
             if(node.ifBody != null){
                 localScope scp = new localScope(scopeStack.peek());
+                scopeStack.push(scp);
                 node.ifBody.setScope(scp);
                 visit(node.ifBody);
                 scopeStack.pop();
             }
             if(node.elseBody != null) {
                 localScope scp = new localScope(scopeStack.peek());
+                scopeStack.push(scp);
                 node.elseBody.setScope(scp);
                 visit(node.elseBody);
                 scopeStack.pop();
@@ -184,6 +189,7 @@ public class localResolver implements ASTVisitor {
     @Override
     public void visit(varDecStmt node) {
         if(node != null){
+            (scopeStack.peek()).declareEntity(error, node);
             visit(node.variableExpr);
         }
     }
@@ -191,8 +197,10 @@ public class localResolver implements ASTVisitor {
     @Override
     public void visit(whileloopStmt node) {
         if(node != null){
+            visit(node.cond);
             if(node.whileBody != null) {
                 localScope scp = new localScope(scopeStack.peek());
+                scopeStack.push(scp);
                 node.whileBody.setScope(scp);
                 visit(node.whileBody);
                 scopeStack.pop();
@@ -202,7 +210,7 @@ public class localResolver implements ASTVisitor {
 
     @Override
     public void visit(expr node) {
-        if(node != null) return;
+        if(node == null) return;
         node.accept(this);
     }
 
@@ -227,7 +235,7 @@ public class localResolver implements ASTVisitor {
     @Override
     public void visit(identifier node) {
         node.setScope(scopeStack.peek());
-        astNode ent = (scopeStack.peek()).get(node.name);
+        astNode ent = (scopeStack.peek()).get(error,node.name, node.loc);
         if(ent != null) {
             node.setEnt(ent);
         }
@@ -269,7 +277,9 @@ public class localResolver implements ASTVisitor {
 
     @Override
     public void visit(funcCall node) {
-
+        if (node != null){
+            visit(node.obj);
+        }
     }
 
     @Override
@@ -310,7 +320,8 @@ public class localResolver implements ASTVisitor {
 
     @Override
     public void visit(typ node) {
-
+        if(node == null) return;
+        node.accept(this);
     }
 
     @Override
@@ -325,7 +336,6 @@ public class localResolver implements ASTVisitor {
 
     @Override
     public void visit(classType node) {
-
     }
 
     @Override

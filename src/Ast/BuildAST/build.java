@@ -3,6 +3,8 @@ package Ast.BuildAST;
 import Ast.abstractSyntaxTree;
 import Parser.MxLexer;
 import Parser.MxParser;
+import Exception.*;
+import SemanticChecker.localResolver;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -13,22 +15,31 @@ import java.io.InputStream;
 
 public class build {
     public static void main(String[] args) throws Exception{
-        String inputFilePath = "E:\\compiler\\MyCompiler\\testcase" +
-                "\\semantic\\compile_error\\test.mx";
-        InputStream is = new FileInputStream(inputFilePath);
-        ANTLRInputStream input = new ANTLRInputStream(is);
-        MxLexer lexer = new MxLexer(input);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        MxParser parser = new MxParser(tokens);
-        ParseTree tree = parser.program();
+            String inputFilePath = "E:\\compiler\\MyCompiler\\testcase" +
+                    "\\semantic\\compile_error\\var-4-5140309552-wancheng.mx";
+            InputStream is = new FileInputStream(inputFilePath);
+            ANTLRInputStream input = new ANTLRInputStream(is);
+            MxLexer lexer = new MxLexer(input);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            MxParser parser = new MxParser(tokens);
+            ParseTree tree = parser.program();
 
-        ParseTreeWalker walker = new ParseTreeWalker();
-        ASTBuilder astBuilder = new ASTBuilder(parser);
-        walker.walk(astBuilder, tree);
+            ParseTreeWalker walker = new ParseTreeWalker();
+            ASTBuilder astBuilder = new ASTBuilder(parser);
+            walker.walk(astBuilder, tree);
 
-        abstractSyntaxTree rootNode = astBuilder.getRootNode();
+            abstractSyntaxTree rootNode = astBuilder.getRootNode();
 
-        ASTViewer viewer = new ASTViewer(System.out);
-        rootNode.accept(viewer);
+            ASTViewer viewer = new ASTViewer(System.out);
+            rootNode.accept(viewer);
+
+            localResolver resolver = new localResolver();
+            rootNode.accept(resolver);
+
+            if(!resolver.error.exceptionList.isEmpty()) {
+                resolver.error.printExceptions();
+            }
+        }
+
     }
-}
+

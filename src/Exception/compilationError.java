@@ -1,12 +1,13 @@
 package Exception;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class compilationError {
     public static List<Exception> exceptionList;
 
-    public void compilationError(){
+    public compilationError(){
         exceptionList = new LinkedList<>();
     }
 
@@ -14,9 +15,13 @@ public class compilationError {
         exceptionList.add(exception);
     }
 
-    public void printExceptions(){
+    public static void printExceptions(){
         for(Exception exception : exceptionList){
-            System.err.println(exception.getMessage());
+            System.err.println("Error: " + exception.getMessage());
         }
+    }
+
+    public static Exception top(){
+        return exceptionList.get(exceptionList.size()-1);
     }
 }
