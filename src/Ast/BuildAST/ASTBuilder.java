@@ -68,7 +68,7 @@ public class ASTBuilder extends MxBaseListener {
             astNode node = property.get(p);
             treeNode.classMems.add((memberDec) node);
         }
-        treeNode.className = ctx.Identifier().getText();
+        treeNode.name = ctx.Identifier().getText();
         property.get(ctx).loc = new location(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine());
     }
 
@@ -79,7 +79,7 @@ public class ASTBuilder extends MxBaseListener {
         property.put(ctx, treeNode);
 
         treeNode.functionType = (typ) property.get(ctx.typeSpecifier());
-        treeNode.functionName = ctx.Identifier().getText();
+        treeNode.name = ctx.Identifier().getText();
         treeNode.functionStmt = (compoundStmt) property.get(ctx.compoundStatement());
         for (MxParser.VariableDeclarationContext p : ctx.variableDeclaration()){
             astNode node = property.get(p);
@@ -94,7 +94,7 @@ public class ASTBuilder extends MxBaseListener {
         globalVarDec treeNode = new globalVarDec();
         property.put(ctx, treeNode);
 
-        treeNode.variableName = ctx.Identifier().getText();
+        treeNode.name = ctx.Identifier().getText();
         treeNode.variableType = (typ) property.get(ctx.typeSpecifier());
         treeNode.variableExpression = (expr) property.get(ctx.expression());
         property.get(ctx).loc = new location(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine());
@@ -107,7 +107,7 @@ public class ASTBuilder extends MxBaseListener {
         varDec treeNode = new varDec();
         property.put(ctx, treeNode);
 
-        treeNode.variableName = ctx.Identifier().getText();
+        treeNode.name = ctx.Identifier().getText();
         treeNode.variableType = (typ) property.get(ctx.typeSpecifier());
         treeNode.variableExpression = (expr) property.get(ctx.expression());
         property.get(ctx).loc = new location(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine());
@@ -119,7 +119,7 @@ public class ASTBuilder extends MxBaseListener {
         constructFuncDec treeNode = new constructFuncDec();
         property.put(ctx, treeNode);
 
-        treeNode.funcName = ctx.Identifier().getText();
+        treeNode.name = ctx.Identifier().getText();
         treeNode.funcStmt = (compoundStmt) property.get(ctx.compoundStatement());
         property.get(ctx).loc = new location(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine());
     }
@@ -253,7 +253,7 @@ public class ASTBuilder extends MxBaseListener {
         varDecStmt treeNode = new varDecStmt();
         property.put(ctx, treeNode);
         treeNode.variableType = (typ) property.get(ctx.typeSpecifier());
-        treeNode.variableName = ctx.Identifier().getText();
+        treeNode.name = ctx.Identifier().getText();
         treeNode.variableExpr = (expr) property.get(ctx.expression());
         property.get(ctx).loc = new location(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine());
 
@@ -546,7 +546,7 @@ public class ASTBuilder extends MxBaseListener {
                 else {
                     fieldmemAccessExpr treeNode = new fieldmemAccessExpr();
                     property.put(ctx, treeNode);
-                    treeNode.fieldMem = ctx.Identifier().getText();
+                    treeNode.name = ctx.Identifier().getText();
                     treeNode.obj = (expr) property.get(ctx.suffixExpression());
                     property.get(ctx).loc = new location(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine());
                 }
@@ -573,7 +573,7 @@ public class ASTBuilder extends MxBaseListener {
             else if (ctx.LeftParen() != null){
                 if(ctx.suffixExpression().Dot() != null) {
                     fieldfuncAccessExpr treeNode = new fieldfuncAccessExpr();
-                    treeNode.funcName = ctx.suffixExpression().Identifier().getText();
+                    treeNode.name = ctx.suffixExpression().Identifier().getText();
                     property.put(ctx, treeNode);
                     treeNode.obj = (expr)property.get(ctx.suffixExpression().suffixExpression());
                     for (MxParser.ExpressionContext p : ctx.expression()){
@@ -697,7 +697,7 @@ public class ASTBuilder extends MxBaseListener {
         }
         else if (ctx.Identifier() != null){
             classType treeNode = new classType();
-            treeNode.className = ctx.getText();
+            treeNode.name = ctx.getText();
             property.put(ctx,treeNode);
             property.get(ctx).loc = new location(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine());
         }

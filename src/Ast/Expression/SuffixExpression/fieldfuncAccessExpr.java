@@ -8,18 +8,18 @@ import java.util.List;
 
 public class fieldfuncAccessExpr extends expr {
     public expr obj;
-    public String funcName;
+    //public String funcName;
     public List<expr>  parameters;
 
     public fieldfuncAccessExpr(){
         obj = null;
-        funcName = null;
+        name = null;
         parameters = new LinkedList<>();
     }
 
     public fieldfuncAccessExpr(expr obj, String funcName, List<expr> parameters){
         this.obj = obj;
-        this.funcName = funcName;
+        this.name = funcName;
         this.parameters = parameters;
     }
 

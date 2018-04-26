@@ -9,12 +9,12 @@ import java.util.List;
 
 public class funcDec extends dec {
     public typ functionType;
-    public String functionName;
+    //public String functionName;
     public List<varDec> parameterList;
     public compoundStmt functionStmt;
 
     public funcDec(){
-        functionName = null;
+        name = null;
         functionType = null;
         functionStmt = null;
         parameterList = new LinkedList<>();
@@ -22,7 +22,7 @@ public class funcDec extends dec {
 
     public funcDec(typ funcType, String funcName, List<varDec> paraList, compoundStmt funcStmt){
         functionType = funcType;
-        functionName = funcName;
+        name = funcName;
         functionStmt = funcStmt;
         parameterList = paraList;
     }

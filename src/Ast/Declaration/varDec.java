@@ -7,18 +7,18 @@ import Ast.TypeSpecifier.typ;
 
 public class varDec extends dec{
     public typ variableType;
-    public String variableName;
+    //public String variableName;
     public expr  variableExpression;
 
     public varDec(){
         variableType = null;
-        variableName = null;
+        name = null;
         variableExpression = null;
     }
 
     public varDec(typ varType, String varName, expr varExpr) {
         variableType = varType;
-        variableName = varName;
+        name = varName;
         variableExpression = varExpr;
     }
 

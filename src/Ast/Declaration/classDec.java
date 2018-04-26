@@ -6,16 +6,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class classDec extends dec{
-    public String className;
+    //public String className;
     public List<memberDec> classMems;
 
     public classDec(){
-        className = null;
+        //className = null;
         classMems = new LinkedList<>();
     }
 
     public classDec(String claName, List<memberDec> claMems){
-        className = claName;
+        name = claName;
         classMems = claMems;
     }
 

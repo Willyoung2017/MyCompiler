@@ -4,16 +4,16 @@ import Ast.BuildAST.ASTVisitor;
 import Ast.Statement.compoundStmt;
 
 public class constructFuncDec extends dec{
-    public String funcName;
+    //public String funcName;
     public compoundStmt funcStmt;
 
     public constructFuncDec(){
-        funcName = null;
+        name = null;
         funcStmt = null;
     }
 
     public constructFuncDec(String funcName, compoundStmt funcStmt){
-        this.funcName = funcName;
+        this.name = funcName;
         this.funcStmt = funcStmt;
     }
 

@@ -6,18 +6,18 @@ import Ast.TypeSpecifier.typ;
 
 public class varDecStmt extends stmt{
     public typ variableType;
-    public String variableName;
+    //public String variableName;
     public expr variableExpr;
 
     public varDecStmt(){
         variableExpr = null;
-        variableName = null;
+        name = null;
         variableType = null;
     }
 
     public varDecStmt(typ varType, String varName, expr varExpr){
         variableType = varType;
-        variableName = varName;
+        name = varName;
         variableExpr = varExpr;
     }
 

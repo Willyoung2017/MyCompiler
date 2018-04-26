@@ -38,7 +38,7 @@ public class ASTViewer implements ASTVisitor {
     @Override
     public void visit(classDec node) {
         if(node != null){
-            out.println("[Class: "+node.className+"]{"+node.loc.locString());
+            out.println("[Class: "+node.name+"]{"+node.loc.locString());
             out.println("ClassMembers:");
             node.classMems.stream().forEachOrdered(this::visit);
             out.println("}");
@@ -48,7 +48,7 @@ public class ASTViewer implements ASTVisitor {
     @Override
     public void visit(funcDec node) {
         if (node != null) {
-            out.println("[Func: " + node.functionName + "]{" + node.loc.locString());
+            out.println("[Func: " + node.name + "]{" + node.loc.locString());
             out.println("ReturnType: ");
             visit(node.functionType);
             out.println("Parameters: ");
@@ -62,7 +62,7 @@ public class ASTViewer implements ASTVisitor {
     @Override
     public void visit(globalVarDec node) {
         if (node != null){
-            out.println("[GlobalVar: "+node.variableName+"]{"+node.loc.locString());
+            out.println("[GlobalVar: "+node.name+"]{"+node.loc.locString());
             out.println("VarType: ");
             visit(node.variableType);
             out.println("VarExpr: ");
@@ -74,7 +74,7 @@ public class ASTViewer implements ASTVisitor {
     @Override
     public void visit(constructFuncDec node) {
         if (node != null){
-            out.println("[ConstructFunction: "+node.funcName+"]{"+node.loc.locString());
+            out.println("[ConstructFunction: "+node.name+"]{"+node.loc.locString());
             out.println("FuncBody: ");
             visit(node.funcStmt);
             out.println("}");
@@ -85,7 +85,7 @@ public class ASTViewer implements ASTVisitor {
     @Override
     public void visit(varDec node) {
         if (node != null){
-            out.println("[Var: "+node.variableName+"]{"+node.loc.locString());
+            out.println("[Var: "+node.name+"]{"+node.loc.locString());
             out.println("VarType: ");
             visit(node.variableType);
             out.println("VarExpr: ");
@@ -182,7 +182,7 @@ public class ASTViewer implements ASTVisitor {
     public void visit(varDecStmt node) {
         if (node != null){
             out.println("[VarStatement]{"+node.loc.locString());
-            out.println("VarName: "+node.variableName);
+            out.println("VarName: "+node.name);
             out.println("VarType: ");
             visit(node.variableType);
             out.println("VarExpr: ");
@@ -279,7 +279,7 @@ public class ASTViewer implements ASTVisitor {
             out.println("[FieldFuncAccessExpr]{"+node.loc.locString());
             out.println("obj: ");
             visit(node.obj);
-            out.println("FuncName: "+node.funcName);
+            out.println("FuncName: "+node.name);
             out.println("parameters: ");
             node.parameters.stream().forEachOrdered(this::visit);
         }
@@ -291,7 +291,7 @@ public class ASTViewer implements ASTVisitor {
             out.println("[FieldMemAccessExpr]{"+node.loc.locString());
             out.println("obj: ");
             visit(node.obj);
-            out.println("Mem: "+node.fieldMem);
+            out.println("Mem: "+node.name);
             out.println("}");
         }
     }
@@ -389,7 +389,7 @@ public class ASTViewer implements ASTVisitor {
     @Override
     public void visit(classType node) {
         if (node != null){
-            out.println("(classType: "+node.className+")");
+            out.println("(classType: "+node.name+")");
         }
     }
 

@@ -3,14 +3,14 @@ package Ast.TypeSpecifier;
 import Ast.BuildAST.ASTVisitor;
 
 public class classType extends typ{
-    public String className;
+    //public String className;
 
     public classType(){
-        className = null;
+        name = null;
     }
 
     public classType(String className){
-        this.className = className;
+        this.name = className;
     }
 
     public void accept(ASTVisitor visitor){

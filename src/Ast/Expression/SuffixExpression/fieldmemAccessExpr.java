@@ -5,16 +5,16 @@ import Ast.Expression.expr;
 
 public class fieldmemAccessExpr extends expr {
     public expr obj;
-    public String fieldMem;
+    //public String fieldMem;
 
     public fieldmemAccessExpr(){
         obj = null;
-        fieldMem = null;
+        name = null;
     }
 
     public fieldmemAccessExpr(expr obj, String fieldMem){
         this.obj = obj;
-        this.fieldMem = fieldMem;
+        this.name = fieldMem;
     }
 
     public void accept(ASTVisitor visitor){
