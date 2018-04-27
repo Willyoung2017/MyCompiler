@@ -1,9 +1,11 @@
 package SemanticChecker;
 
+import Ast.location;
 import Exception.semanticException;
 import Exception.compilationError;
 import Ast.BuildAST.ASTVisitor;
 import Ast.Declaration.*;
+import Ast.TypeSpecifier.*;
 import Ast.Expression.BinaryExpression.binaryExpr;
 import Ast.Expression.PrimaryExpression.*;
 import Ast.Expression.SuffixExpression.*;
@@ -34,6 +36,28 @@ public class localResolver implements ASTVisitor {
         scopeStack.push(scp);
     }
 
+    public void checkMain(toplevelScope toplevel){
+        compilationError e = new compilationError();
+        location loc = new location(-1,-1);
+        astNode mainNode = toplevel.get(e, "main", loc);
+        if (mainNode == null){
+            error.add(new semanticException("Main function not found!"));
+        }
+        else {
+            if (!(mainNode instanceof funcDec)) {
+                error.add(new semanticException("Main must be a function!"));
+            }
+            else {
+                if (!(((funcDec) mainNode).functionType instanceof intType)) {
+                    error.add(new semanticException("Returntype of Main must be INT!"));
+                }
+                if (((funcDec) mainNode).parameterList.size() != 0) {
+                    error.add(new semanticException("Main cannot have parameters!"));
+                }
+            }
+        }
+    }
+
     @Override
     public void visit(abstractSyntaxTree node) {
         toplevelScope toplevel = new toplevelScope();
@@ -47,6 +71,7 @@ public class localResolver implements ASTVisitor {
         for (dec declaration: node.declarations){
                 visit(declaration);
         }
+        checkMain(toplevel);
     }
 
     @Override
@@ -99,6 +124,7 @@ public class localResolver implements ASTVisitor {
     @Override
     public void visit(varDec node) {
         if(node != null){
+            node.setScope(scopeStack.peek());
             visit(node.variableExpression);
         }
     }
@@ -106,6 +132,7 @@ public class localResolver implements ASTVisitor {
     @Override
     public void visit(memberDec node) {
         if(node != null){
+            node.setScope(scopeStack.peek());
             visit(node.declaration);
         }
     }
@@ -138,6 +165,7 @@ public class localResolver implements ASTVisitor {
     @Override
     public void visit(exprStmt node) {
         if(node != null){
+            node.setScope(scopeStack.peek());
             visit(node.expression);
         }
     }

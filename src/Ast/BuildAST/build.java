@@ -4,7 +4,7 @@ import Ast.abstractSyntaxTree;
 import Parser.MxLexer;
 import Parser.MxParser;
 import Exception.*;
-import SemanticChecker.localResolver;
+import SemanticChecker.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -16,7 +16,7 @@ import java.io.InputStream;
 public class build {
     public static void main(String[] args) throws Exception{
             String inputFilePath = "E:\\compiler\\MyCompiler\\testcase" +
-                    "\\semantic\\compile_error\\var-4-5140309552-wancheng.mx";
+                    "\\semantic\\compile_error\\test.mx";
             InputStream is = new FileInputStream(inputFilePath);
             ANTLRInputStream input = new ANTLRInputStream(is);
             MxLexer lexer = new MxLexer(input);
@@ -33,13 +33,19 @@ public class build {
             ASTViewer viewer = new ASTViewer(System.out);
             rootNode.accept(viewer);
 
-            localResolver resolver = new localResolver();
-            rootNode.accept(resolver);
+            localResolver Localresolver = new localResolver();
+            rootNode.accept(Localresolver);
 
-            if(!resolver.error.exceptionList.isEmpty()) {
-                resolver.error.printExceptions();
+            typeResolver Typeresolver = new typeResolver();
+            rootNode.accept(Typeresolver);
+
+            if (!Localresolver.error.exceptionList.isEmpty()) {
+                Localresolver.error.printExceptions();
             }
-        }
+            if (!Typeresolver.error.exceptionList.isEmpty()) {
+                Typeresolver.error.printExceptions();
+            }
+    }
 
     }
 

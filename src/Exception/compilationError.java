@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class compilationError {
-    public static List<Exception> exceptionList;
+    public  List<Exception> exceptionList;
 
     public compilationError(){
         exceptionList = new LinkedList<>();
@@ -15,13 +15,13 @@ public class compilationError {
         exceptionList.add(exception);
     }
 
-    public static void printExceptions(){
+    public  void printExceptions(){
         for(Exception exception : exceptionList){
             System.err.println("Error: " + exception.getMessage());
         }
     }
 
-    public static Exception top(){
+    public  Exception top(){
         return exceptionList.get(exceptionList.size()-1);
     }
 }
