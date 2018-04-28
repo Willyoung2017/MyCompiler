@@ -63,9 +63,9 @@ public class localResolver implements ASTVisitor {
         toplevelScope toplevel = new toplevelScope();
         scopeStack.add(toplevel);
         for (dec declaration: node.declarations){
+            declaration.setScope(toplevel);
             if (!(declaration instanceof globalVarDec))
                 toplevel.declareEntity(error, declaration);
-
         }
         node.setScope(toplevel);
         for (dec declaration: node.declarations){
@@ -99,6 +99,7 @@ public class localResolver implements ASTVisitor {
         if(node != null) {
             visit(node.functionType);
             pushScope(node.parameterList);
+            node.parameterList.forEach(this::visit);
             visit(node.functionStmt);
             node.setScope(scopeStack.pop());
         }
@@ -108,6 +109,7 @@ public class localResolver implements ASTVisitor {
     public void visit(globalVarDec node) {
         if(node != null){
             (scopeStack.peek()).declareEntity(error, node);
+            visit(node.variableType);
             visit(node.variableExpression);
         }
     }
@@ -125,6 +127,7 @@ public class localResolver implements ASTVisitor {
     public void visit(varDec node) {
         if(node != null){
             node.setScope(scopeStack.peek());
+            visit(node.variableType);
             visit(node.variableExpression);
         }
     }
@@ -218,6 +221,7 @@ public class localResolver implements ASTVisitor {
     public void visit(varDecStmt node) {
         if(node != null){
             (scopeStack.peek()).declareEntity(error, node);
+            node.setScope(scopeStack.peek());
             visit(node.variableExpr);
         }
     }
@@ -307,6 +311,7 @@ public class localResolver implements ASTVisitor {
     public void visit(funcCall node) {
         if (node != null){
             visit(node.obj);
+            node.parameters.stream().forEachOrdered(this::visit);
         }
     }
 
@@ -354,7 +359,9 @@ public class localResolver implements ASTVisitor {
 
     @Override
     public void visit(arrayType node) {
-
+        if(node != null){
+            node.setScope(scopeStack.peek());
+        }
     }
 
     @Override
