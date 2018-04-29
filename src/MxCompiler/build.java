@@ -1,7 +1,8 @@
-package MxCompiler.Ast;
+package MxCompiler;
 
 import MxCompiler.Ast.BuildAST.ASTBuilder;
 import MxCompiler.Ast.BuildAST.ASTViewer;
+import MxCompiler.Ast.abstractSyntaxTree;
 import MxCompiler.SemanticChecker.localResolver;
 import MxCompiler.SemanticChecker.typeResolver;
 import MxCompiler.Parser.MxLexer;
