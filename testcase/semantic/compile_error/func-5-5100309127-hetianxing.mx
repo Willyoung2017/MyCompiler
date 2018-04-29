@@ -1,0 +1,18 @@
+class AI {
+	int f(){
+		a = 1;
+	}
+    int a;
+}
+
+int f(int a, int b)
+{
+b = 9;
+c = 1;
+}
+
+int main() {
+    int b;
+    AI sa = new AI;
+    f(b, sa);
+}
