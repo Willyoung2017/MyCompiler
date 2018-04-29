@@ -73,7 +73,7 @@ public class typeResolver implements ASTVisitor {
                         }
                     }
                 }
-                if (!exist && !node.name.equals("main")) error.add(new semanticException("Function has no return!"+node.loc.locString()));
+                if (!exist && !node.name.equals("main") && !(node.functionType instanceof voidType)) error.add(new semanticException("Function has no return!"+node.loc.locString()));
 
             }
         }
@@ -318,9 +318,10 @@ public class typeResolver implements ASTVisitor {
                 if (!(node.rightOperand.type instanceof intType)) {
                     error.add(new semanticException("Right Operand must be int type" + node.loc.locString()));
                 }
-                node.type = new intType();
+                node.type = new boolType();
             }
             else if (node.operator.equals(binaryOp.ASSIGN)){
+
                   if ((node.rightOperand.type.getClass() != node.leftOperand.type.getClass())){
                     error.add(new semanticException("Left and Right Operand of Assign must be the same!"+node.loc.locString()));
                 }
@@ -454,24 +455,39 @@ public class typeResolver implements ASTVisitor {
             visit(node.obj);
             node.parameters.stream().forEachOrdered(this::visit);
             if (node.obj instanceof identifier){
+                if (node.obj.name.equals("getInt")){
+                    node.type = new intType();
+                }
+                else if (node.obj.name.equals("print") || node.obj.name.equals("println")){
+                    node.type = new voidType();
+                    if (node.parameters.size() != 1 || (!(node.parameters.get(0).type instanceof stringType) && !(node.parameters.get(0) instanceof stringConstant))){
+                        error.add(new semanticException(node.obj.name + "Parameter is wrong" + node.loc.locString()));
+                    }
+                }
+                else if (node.obj.name.equals("toString")){
+                    node.type = new stringType();
+                    if (node.parameters.size() != 1)
+                        error.add(new semanticException((node.obj.name+"Parameter is wrong"+node.loc.locString())));
+                }
+                else{
                 if(!(((identifier) node.obj).ent instanceof funcDec)){
                     error.add(new semanticException("This is not a function!"+node.loc.locString()));
                 }
-                else{
-                if(((funcDec) ((identifier) node.obj).ent).parameterList.size() != node.parameters.size()){
-                    error.add(new semanticException("Parameters inconsistent!"+node.loc.locString()));
-                }
                 else {
-                    for (varDec para : ((funcDec) ((identifier) node.obj).ent).parameterList) {
-                        expr funccall_para = node.parameters.get(i);
-                        visit(funccall_para);
-                        if (funccall_para.type.getClass() != para.variableType.getClass()) {
-                            error.add(new semanticException("Parameter type is wrong" + node.loc.locString()));
+                    if (((funcDec) ((identifier) node.obj).ent).parameterList.size() != node.parameters.size()) {
+                        error.add(new semanticException("Parameters inconsistent!" + node.loc.locString()));
+                    } else {
+                        for (varDec para : ((funcDec) ((identifier) node.obj).ent).parameterList) {
+                            expr funccall_para = node.parameters.get(i);
+                            visit(funccall_para);
+                            if (funccall_para.type.getClass() != para.variableType.getClass()) {
+                                error.add(new semanticException("Parameter type is wrong" + node.loc.locString()));
+                            }
+                            ++i;
                         }
-                        ++i;
                     }
-                }
                     node.type = ((funcDec) ((identifier) node.obj).ent).functionType;
+                }
                 }
             }
         }
@@ -525,18 +541,23 @@ public class typeResolver implements ASTVisitor {
     public void visit(unaryExpr node) {
         if (node != null){
             visit(node.operand);
-            if (node.operator.equals(unaryOp.LOGIC_NOT) && !(node.operand.type instanceof boolType)){
-                error.add(new semanticException("The Operand must be booltype!"+node.loc.locString()));
+            if (node.operator.equals(unaryOp.LOGIC_NOT)) {
+                node.type = new boolType();
+                if (!(node.operand.type instanceof boolType)) {
+                    error.add(new semanticException("The Operand must be booltype!" + node.loc.locString()));
+                }
             }
             if (node.operator.equals(unaryOp.INCREMENT)
                     || node.operator.equals(unaryOp.DECREMENT)
                     || node.operator.equals(unaryOp.POS)
                     || node.operator.equals(unaryOp.NEG)
                     || node.operator.equals(unaryOp.BITWISE_NOT)){
+                node.type = new intType();
                 if(!(node.operand.type instanceof intType)) {
                     error.add(new semanticException("The Operand must be inttype!" + node.loc.locString()));
                 }
             }
+
         }
     }
 
@@ -555,13 +576,18 @@ public class typeResolver implements ASTVisitor {
         }
         visit(node.index);
         if (node.index != null && (!(node.index.type instanceof intType))){
-            error.add(new semanticException("Array index must be inttype!"+node.loc.locString()));
+            error.add(new semanticException("Array index must be inttype!"+node.loc.locString()+node.index.type.getClass().toString()));
         }
         if (node.baseType instanceof classType){
             astNode ent = node.scp.get(error,((classType)node.baseType).name,node.loc);
             if(ent != null)
                 node.baseType = ent.type;
             else node.baseType = new voidType();
+        }
+        if(node.baseType instanceof arrayType){
+            if(((arrayType)node.baseType).index == null && node.index != null){
+                error.add(new semanticException("The index cannot be null!"+node.loc.locString()));
+            }
         }
         node.type = node.baseType;
 
