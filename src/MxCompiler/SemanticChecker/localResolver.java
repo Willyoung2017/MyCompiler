@@ -225,6 +225,7 @@ public class localResolver implements ASTVisitor {
         if(node != null){
             (scopeStack.peek()).declareEntity(error, node);
             node.setScope(scopeStack.peek());
+            visit(node.variableType);
             visit(node.variableExpr);
         }
     }
@@ -289,6 +290,7 @@ public class localResolver implements ASTVisitor {
     public void visit(newExpr node) {
         if (node != null){
             visit(node.newName);
+            node.setScope(scopeStack.peek());
         }
     }
 
@@ -305,6 +307,7 @@ public class localResolver implements ASTVisitor {
     @Override
     public void visit(fieldfuncAccessExpr node) {
         if (node != null) {
+            node.setScope(scopeStack.peek());
             visit(node.obj);
             node.parameters.stream().forEachOrdered(this::visit);
         }
@@ -313,6 +316,7 @@ public class localResolver implements ASTVisitor {
     @Override
     public void visit(fieldmemAccessExpr node) {
         if (node != null){
+            node.setScope(scopeStack.peek());
             visit(node.obj);
         }
     }
@@ -321,7 +325,7 @@ public class localResolver implements ASTVisitor {
     public void visit(funcCall node) {
         if (node != null){
             node.parameters.stream().forEachOrdered(this::visit);
-            if(node.obj.name.equals("getInt")||node.obj.name.equals("toString")||node.obj.name.equals("print")||node.obj.name.equals("println"))
+            if(node.obj.name.equals("getInt")||node.obj.name.equals("getString")||node.obj.name.equals("toString")||node.obj.name.equals("print")||node.obj.name.equals("println"))
                 return;
             visit(node.obj);
 
@@ -331,6 +335,7 @@ public class localResolver implements ASTVisitor {
     @Override
     public void visit(indexAccessExpr node) {
         if (node != null){
+            node.setScope(scopeStack.peek());
             visit(node.array);
             visit(node.index);
         }
