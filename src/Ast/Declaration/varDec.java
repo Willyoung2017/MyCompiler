@@ -8,7 +8,7 @@ import Ast.TypeSpecifier.typ;
 public class varDec extends dec{
     public typ variableType;
     //public String variableName;
-    public expr  variableExpression;
+    public expr variableExpression;
 
     public varDec(){
         variableType = null;

@@ -1,11 +1,8 @@
 package SemanticChecker;
 
+import Exception.compilationError;
 import Ast.location;
-import Exception.*;
 import Ast.astNode;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class localScope extends scope {
     protected  scope parent;

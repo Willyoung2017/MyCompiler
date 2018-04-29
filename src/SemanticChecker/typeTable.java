@@ -1,10 +1,10 @@
 package SemanticChecker;
 
-import Ast.Declaration.varDec;
+import Exception.compilationError;
+import Exception.semanticException;
 import Ast.TypeSpecifier.classType;
-import Ast.TypeSpecifier.typ;
 import Ast.astNode;
-import Exception.*;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 

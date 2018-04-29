@@ -6,7 +6,7 @@ import Ast.Declaration.dec;
 import java.util.LinkedList;
 import java.util.List;
 
-public class abstractSyntaxTree extends astNode{
+public class abstractSyntaxTree extends astNode {
     public List<dec> declarations;
 
     public abstractSyntaxTree(){

@@ -2,17 +2,18 @@ package SemanticChecker;
 
 import Ast.BuildAST.ASTVisitor;
 import Ast.Declaration.*;
-import Ast.Expression.BinaryExpression.binaryExpr;
-import Ast.Expression.BinaryExpression.binaryOp;
 import Ast.Expression.PrimaryExpression.*;
 import Ast.Expression.SuffixExpression.*;
+import Ast.Statement.*;
+import Ast.TypeSpecifier.*;
+import Exception.compilationError;
+import Exception.semanticException;
+import Ast.Expression.BinaryExpression.binaryExpr;
+import Ast.Expression.BinaryExpression.binaryOp;
 import Ast.Expression.UnaryExpression.unaryExpr;
 import Ast.Expression.UnaryExpression.unaryOp;
 import Ast.Expression.expr;
 import Ast.astNode;
-import Exception.*;
-import Ast.Statement.*;
-import Ast.TypeSpecifier.*;
 import Ast.abstractSyntaxTree;
 
 public class typeResolver implements ASTVisitor {

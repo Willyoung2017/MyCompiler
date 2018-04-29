@@ -1,6 +1,5 @@
 package Ast.Expression;
 import Ast.BuildAST.ASTVisitor;
-import Ast.TypeSpecifier.typ;
 import Ast.astNode;
 
 public class expr extends astNode{

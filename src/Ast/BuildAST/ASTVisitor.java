@@ -9,6 +9,11 @@ import Ast.Expression.expr;
 import Ast.Statement.*;
 import Ast.TypeSpecifier.*;
 import Ast.abstractSyntaxTree;
+import Ast.BuildAST.Declaration.*;
+import Ast.BuildAST.Expression.PrimaryExpression.*;
+import Ast.BuildAST.Expression.SuffixExpression.*;
+import Ast.BuildAST.Statement.*;
+import Ast.BuildAST.TypeSpecifier.*;
 
 public interface ASTVisitor {
     public void visit(abstractSyntaxTree node);

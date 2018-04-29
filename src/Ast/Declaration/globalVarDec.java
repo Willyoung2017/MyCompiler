@@ -1,7 +1,7 @@
 package Ast.Declaration;
 import Ast.BuildAST.ASTVisitor;
-import Ast.TypeSpecifier.*;
-import Ast.Expression.*;
+import Ast.Expression.expr;
+import Ast.TypeSpecifier.typ;
 
 public class globalVarDec extends dec{
     public typ variableType;

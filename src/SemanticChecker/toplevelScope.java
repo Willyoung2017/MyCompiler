@@ -1,10 +1,11 @@
 package SemanticChecker;
 
+import Exception.compilationError;
+import Exception.semanticException;
 import Ast.astNode;
 import Ast.location;
-import Exception.*;
+
 import java.util.List;
-import java.util.Map;
 
 public class toplevelScope extends scope{
     protected List<astNode> localVar;

@@ -1,18 +1,17 @@
 package SemanticChecker;
 
+import Ast.Declaration.*;
+import Ast.Expression.PrimaryExpression.*;
+import Ast.Expression.SuffixExpression.*;
+import Ast.Statement.*;
+import Ast.TypeSpecifier.*;
 import Ast.location;
 import Exception.semanticException;
 import Exception.compilationError;
 import Ast.BuildAST.ASTVisitor;
-import Ast.Declaration.*;
-import Ast.TypeSpecifier.*;
 import Ast.Expression.BinaryExpression.binaryExpr;
-import Ast.Expression.PrimaryExpression.*;
-import Ast.Expression.SuffixExpression.*;
 import Ast.Expression.UnaryExpression.unaryExpr;
 import Ast.Expression.expr;
-import Ast.Statement.*;
-import Ast.TypeSpecifier.*;
 import Ast.abstractSyntaxTree;
 import Ast.astNode;
 
@@ -280,6 +279,9 @@ public class localResolver implements ASTVisitor {
 
     @Override
     public void visit(newExpr node) {
+        if (node != null){
+            visit(node.newName);
+        }
     }
 
     @Override

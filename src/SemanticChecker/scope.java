@@ -1,8 +1,10 @@
 package SemanticChecker;
 
+import Exception.compilationError;
+import Exception.semanticException;
 import Ast.astNode;
 import Ast.location;
-import Exception.*;
+
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
