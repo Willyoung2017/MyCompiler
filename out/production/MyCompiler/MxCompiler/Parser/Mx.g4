@@ -221,7 +221,7 @@ Identifier
         )*
     ;
 
-//fvck : StringConstant;
+fvck : StringConstant;
 fragment
 Nondigit
     :   [a-zA-Z_]
@@ -254,7 +254,7 @@ Char
 
 fragment
 PrintableChar
-    :   ~['"\\\r\n]
+    :   ~["\\\r\n]
     ;
 
 fragment

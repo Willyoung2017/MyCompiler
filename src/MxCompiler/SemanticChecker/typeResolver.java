@@ -66,6 +66,20 @@ public class typeResolver implements ASTVisitor {
                 typeTable.add(error, node.name, (node.functionType));
             if (node.functionType != null){
                 for (stmt statement: node.functionStmt.stmtList){
+                    if(statement instanceof ifStmt){
+                         if(((ifStmt)statement).ifBody instanceof returnStmt) {
+                             exist = true;
+                             if(((ifStmt)statement).ifBody.type.getClass() != node.functionType.getClass()){
+                                 error.add(new semanticException("Function's returnType is wrong!"+statement.loc.locString()));
+                             }
+                         }
+                         else if (((ifStmt)statement).elseBody instanceof returnStmt){
+                             exist = true;
+                             if(((ifStmt)statement).elseBody.type.getClass() != node.functionType.getClass()){
+                                 error.add(new semanticException("Function's returnType is wrong!"+statement.loc.locString()));
+                             }
+                         }
+                    }
                     if (statement instanceof returnStmt){
                         exist = true;
                         if(statement.type.getClass() != node.functionType.getClass()){
@@ -278,8 +292,18 @@ public class typeResolver implements ASTVisitor {
         if (node != null) {
             visit(node.leftOperand);
             visit(node.rightOperand);
-            if(node.operator.equals(binaryOp.ADD)
-                    || node.operator.equals(binaryOp.SUB)
+            if(node.operator.equals(binaryOp.ADD)){
+                if ((node.rightOperand.type instanceof intType && node.leftOperand.type instanceof intType)) {
+                    node.type = new intType();
+                }
+                else if ((node.rightOperand.type instanceof stringType && node.leftOperand.type instanceof stringType)) {
+                    node.type = new stringType();
+                }
+                else {
+                    error.add(new semanticException("Operands error!"+node.loc.locString()));
+                }
+            }
+            if(node.operator.equals(binaryOp.SUB)
                     || node.operator.equals(binaryOp.MUL)
                     || node.operator.equals(binaryOp.DIV)
                     || node.operator.equals(binaryOp.MOD)
@@ -460,7 +484,7 @@ public class typeResolver implements ASTVisitor {
                 }
                 else if (node.obj.name.equals("print") || node.obj.name.equals("println")){
                     node.type = new voidType();
-                    if (node.parameters.size() != 1 || (!(node.parameters.get(0).type instanceof stringType) && !(node.parameters.get(0) instanceof stringConstant))){
+                    if (node.parameters.size() != 1 || (!(node.parameters.get(0).type instanceof stringType))){
                         error.add(new semanticException(node.obj.name + "Parameter is wrong" + node.loc.locString()));
                     }
                 }

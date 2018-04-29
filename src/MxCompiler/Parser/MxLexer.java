@@ -2,9 +2,12 @@
 package MxCompiler.Parser;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class MxLexer extends Lexer {
@@ -140,7 +143,7 @@ public class MxLexer extends Lexer {
 		"\13\25\f\27\r\31\16\33\17\35\20\37\21!\22#\23%\24\'\25)\2+\2-\2/\26\61"+
 		"\27\63\2\65\2\67\29\30;\31=\32?\33A\34C\35E\36G\37I K!M\"O#Q$S%U&W\'Y"+
 		"([)]*_+a,c-e.g/i\60k\61m\62o\63q\64s\65u\66w\67y8{9}:\3\2\t\5\2C\\aac"+
-		"|\3\2\62;\3\2\63;\7\2\f\f\17\17$$))^^\f\2$$))AA^^cdhhppttvvxx\4\2\13\13"+
+		"|\3\2\62;\3\2\63;\6\2\f\f\17\17$$^^\f\2$$))AA^^cdhhppttvvxx\4\2\13\13"+
 		"\"\"\4\2\f\f\17\17\u016c\2\3\3\2\2\2\2\5\3\2\2\2\2\7\3\2\2\2\2\t\3\2\2"+
 		"\2\2\13\3\2\2\2\2\r\3\2\2\2\2\17\3\2\2\2\2\21\3\2\2\2\2\23\3\2\2\2\2\25"+
 		"\3\2\2\2\2\27\3\2\2\2\2\31\3\2\2\2\2\33\3\2\2\2\2\35\3\2\2\2\2\37\3\2"+
