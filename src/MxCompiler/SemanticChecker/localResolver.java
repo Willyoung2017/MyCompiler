@@ -21,6 +21,7 @@ import java.util.List;
 public class localResolver implements ASTVisitor {
     public LinkedList<scope> scopeStack;
     public compilationError error;
+    public classDec thisClass;
 
     public localResolver(){
         scopeStack = new LinkedList<>();
@@ -83,6 +84,7 @@ public class localResolver implements ASTVisitor {
     public void visit(classDec node){
         if(node != null) {
             localScope scp = new localScope(scopeStack.peek());
+            thisClass = node;
             for(memberDec dec : node.classMems){
                 scp.declareEntity(error,dec.declaration);
             }
@@ -153,9 +155,11 @@ public class localResolver implements ASTVisitor {
     @Override
     public void visit(compoundStmt node) {
         if(node != null){
-            //localScope scp = new localScope(scopeStack.peek());
+            localScope scp = new localScope(scopeStack.peek());
+            scopeStack.push(scp);
             node.setScope(scopeStack.peek());
             node.stmtList.stream().forEachOrdered(this::visit);
+            scopeStack.pop();
         }
     }
 
@@ -266,6 +270,10 @@ public class localResolver implements ASTVisitor {
     @Override
     public void visit(identifier node) {
         node.setScope(scopeStack.peek());
+        if(node.name.equals("this")){
+            node.setEnt(thisClass);
+            return;
+        }
         astNode ent = (scopeStack.peek()).get(error,node.name, node.loc);
         if(ent != null) {
             node.setEnt(ent);

@@ -5,52 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a0f4a68e-9013-490c-8d4f-cdeb20d678dc" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/Mx.g4" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/Mx.g4" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxBaseListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxBaseListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxLexer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxLexer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$AdditiveExpressionContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$AdditiveExpressionContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$AssignmentExpressionContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$AssignmentExpressionContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$BitwiseAndExpressionContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$BitwiseAndExpressionContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$BitwiseExclusiveOrExpressionContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$BitwiseExclusiveOrExpressionContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$BitwiseInclusiveOrExpressionContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$BitwiseInclusiveOrExpressionContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ClassDeclarationContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ClassDeclarationContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$CompoundStatementContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$CompoundStatementContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ConditionContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ConditionContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ConstantContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ConstantContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ConstructFunctionDeclarationContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ConstructFunctionDeclarationContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$EqualityExpressionContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$EqualityExpressionContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ExpressionContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ExpressionContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ExpressionStatementContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ExpressionStatementContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ExternalDeclarationContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ExternalDeclarationContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$FunctionDeclarationContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$FunctionDeclarationContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$GlobalVariableDeclarationContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$GlobalVariableDeclarationContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$InitContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$InitContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$IterationStatementContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$IterationStatementContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$JumpStatementContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$JumpStatementContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$LogicalAndExpressionContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$LogicalAndExpressionContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$LogicalOrExpressionContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$LogicalOrExpressionContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$MemberDeclarationContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$MemberDeclarationContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$MultiplicativeExpressionContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$MultiplicativeExpressionContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$PrimaryExpressionContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$PrimaryExpressionContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ProgramContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ProgramContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$RelationExpressionContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$RelationExpressionContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$SelectionStatementContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$SelectionStatementContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ShiftExpressionContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ShiftExpressionContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$StatementContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$StatementContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$StepContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$StepContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$SuffixExpressionContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$SuffixExpressionContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$TypeSpecifierContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$TypeSpecifierContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$UnaryExpressionContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$UnaryExpressionContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$VariableDeclarationContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$VariableDeclarationContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$VariableDeclarationStatementContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$VariableDeclarationStatementContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MxCompiler/Parser/Mx.g4" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/Parser/Mx.g4" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MxCompiler/Parser/MxBaseListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/Parser/MxBaseListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MxCompiler/Parser/MxLexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/Parser/MxLexer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MxCompiler/Parser/MxListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/Parser/MxListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MxCompiler/Parser/MxParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/Parser/MxParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MxCompiler/SemanticChecker/localResolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/SemanticChecker/localResolver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MxCompiler/SemanticChecker/typeResolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/SemanticChecker/typeResolver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MxCompiler/build.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/build.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/test.mx" beforeDir="false" afterPath="$PROJECT_DIR$/testcase/semantic/compile_error/test.mx" afterDir="false" />
@@ -82,7 +37,7 @@
       <file leaf-file-name="build.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/MxCompiler/build.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="427">
+            <state relative-caret-position="361">
               <caret line="37" column="20" selection-start-line="37" selection-start-column="20" selection-end-line="37" selection-end-column="20" />
             </state>
           </provider>
@@ -91,8 +46,53 @@
       <file leaf-file-name="typeResolver.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/MxCompiler/SemanticChecker/typeResolver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="367">
-              <caret line="302" column="69" lean-forward="true" selection-start-line="302" selection-start-column="69" selection-end-line="302" selection-end-column="69" />
+            <state relative-caret-position="228">
+              <caret line="455" column="12" selection-start-line="455" selection-start-column="12" selection-end-line="455" selection-end-column="12" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="funcDec.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/MxCompiler/Ast/Declaration/funcDec.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="475">
+              <caret line="30" selection-start-line="30" selection-end-line="30" />
+              <folding>
+                <element signature="e#855#856#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="identifier.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/MxCompiler/Ast/Expression/PrimaryExpression/identifier.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="285">
+              <caret line="23" selection-start-line="23" selection-end-line="23" />
+              <folding>
+                <element signature="e#525#526#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="localResolver.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/MxCompiler/SemanticChecker/localResolver.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="361">
+              <caret line="161" column="29" selection-start-line="161" selection-start-column="29" selection-end-line="161" selection-end-column="29" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="returnStmt.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/MxCompiler/Ast/Statement/returnStmt.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="228">
+              <caret line="17" selection-start-line="17" selection-end-line="17" />
+              <folding>
+                <element signature="e#414#415#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -193,13 +193,13 @@
         <option value="$PROJECT_DIR$/src/MxCompiler/Ast/BuildAST/ASTViewer.java" />
         <option value="$PROJECT_DIR$/src/MxCompiler/Ast/build.java" />
         <option value="$PROJECT_DIR$/semantic.bash" />
-        <option value="$PROJECT_DIR$/src/MxCompiler/SemanticChecker/localResolver.java" />
         <option value="$PROJECT_DIR$/src/MxCompiler/Parser/Mx.g4" />
         <option value="$PROJECT_DIR$/src/MxCompiler/Parser/MxBaseListener.java" />
         <option value="$PROJECT_DIR$/src/MxCompiler/Parser/MxLexer.java" />
         <option value="$PROJECT_DIR$/src/MxCompiler/Parser/MxListener.java" />
         <option value="$PROJECT_DIR$/src/MxCompiler/Parser/MxParser.java" />
         <option value="$PROJECT_DIR$/src/MxCompiler/build.java" />
+        <option value="$PROJECT_DIR$/src/MxCompiler/SemanticChecker/localResolver.java" />
         <option value="$PROJECT_DIR$/src/MxCompiler/SemanticChecker/typeResolver.java" />
       </list>
     </option>
@@ -426,7 +426,7 @@
       <workItem from="1524964075340" duration="3228000" />
       <workItem from="1524967375223" duration="294000" />
       <workItem from="1524967691047" duration="777000" />
-      <workItem from="1524990959576" duration="9478000" />
+      <workItem from="1524990959576" duration="18077000" />
     </task>
     <task id="LOCAL-00001" summary="AST building work">
       <created>1524575362052</created>
@@ -509,7 +509,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="215619000" />
+    <option name="totallyTimeSpent" value="224218000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -526,11 +526,11 @@
       <window_info anchor="right" id="Maven Projects" order="3" weight="0.3297587" />
       <window_info anchor="bottom" id="Database Changes" order="3" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="4" />
-      <window_info active="true" anchor="right" id="Run" order="9" visible="true" weight="0.13802083" />
+      <window_info active="true" anchor="right" id="Run" order="9" visible="true" weight="0.33984375" />
       <window_info anchor="bottom" id="Terminal" order="5" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1907552" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21940105" />
       <window_info anchor="right" id="Database" order="4" weight="0.3297587" />
       <window_info anchor="bottom" id="ANTLR Preview" order="6" weight="0.0" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -649,13 +649,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/MxCompiler/Ast/Statement/returnStmt.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="17" selection-start-line="17" selection-end-line="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/MxCompiler/Exception/compilationError.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="602">
@@ -712,13 +705,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/MxCompiler/Ast/Declaration/funcDec.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="475">
-          <caret line="30" selection-start-line="30" selection-end-line="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/MxCompiler/Ast/astNode.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="190">
@@ -730,13 +716,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="375">
           <caret line="25" selection-start-line="25" selection-end-line="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/MxCompiler/Ast/Expression/PrimaryExpression/identifier.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="23" selection-start-line="23" selection-end-line="23" />
         </state>
       </provider>
     </entry>
@@ -857,13 +836,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/MxCompiler/SemanticChecker/localResolver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="316" column="23" selection-start-line="316" selection-start-column="23" selection-end-line="316" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/MxCompiler/Ast/Expression/BinaryExpression/binaryExpr.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="399">
@@ -939,13 +911,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/MxCompiler/build.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="427">
-          <caret line="37" column="20" selection-start-line="37" selection-start-column="20" selection-end-line="37" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/MxCompiler/Ast/Statement/ifStmt.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="76">
@@ -953,10 +918,54 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/MxCompiler/Ast/Statement/returnStmt.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
+          <folding>
+            <element signature="e#414#415#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/MxCompiler/Ast/Declaration/funcDec.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="475">
+          <caret line="30" selection-start-line="30" selection-end-line="30" />
+          <folding>
+            <element signature="e#855#856#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/MxCompiler/Ast/Expression/PrimaryExpression/identifier.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="23" selection-start-line="23" selection-end-line="23" />
+          <folding>
+            <element signature="e#525#526#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/MxCompiler/build.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="37" column="20" selection-start-line="37" selection-start-column="20" selection-end-line="37" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/MxCompiler/SemanticChecker/localResolver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="161" column="29" selection-start-line="161" selection-start-column="29" selection-end-line="161" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/MxCompiler/SemanticChecker/typeResolver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="367">
-          <caret line="302" column="69" lean-forward="true" selection-start-line="302" selection-start-column="69" selection-end-line="302" selection-end-column="69" />
+        <state relative-caret-position="228">
+          <caret line="455" column="12" selection-start-line="455" selection-start-column="12" selection-end-line="455" selection-end-column="12" />
         </state>
       </provider>
     </entry>
