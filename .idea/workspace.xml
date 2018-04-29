@@ -5,10 +5,312 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a0f4a68e-9013-490c-8d4f-cdeb20d678dc" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/src/MxCompiler/SemanticChecker/localResolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/SemanticChecker/localResolver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MxCompiler/SemanticChecker/typeResolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/SemanticChecker/typeResolver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/Mx.tokens" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/MxBaseListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/MxBaseVisitor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/MxLexer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/MxLexer.tokens" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/MxListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/MxParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/MxVisitor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/Parser/Mx.tokens" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/Parser/MxBaseListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/Parser/MxBaseVisitor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/Parser/MxLexer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/Parser/MxLexer.tokens" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/Parser/MxListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/Parser/MxParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/Parser/MxVisitor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/BuildAST/ASTBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/BuildAST/ASTViewer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/BuildAST/ASTVisitor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Declaration/classDec.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Declaration/constructFuncDec.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Declaration/dec.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Declaration/funcDec.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Declaration/globalVarDec.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Declaration/memberDec.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Declaration/varDec.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Expression/BinaryExpression/binaryExpr.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Expression/BinaryExpression/binaryOp.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Expression/PrimaryExpression/Null.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Expression/PrimaryExpression/boolConstant.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Expression/PrimaryExpression/identifier.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Expression/PrimaryExpression/intConstant.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Expression/PrimaryExpression/newExpr.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Expression/PrimaryExpression/primaryExpr.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Expression/PrimaryExpression/stringConstant.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Expression/SuffixExpression/fieldfuncAccessExpr.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Expression/SuffixExpression/fieldmemAccessExpr.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Expression/SuffixExpression/funcCall.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Expression/SuffixExpression/indexAccessExpr.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Expression/SuffixExpression/selfDec.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Expression/SuffixExpression/selfInc.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Expression/SuffixExpression/suffixExpr.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Expression/UnaryExpression/unaryExpr.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Expression/UnaryExpression/unaryOp.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Expression/expr.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Statement/breakStmt.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Statement/compoundStmt.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Statement/continueStmt.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Statement/exprStmt.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Statement/forloopStmt.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Statement/ifStmt.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Statement/returnStmt.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Statement/stmt.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Statement/varDecStmt.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/Statement/whileloopStmt.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/TypeSpecifier/arrayType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/TypeSpecifier/boolType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/TypeSpecifier/classType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/TypeSpecifier/intType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/TypeSpecifier/nullType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/TypeSpecifier/stringType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/TypeSpecifier/typ.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/TypeSpecifier/voidType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/abstractSyntaxTree.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/astNode.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Ast/location.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Exception/compilationError.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Exception/semanticException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/Mx.g4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/Mx.tokens" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxBaseListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxLexer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxLexer.tokens" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$AdditiveExpressionContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$AssignmentExpressionContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$BitwiseAndExpressionContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$BitwiseExclusiveOrExpressionContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$BitwiseInclusiveOrExpressionContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ClassDeclarationContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$CompoundStatementContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ConditionContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ConstantContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ConstructFunctionDeclarationContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$EqualityExpressionContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ExpressionContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ExpressionStatementContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ExternalDeclarationContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$FunctionDeclarationContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$FvckContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$GlobalVariableDeclarationContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$InitContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$IterationStatementContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$JumpStatementContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$LogicalAndExpressionContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$LogicalOrExpressionContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$MemberDeclarationContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$MultiplicativeExpressionContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$PrimaryExpressionContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ProgramContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$RelationExpressionContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$SelectionStatementContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$ShiftExpressionContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$StatementContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$StepContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$SuffixExpressionContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$TypeSpecifierContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$UnaryExpressionContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$VariableDeclarationContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser$VariableDeclarationStatementContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/Parser/MxParser.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/SemanticChecker/dereferenceChecker.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/SemanticChecker/localResolver.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/SemanticChecker/localScope.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/SemanticChecker/scope.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/SemanticChecker/toplevelScope.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/SemanticChecker/typeResolver.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/SemanticChecker/typeTable.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MyCompiler/MxCompiler/build.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MxCompiler/build.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/build.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/test.mx" beforeDir="false" afterPath="$PROJECT_DIR$/testcase/semantic/compile_error/test.mx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/error/selfref-5090379042-jiaxiao.mill" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/a-function-call.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/a-function-call.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/array_test1-mahaojun.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/array_test1-mahaojun.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/array_test1-mahaojun.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/array_test2-mahaojun.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/array_test2-mahaojun.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/array_test2-mahaojun.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/basicopt1-5100309127-hetianxing.limit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/basicopt1-5100309127-hetianxing.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/basicopt1-5100309127-hetianxing.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/builtin-5140519064-youyurong.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/builtin-5140519064-youyurong.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/builtin-5140519064-youyurong.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/bulgarian-5110379024-wuhang.limit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/bulgarian-5110379024-wuhang.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/bulgarian-5110379024-wuhang.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/class_test-mahaojun.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/class_test-mahaojun.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/expr-5110309085-jintianxing.limit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/expr-5110309085-jintianxing.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/expr-5110309085-jintianxing.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/function_test-huyuncong.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/function_test-huyuncong.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/function_test-huyuncong.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/gcd-5090379042-jiaxiao.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/gcd-5090379042-jiaxiao.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/hanoi-5100379110-daibo.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/hanoi-5100379110-daibo.limit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/hanoi-5100379110-daibo.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/hanoi-5100379110-daibo.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/hashmap-5100309127-hetianxing.limit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/hashmap-5100309127-hetianxing.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/hashmap-5100309127-hetianxing.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/heapsort-5100379110-daibo.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/heapsort-5100379110-daibo.limit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/heapsort-5100379110-daibo.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/heapsort-5100379110-daibo.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/horse-5100309153-yanghuan.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/horse-5100309153-yanghuan.limit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/horse-5100309153-yanghuan.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/horse-5100309153-yanghuan.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/horse2-5100309153-yanghuan.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/horse2-5100309153-yanghuan.limit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/horse2-5100309153-yanghuan.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/horse2-5100309153-yanghuan.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/horse3-5100309153-yanghuan.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/horse3-5100309153-yanghuan.limit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/horse3-5100309153-yanghuan.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/horse3-5100309153-yanghuan.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/lvalue2-5110379024-wuhang.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/lvalue2-5110379024-wuhang.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/magic-5100309153-yanghuan.limit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/magic-5100309153-yanghuan.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/magic-5100309153-yanghuan.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/manyarguments-5100379110-daibo.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/manyarguments-5100379110-daibo.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/maxflow-5100379110-daibo.limit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/maxflow-5100379110-daibo.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/maxflow-5100379110-daibo.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/multiarray-5100309153-yanghuan.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/multiarray-5100309153-yanghuan.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/pi-5090379042-jiaxiao.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/pi-5090379042-jiaxiao.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/prime-5100309153-yanghuan.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/prime-5100309153-yanghuan.limit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/prime-5100309153-yanghuan.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/prime-5100309153-yanghuan.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/qsort-5100379110-daibo.limit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/qsort-5100379110-daibo.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/qsort-5100379110-daibo.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/queens-5100379110-daibo.limit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/queens-5100379110-daibo.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/queens-5100379110-daibo.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/spill2-5100379110-daibo.limit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/spill2-5100379110-daibo.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/spill2-5100379110-daibo.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/statement_test-huyuncong.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/statement_test-huyuncong.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/statement_test-huyuncong.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/string_test-huyuncong.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/string_test-huyuncong.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/string_test-huyuncong.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/superloop-5090379042-jiaxiao.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/superloop-5090379042-jiaxiao.limit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/superloop-5090379042-jiaxiao.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/superloop-5090379042-jiaxiao.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/tak-5090379042-jiaxiao.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/tak-5090379042-jiaxiao.limit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/tak-5090379042-jiaxiao.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/tak-5090379042-jiaxiao.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/twinprime-5090379042-jiaxiao.limit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/twinprime-5090379042-jiaxiao.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/final/twinprime-5090379042-jiaxiao.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/array1.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/array2.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/array3.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/array4.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/builtin1.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/builtin2.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/builtin3.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/function1.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/function2.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/global1.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/loop1.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/loop2.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/loop3.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/loop4.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/simple1.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/simple2.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/simple3.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/simple4.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/simple5.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/simple6.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/simple7.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/ssa1.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/ssa2.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/string1.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/string2.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/struct1.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/struct2.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/struct3.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/symtable1.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/ir/symtable2.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/basic_test-yurongyou.mill" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/arrop-1-5100379071-puyouer.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/asiop-1-5100379071-puyouer.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/asiop-2-5100379071-puyouer.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/asiop-3-5120309049-liaochao.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/asiop-4-5120309049-liaochao.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/asiop-5-5100379071-puyouer.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/asiop-6-5100379071-puyouer.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/asiop-7-5120309049-liaochao.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/biop-1-5100379071-puyouer.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/bitop-1-5120309049-liaochao.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/boop-1-5120309049-liaochao.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/class-1-5100379071-puyouer.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/class-2-5120309049-liaochao.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/ctrflow-1-5100379071-puyouer.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/ctrflow-2-5120309049-liaochao.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/ctrflow-3-5100379071-puyouer.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/ctrflow-4-5120309049-liaochao.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/ctrflow-5-5120309049-liaochao.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/fldop-1-5120309049-liaochao.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/func-1-5100379071-puyouer.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/func-2-5120309049-liaochao.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/func-3-5100379071-puyouer.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/func-4-5100379071-puyouer.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/func-5-5100309127-hetianxing.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/func-6-5130309059-lijiajun.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/func-7-5140309552-wancheng.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/incop-1-5120309049-liaochao.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/relop-1-5120309049-liaochao.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/relop-2-5120309049-liaochao.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/scope-1-5140519064-youyurong.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/scope-2-5140519064-youyurong.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/test.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/var-1-5110379024-wuhang.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/var-2-5100309127-hetianxing.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/var-3-5120309049-liaochao.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/compile_error/var-4-5140309552-wancheng.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/grammar_patch_1.mill" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/grammar_patch_2.mill" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/hello-5090379042-jiaxiao.mill" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/language_manual.mill" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/passed/basicopt1-5100309127-hetianxing.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/passed/builtin-5140519064-youyurong.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/passed/bulgarian-5110379024-wuhang.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/passed/expr-5110309085-jintianxing.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/passed/hanoi-5100379110-daibo.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/passed/hashmap-5100309127-hetianxing.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/passed/heapsort-5100379110-daibo.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/passed/horse-5100309153-yanghuan.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/passed/horse2-5100309153-yanghuan.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/passed/horse3-5100309153-yanghuan.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/passed/lvalue2-5110379024-wuhang.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/passed/magic-5100309153-yanghuan.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/passed/maxflow-5100379110-daibo.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/passed/prime-5100309153-yanghuan.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/passed/qsort-5100379110-daibo.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/passed/queens-5100379110-daibo.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/passed/spill2-5100379110-daibo.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/passed/superloop-5090379042-jiaxiao.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/passed/tak-5090379042-jiaxiao.mx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcase/semantic/passed/twinprime-5090379042-jiaxiao.mx" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -46,8 +348,8 @@
       <file leaf-file-name="typeResolver.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/MxCompiler/SemanticChecker/typeResolver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="455" column="12" selection-start-line="455" selection-start-column="12" selection-end-line="455" selection-end-column="12" />
+            <state relative-caret-position="190">
+              <caret line="453" column="30" selection-start-line="453" selection-start-column="30" selection-end-line="453" selection-end-column="30" />
             </state>
           </provider>
         </entry>
@@ -122,7 +424,7 @@
         <entry file="file://$PROJECT_DIR$/src/MxCompiler/Ast/BuildAST/ASTBuilder.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="190">
-              <caret line="530" column="5" lean-forward="true" selection-start-line="530" selection-start-column="5" selection-end-line="530" selection-end-column="5" />
+              <caret line="530" column="5" selection-start-line="530" selection-start-column="5" selection-end-line="530" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -219,7 +521,7 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-8" />
     <option name="width" value="977" />
     <option name="height" value="1038" />
@@ -426,7 +728,7 @@
       <workItem from="1524964075340" duration="3228000" />
       <workItem from="1524967375223" duration="294000" />
       <workItem from="1524967691047" duration="777000" />
-      <workItem from="1524990959576" duration="18077000" />
+      <workItem from="1524990959576" duration="18843000" />
     </task>
     <task id="LOCAL-00001" summary="AST building work">
       <created>1524575362052</created>
@@ -509,7 +811,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="224218000" />
+    <option name="totallyTimeSpent" value="224984000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -526,7 +828,7 @@
       <window_info anchor="right" id="Maven Projects" order="3" weight="0.3297587" />
       <window_info anchor="bottom" id="Database Changes" order="3" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="4" />
-      <window_info active="true" anchor="right" id="Run" order="9" visible="true" weight="0.33984375" />
+      <window_info active="true" anchor="right" id="Run" order="9" visible="true" weight="0.50130206" />
       <window_info anchor="bottom" id="Terminal" order="5" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
@@ -849,7 +1151,7 @@
     <entry file="file://$PROJECT_DIR$/src/MxCompiler/Ast/BuildAST/ASTBuilder.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="190">
-          <caret line="530" column="5" lean-forward="true" selection-start-line="530" selection-start-column="5" selection-end-line="530" selection-end-column="5" />
+          <caret line="530" column="5" selection-start-line="530" selection-start-column="5" selection-end-line="530" selection-end-column="5" />
         </state>
       </provider>
     </entry>
@@ -964,8 +1266,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/MxCompiler/SemanticChecker/typeResolver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="455" column="12" selection-start-line="455" selection-start-column="12" selection-end-line="455" selection-end-column="12" />
+        <state relative-caret-position="190">
+          <caret line="453" column="30" selection-start-line="453" selection-start-column="30" selection-end-line="453" selection-end-column="30" />
         </state>
       </provider>
     </entry>
