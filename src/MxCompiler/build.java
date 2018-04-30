@@ -17,10 +17,10 @@ import java.io.InputStream;
 
 public class build {
     public static void main(String[] args) throws Exception{
-     //       try {
-                    String inputFilePath = "E:\\compiler\\testcase\\semantic\\compile_error\\test.mx";
-                    InputStream is = new FileInputStream(inputFilePath);
-                    //InputStream is = System.in;
+            try {
+                    //String inputFilePath = "E:\\compiler\\testcase\\semantic\\compile_error\\test.mx";
+                    //InputStream is = new FileInputStream(inputFilePath);
+                    InputStream is = System.in;
                     ANTLRInputStream input = new ANTLRInputStream(is);
                     MxLexer lexer = new MxLexer(input);
                     CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -44,17 +44,17 @@ public class build {
 
                     if (!Localresolver.error.exceptionList.isEmpty()) {
                             Localresolver.error.printExceptions();
-//                            throw new Exception();
+                            throw new Exception();
                     }
                     if (!Typeresolver.error.exceptionList.isEmpty()) {
                             Typeresolver.error.printExceptions();
-//                            throw new Exception();
+                            throw new Exception();
                     }
-     //       }
-     //       catch(Exception e){
-                   // System.err.println(e.getMessage());
-     //               System.exit(1);
-     //       }
+            }
+            catch(Exception e){
+                    System.err.println(e.getMessage());
+                    System.exit(1);
+           }
     }
 
     }
