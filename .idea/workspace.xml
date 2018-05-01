@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/MxCompiler/build.java" line="54" />
+    <bookmark url="file://$PROJECT_DIR$/src/MxCompiler/build.java" line="62" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a0f4a68e-9013-490c-8d4f-cdeb20d678dc" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MxCompiler/SemanticChecker/typeResolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/SemanticChecker/typeResolver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MxCompiler/SemanticChecker/typeTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/SemanticChecker/typeTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MxCompiler/SemanticChecker/dereferenceChecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/SemanticChecker/dereferenceChecker.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MxCompiler/build.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/build.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -34,11 +33,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="build.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="build.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/MxCompiler/build.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="36" column="22" selection-start-line="36" selection-start-column="22" selection-end-line="36" selection-end-column="22" />
+            <state relative-caret-position="478">
+              <caret line="58" column="22" selection-start-line="58" selection-start-column="22" selection-end-line="58" selection-end-column="22" />
             </state>
           </provider>
         </entry>
@@ -46,29 +45,40 @@
       <file leaf-file-name="typeResolver.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/MxCompiler/SemanticChecker/typeResolver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1067">
-              <caret line="522" column="14" selection-start-line="522" selection-start-column="14" selection-end-line="522" selection-end-column="14" />
+            <state relative-caret-position="133">
+              <caret line="355" column="51" selection-start-line="355" selection-start-column="51" selection-end-line="355" selection-end-column="51" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="localScope.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/MxCompiler/SemanticChecker/localScope.java">
+      <file leaf-file-name="dereferenceChecker.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/MxCompiler/SemanticChecker/dereferenceChecker.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="304">
-              <caret line="20" column="23" selection-start-line="20" selection-start-column="23" selection-end-line="20" selection-end-column="23" />
+            <state relative-caret-position="2682">
+              <caret line="303" lean-forward="true" selection-start-line="303" selection-end-line="303" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#787#788#0" expanded="true" />
+                <element signature="e#819#820#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="typeTable.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/MxCompiler/SemanticChecker/typeTable.java">
+      <file leaf-file-name="astNode.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/MxCompiler/Ast/astNode.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="21" column="46" lean-forward="true" selection-start-line="21" selection-start-column="46" selection-end-line="21" selection-end-column="46" />
+            <state relative-caret-position="152">
+              <caret line="9" column="20" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="expr.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/MxCompiler/Ast/Expression/expr.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="76">
+              <caret line="5" column="28" lean-forward="true" selection-start-line="5" selection-start-column="28" selection-end-line="5" selection-end-column="28" />
             </state>
           </provider>
         </entry>
@@ -100,8 +110,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/Ast/TypeSpecifier/localScope.java" />
-        <option value="$PROJECT_DIR$/src/Ast/scope.java" />
         <option value="$PROJECT_DIR$/src/Ast/localScope.java" />
         <option value="$PROJECT_DIR$/src/SemanticCheck/scope.java" />
         <option value="$PROJECT_DIR$/README.md" />
@@ -148,9 +156,11 @@
         <option value="$PROJECT_DIR$/src/MxCompiler/Parser/MxListener.java" />
         <option value="$PROJECT_DIR$/src/MxCompiler/Parser/MxParser.java" />
         <option value="$PROJECT_DIR$/src/MxCompiler/SemanticChecker/localResolver.java" />
-        <option value="$PROJECT_DIR$/src/MxCompiler/build.java" />
-        <option value="$PROJECT_DIR$/src/MxCompiler/SemanticChecker/typeResolver.java" />
         <option value="$PROJECT_DIR$/src/MxCompiler/SemanticChecker/typeTable.java" />
+        <option value="$PROJECT_DIR$/src/MxCompiler/SemanticChecker/typeResolver.java" />
+        <option value="$PROJECT_DIR$/src/MxCompiler/Ast/astNode.java" />
+        <option value="$PROJECT_DIR$/src/MxCompiler/SemanticChecker/dereferenceChecker.java" />
+        <option value="$PROJECT_DIR$/src/MxCompiler/build.java" />
       </list>
     </option>
   </component>
@@ -170,9 +180,10 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="width" value="977" />
-    <option name="height" value="1038" />
+    <option name="x" value="317" />
+    <option name="y" value="151" />
+    <option name="width" value="1695" />
+    <option name="height" value="970" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -367,7 +378,7 @@
       <workItem from="1524964075340" duration="3228000" />
       <workItem from="1524967375223" duration="294000" />
       <workItem from="1524967691047" duration="777000" />
-      <workItem from="1524990959576" duration="42862000" />
+      <workItem from="1524990959576" duration="51524000" />
     </task>
     <task id="LOCAL-00001" summary="AST building work">
       <created>1524575362052</created>
@@ -446,11 +457,25 @@
       <option name="project" value="LOCAL" />
       <updated>1525002963598</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="add equalType func &amp;&amp; field access fix">
+      <created>1525076972527</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1525076972527</updated>
+    </task>
+    <task id="LOCAL-00013" summary="for build">
+      <created>1525077114304</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1525077114304</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="249003000" />
+    <option name="totallyTimeSpent" value="257665000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -467,11 +492,11 @@
       <window_info anchor="right" id="Maven Projects" order="3" weight="0.3297587" />
       <window_info anchor="bottom" id="Database Changes" order="3" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="4" />
-      <window_info active="true" anchor="right" id="Run" order="9" visible="true" weight="0.15494792" />
+      <window_info anchor="right" id="Run" order="9" visible="true" weight="0.2903646" />
       <window_info anchor="bottom" id="Terminal" order="5" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1842448" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19466145" />
       <window_info anchor="right" id="Database" order="4" weight="0.3297587" />
       <window_info anchor="bottom" id="ANTLR Preview" order="6" weight="0.0" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -534,7 +559,9 @@
     <MESSAGE value="fix ASTBuilder" />
     <MESSAGE value="update bash" />
     <MESSAGE value="add println print toString funcCall support" />
-    <option name="LAST_COMMIT_MESSAGE" value="add println print toString funcCall support" />
+    <MESSAGE value="add equalType func &amp;&amp; field access fix" />
+    <MESSAGE value="for build" />
+    <option name="LAST_COMMIT_MESSAGE" value="for build" />
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
@@ -580,13 +607,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-8">
           <caret line="2" column="31" selection-start-line="2" selection-start-column="31" selection-end-line="2" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/MxCompiler/Ast/Expression/expr.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="57">
-          <caret line="5" column="34" selection-start-line="5" selection-start-column="34" selection-end-line="5" selection-end-column="34" />
         </state>
       </provider>
     </entry>
@@ -660,13 +680,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="152">
           <caret line="14" column="24" selection-start-line="14" selection-start-column="24" selection-end-line="14" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/MxCompiler/SemanticChecker/dereferenceChecker.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -847,13 +860,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/MxCompiler/Ast/astNode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="24" selection-start-line="24" selection-end-line="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/MxCompiler/Ast/Declaration/globalVarDec.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="399">
@@ -891,13 +897,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/MxCompiler/build.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="36" column="22" selection-start-line="36" selection-start-column="22" selection-end-line="36" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/MxCompiler/SemanticChecker/localScope.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="304">
@@ -908,17 +907,50 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/MxCompiler/SemanticChecker/typeResolver.java">
+    <entry file="file://$PROJECT_DIR$/src/MxCompiler/SemanticChecker/typeTable.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1067">
-          <caret line="522" column="14" selection-start-line="522" selection-start-column="14" selection-end-line="522" selection-end-column="14" />
+        <state relative-caret-position="209">
+          <caret line="20" selection-start-line="20" selection-end-line="29" selection-end-column="9" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/MxCompiler/SemanticChecker/typeTable.java">
+    <entry file="file://$PROJECT_DIR$/src/MxCompiler/SemanticChecker/typeResolver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="21" column="46" lean-forward="true" selection-start-line="21" selection-start-column="46" selection-end-line="21" selection-end-column="46" />
+        <state relative-caret-position="133">
+          <caret line="355" column="51" selection-start-line="355" selection-start-column="51" selection-end-line="355" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/MxCompiler/Ast/Expression/expr.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="76">
+          <caret line="5" column="28" lean-forward="true" selection-start-line="5" selection-start-column="28" selection-end-line="5" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/MxCompiler/Ast/astNode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="9" column="20" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/MxCompiler/SemanticChecker/dereferenceChecker.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2682">
+          <caret line="303" lean-forward="true" selection-start-line="303" selection-end-line="303" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#787#788#0" expanded="true" />
+            <element signature="e#819#820#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/MxCompiler/build.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="478">
+          <caret line="58" column="22" selection-start-line="58" selection-start-column="22" selection-end-line="58" selection-end-column="22" />
         </state>
       </provider>
     </entry>

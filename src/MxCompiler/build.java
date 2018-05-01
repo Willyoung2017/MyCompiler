@@ -3,6 +3,7 @@ package MxCompiler;
 import MxCompiler.Ast.BuildAST.ASTBuilder;
 import MxCompiler.Ast.BuildAST.ASTViewer;
 import MxCompiler.Ast.abstractSyntaxTree;
+import MxCompiler.SemanticChecker.dereferenceChecker;
 import MxCompiler.SemanticChecker.localResolver;
 import MxCompiler.SemanticChecker.typeResolver;
 import MxCompiler.Parser.MxLexer;
@@ -42,12 +43,19 @@ public class build {
                     typeResolver Typeresolver = new typeResolver();
                     rootNode.accept(Typeresolver);
 
+                    dereferenceChecker DereferenceChecker = new dereferenceChecker();
+                    rootNode.accept(DereferenceChecker);
+
                     if (!Localresolver.error.exceptionList.isEmpty()) {
                             Localresolver.error.printExceptions();
                             throw new Exception();
                     }
                     if (!Typeresolver.error.exceptionList.isEmpty()) {
                             Typeresolver.error.printExceptions();
+                            throw new Exception();
+                    }
+                    if (!DereferenceChecker.error.exceptionList.isEmpty()){
+                            DereferenceChecker.error.printExceptions();;
                             throw new Exception();
                     }
             }
