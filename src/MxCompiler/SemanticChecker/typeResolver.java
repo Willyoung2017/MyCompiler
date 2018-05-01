@@ -141,6 +141,13 @@ public class typeResolver implements ASTVisitor {
         if (node != null){
             node.parameters.stream().forEachOrdered(this::visit);
             visit(node.funcStmt);
+            if(!node.name.equals(thisClass.type.name))
+                error.add(new semanticException("False constructFunc!"+node.loc.locString()));
+            for(stmt statement: node.funcStmt.stmtList){
+                if(statement instanceof returnStmt && ((returnStmt)statement).returnExpr != null){
+                    error.add(new semanticException("ConstructFunc cannot have return statement!"+node.loc.locString()));
+                }
+            }
         }
     }
 
@@ -367,11 +374,20 @@ public class typeResolver implements ASTVisitor {
                     || node.operator.equals(binaryOp.LEQ)
                     || node.operator.equals(binaryOp.GREATER)
                     || node.operator.equals(binaryOp.GEQ)){
-                if (!(node.leftOperand.type instanceof intType)){
+                /*if (!(node.leftOperand.type instanceof intType)){
                     error.add(new semanticException("Left Operand must be int type!"+node.leftOperand.loc.locString()));
                 }
                 if (!(node.rightOperand.type instanceof intType)) {
                     error.add(new semanticException("Right Operand must be int type" + node.loc.locString()));
+                }*/
+                if ((node.rightOperand.type instanceof intType && node.leftOperand.type instanceof intType)) {
+                    node.type = new intType();
+                }
+                else if ((node.rightOperand.type instanceof stringType && node.leftOperand.type instanceof stringType)) {
+                    node.type = new stringType();
+                }
+                else {
+                    error.add(new semanticException("Operands error!"+node.loc.locString()));
                 }
                 node.type = new boolType();
             }
@@ -379,7 +395,7 @@ public class typeResolver implements ASTVisitor {
                         || node.operator.equals(binaryOp.NOT_EQUAL)) {
                 if (!equalType(node.leftOperand,node.rightOperand)
                         || (!(node.leftOperand.type instanceof stringType)
-                        && !(node.leftOperand.type instanceof intType) && !(node.leftOperand.type instanceof classType) && !(node.leftOperand.type instanceof arrayType))) {
+                        && !(node.leftOperand.type instanceof intType) && !(node.leftOperand.type instanceof classType) && !(node.leftOperand.type instanceof boolType) && !(node.leftOperand.type instanceof arrayType))) {
                     error.add(new semanticException("Operand is wrong"+node.loc.locString()));
                 }
                 node.type = new boolType();
@@ -447,6 +463,10 @@ public class typeResolver implements ASTVisitor {
         if (node != null){
             visit(node.newName);
             node.type = node.newName;
+            if(node.type instanceof classType){
+                node.name = node.type.name;
+                //error.add(new semanticException("hh"+node.name));
+            }
           //  error.add(new semanticException("jjjj"+node.type));
         }
     }
@@ -486,8 +506,12 @@ public class typeResolver implements ASTVisitor {
            }
            if(neijian) return;
             astNode ent;
-            String className = node.obj.name;
-            ent = typeTable.get(error, className, node);
+            String className = node.obj.type.name;
+            if(node.obj.name != null && node.obj.name.equals("this"))
+                ent = thisClass;
+            else
+                ent = node.scp.get(error, className, node.loc);
+
             //error.add(new semanticException("gggg"+ent));
             if (ent == null){
                 node.type = new voidType();
@@ -498,7 +522,7 @@ public class typeResolver implements ASTVisitor {
                 error.add(new semanticException("The memberfunc accessed not found!" + node.loc.locString()));
                 node.type = new voidType();
             } else {
-                node.type = memEnt.type;
+                node.type = ((funcDec)memEnt).functionType;
             }
         }
     }
@@ -507,28 +531,13 @@ public class typeResolver implements ASTVisitor {
     public void visit(fieldmemAccessExpr node) {
         if (node != null) {
             visit(node.obj);
-            String className = node.obj.name;
-            if (node.obj instanceof funcCall){
-                className = ((funcCall) node.obj).obj.name;
-            }
-            if (node.obj instanceof indexAccessExpr){
-                className =((indexAccessExpr)(node.obj)).array.name;
-           //     error.add(new semanticException("hhh"+className));
-            }
             astNode ent;
+            String className = node.obj.type.name;
             if(node.obj.name != null && node.obj.name.equals("this"))
                 ent = thisClass;
-            else {
-               // if(!(node.obj instanceof indexAccessExpr))
-                ent = typeTable.get(error, className, node);
-                //error.add(new semanticException(className+"hhhhhh"));
-                //error.add(new semanticException(className));
-                //else {
-                 //   ent = node.scp.get(error, className, node.loc);
-                  //  ent = typeTable.get(error,ent.type.name,node);
-                //}
-               // error.add(new semanticException("ee"+className));
-            }
+            else
+                ent = node.scp.get(error, className, node.loc);
+
             if (ent == null) {
                 node.type = new voidType();
                 return;
@@ -604,7 +613,7 @@ public class typeResolver implements ASTVisitor {
                 error.add(new semanticException("array index must be Inttype!"+node.loc.locString()));
             }
             node.name = node.array.name;
-            //error.add(new semanticException("hhh"+node.type));
+            //error.add(new semanticException("ggg"+node.type));
             /*if(node.array instanceof identifier) {
                 node.name= node.array.name;
                 astNode ent = node.scp.get(error, node.array.name, node.loc);
@@ -705,7 +714,9 @@ public class typeResolver implements ASTVisitor {
             }
         }
         node.type = node.baseType;
+        //if(node.baseType == null) return;
         node.name = node.baseType.name;
+        //error.add(new semanticException("hhh"+node.baseType));
     }
 
     @Override

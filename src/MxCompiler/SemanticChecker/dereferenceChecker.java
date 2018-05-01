@@ -239,6 +239,7 @@ public class dereferenceChecker implements ASTVisitor {
         visit(node.operand);
         if(!node.operand.isLvalue)
             error.add(new semanticException("selfDec must be LeftValue!"+node.loc.locString()));
+        node.isLvalue = false;
     }
 
     @Override
@@ -247,6 +248,7 @@ public class dereferenceChecker implements ASTVisitor {
         visit(node.operand);
         if(!node.operand.isLvalue)
             error.add(new semanticException("selfInc must be LeftValue!"+node.loc.locString()));
+        node.isLvalue = false;
     }
 
     @Override

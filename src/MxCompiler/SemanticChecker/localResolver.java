@@ -63,6 +63,7 @@ public class localResolver implements ASTVisitor {
         toplevelScope toplevel = new toplevelScope();
         scopeStack.add(toplevel);
         for (dec declaration: node.declarations){
+            if(declaration == null) continue;
             declaration.setScope(toplevel);
             if (!(declaration instanceof globalVarDec))
                 toplevel.declareEntity(error, declaration);
@@ -83,11 +84,16 @@ public class localResolver implements ASTVisitor {
     @Override
     public void visit(classDec node){
         if(node != null) {
+            node.type = new classType(node.name);
             localScope scp = new localScope(scopeStack.peek());
             thisClass = node;
             for(memberDec dec : node.classMems){
                 scp.declareEntity(error,dec.declaration);
             }
+            astNode thisNode =new astNode();
+            thisNode.name = "this";
+            thisNode.loc = node.loc;
+            scp.declareEntity(error,thisNode);
             scopeStack.push(scp);
             node.setScope(scp);
             node.classMems.stream().forEachOrdered(this::visit);
@@ -98,6 +104,7 @@ public class localResolver implements ASTVisitor {
     @Override
     public void visit(funcDec node) {
         if(node != null) {
+            node.type = node.functionType;
             visit(node.functionType);
             pushScope(node.parameterList);
             node.parameterList.forEach(this::visit);
@@ -109,7 +116,9 @@ public class localResolver implements ASTVisitor {
     @Override
     public void visit(globalVarDec node) {
         if(node != null){
+            node.type = node.variableType;
             (scopeStack.peek()).declareEntity(error, node);
+            if(node.name.equals("this")) error.add(new semanticException("This is reserved word!"+node.loc.locString()));
             visit(node.variableType);
             visit(node.variableExpression);
         }
@@ -127,6 +136,7 @@ public class localResolver implements ASTVisitor {
     @Override
     public void visit(varDec node) {
         if(node != null){
+            node.type = node.variableType;
             node.setScope(scopeStack.peek());
             visit(node.variableType);
             visit(node.variableExpression);
