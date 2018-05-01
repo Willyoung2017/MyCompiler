@@ -245,7 +245,7 @@ public class typeResolver implements ASTVisitor {
                 node.type = node.returnExpr.type;
             }
             else node.type = new voidType();
-            if(funcreturnType != null && funcreturnType.getClass() != node.type.getClass()){
+            if(funcreturnType != null && !equalType(funcreturnType,node.type)){
                 error.add(new semanticException("Wrong returnType!"+node.loc.locString()));
             }
         }
