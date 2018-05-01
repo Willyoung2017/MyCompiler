@@ -67,9 +67,6 @@ public class typeResolver implements ASTVisitor {
             }
             if(node.functionType instanceof arrayType && ((arrayType)node.functionType).baseType instanceof classType)
                 typeTable.add(error, node.name, (node.functionType));
-
-               // if (!exist && !node.name.equals("main") && !(node.functionType instanceof voidType)) error.add(new semanticException("Function has no return!"+node.loc.locString()));
-
             funcreturnType = null;
         }
     }
@@ -88,7 +85,6 @@ public class typeResolver implements ASTVisitor {
             }
             if(node.variableType instanceof arrayType && getType((arrayType) node.variableType) instanceof classType) {
                 astNode class_node = getType((arrayType) node.variableType);
-                //typeTable.add(error, ((arrayType) node.variableType).baseType.name, node.variableType);
                 astNode ent = node.scp.get(error, class_node.name, node.loc);
                 if (ent != null) {
                     typeTable.typeMap.put(node.name, ent);
@@ -97,22 +93,7 @@ public class typeResolver implements ASTVisitor {
             if(node.variableExpression!= null && !equalType(node.variableType, node.variableExpression)){
                 error.add(new semanticException("Variable type must be the same!"+node.loc.locString()));
             }
-            /*if (node.variableExpression != null
-                    && (node.variableExpression.type.getClass() == node.variableType.getClass())
-                    && node.variableType instanceof classType
-                    && (!node.variableType.name.equals(node.variableExpression.type.name))){
-                    error.add(new semanticException("Variable type must be the same!"+node.loc.locString()));
-            }
-            if (node.variableExpression != null
-                    && (node.variableExpression.type.getClass() == node.variableType.getClass())
-                    && node.variableType instanceof arrayType
-                    && (((arrayType) node.variableType).baseType.getClass() != ((arrayType)node.variableExpression.type).baseType.getClass())){
-                error.add(new semanticException("Variable type must be the same!"+node.loc.locString()));
-            }
-            if(node.variableExpression != null && node.variableExpression.type.getClass() != node.variableType.getClass()){
-                if (!(node.variableExpression.type instanceof nullType && node.variableType instanceof classType))
-                    error.add(new semanticException("Variable type must be same!hhh"+node.loc.locString()));
-            }*/
+
         }
     }
 
@@ -145,7 +126,6 @@ public class typeResolver implements ASTVisitor {
             }
             if(node.variableType instanceof arrayType && getType((arrayType) node.variableType) instanceof classType) {
                 astNode class_node = getType((arrayType) node.variableType);
-                //typeTable.add(error, ((arrayType) node.variableType).baseType.name, node.variableType);
                 astNode ent = node.scp.get(error, class_node.name, node.loc);
                 if (ent != null) {
                     typeTable.typeMap.put(node.name, ent);
@@ -155,22 +135,6 @@ public class typeResolver implements ASTVisitor {
             if(node.variableExpression!= null && !equalType(node.variableType, node.variableExpression)){
                 error.add(new semanticException("Variable type must be the same! "+node.loc.locString()));
             }
-            /*if (node.variableExpression != null
-                    && (node.variableExpression.type.getClass() == node.variableType.getClass())
-                    && node.variableType instanceof classType
-                    && !node.variableType.name.equals(node.variableExpression.type.name)){
-                    error.add(new semanticException("Variable type must be the same!"+node.loc.locString()));
-            }
-            if (node.variableExpression != null
-                    && (node.variableExpression.type.getClass() == node.variableType.getClass())
-                    && node.variableType instanceof arrayType
-                    && (((arrayType) node.variableType).baseType.getClass() != ((arrayType)node.variableExpression.type).baseType.getClass())){
-                error.add(new semanticException("Variable type must be the same!"+node.loc.locString()));
-            }
-            if(node.variableExpression != null && node.variableExpression.type.getClass() != node.variableType.getClass()){
-                if (!(node.variableExpression.type instanceof nullType))
-                    error.add(new semanticException("Variable type must be same!"+node.loc.locString()));
-            }*/
         }
     }
 
@@ -265,7 +229,6 @@ public class typeResolver implements ASTVisitor {
             }
             if(node.variableType instanceof arrayType && getType((arrayType) node.variableType) instanceof classType) {
                 astNode class_node = getType((arrayType) node.variableType);
-                //typeTable.add(error, ((arrayType) node.variableType).baseType.name, node.variableType);
                 astNode ent = node.scp.get(error, class_node.name, node.loc);
                 if (ent != null) {
                     typeTable.typeMap.put(node.name, ent);
@@ -274,22 +237,7 @@ public class typeResolver implements ASTVisitor {
 
             if(node.variableExpr!=null && !equalType(node.variableType,node.variableExpr))
                 error.add(new semanticException("Variable type must be the same !"+node.loc.locString()));
-            /*if (node.variableExpr != null
-                    && (node.variableExpr.type.getClass() == node.variableType.getClass())
-                    && node.variableType instanceof classType
-                    && !node.variableType.name.equals(node.variableExpr.type.name)){
-                    error.add(new semanticException("Variable type must be the same!"+node.loc.locString()));
-            }
-            if (node.variableExpr != null
-                    && (node.variableExpr.type.getClass() == node.variableType.getClass())
-                    && node.variableType instanceof arrayType
-                    && (((arrayType) node.variableType).baseType.getClass() != ((arrayType)node.variableExpr.type).baseType.getClass())){
-                error.add(new semanticException("Variable type must be the same!"+node.loc.locString()));
-            }
-            if(node.variableExpr != null && node.variableExpr.type.getClass() != node.variableType.getClass()){
-                if (!((node.variableExpr.type instanceof nullType) &&(node.variableType instanceof classType)))
-                    error.add(new semanticException("Variable type must be same!"+node.loc.locString()));
-            }*/
+
         }
     }
 
@@ -357,12 +305,6 @@ public class typeResolver implements ASTVisitor {
                     || node.operator.equals(binaryOp.LEQ)
                     || node.operator.equals(binaryOp.GREATER)
                     || node.operator.equals(binaryOp.GEQ)){
-                /*if (!(node.leftOperand.type instanceof intType)){
-                    error.add(new semanticException("Left Operand must be int type!"+node.leftOperand.loc.locString()));
-                }
-                if (!(node.rightOperand.type instanceof intType)) {
-                    error.add(new semanticException("Right Operand must be int type" + node.loc.locString()));
-                }*/
                 if ((node.rightOperand.type instanceof intType && node.leftOperand.type instanceof intType)) {
                     node.type = new intType();
                 }
@@ -387,23 +329,6 @@ public class typeResolver implements ASTVisitor {
                 if(!equalType(node.leftOperand, node.rightOperand)){
                     error.add(new semanticException("Left and Right Operand of Assign must be the same!"+node.loc.locString()));
                 }
-                //error.add(new semanticException("hhh"+node.leftOperand.type+"hhhh"+node.rightOperand.type));
-                /*if ((node.rightOperand.type.getClass() != node.leftOperand.type.getClass())){
-//                      if (node.rightOperand.)
-                      //error.add(new semanticException("kkk"+node.leftOperand.type.toString()));
-                      if (!(node.rightOperand.type instanceof nullType))
-                         error.add(new semanticException("Left and Right Operand of Assign must be the same!"+node.loc.locString()));
-                }
-                if ((node.leftOperand.type.getClass() == node.rightOperand.type.getClass())
-                        && node.leftOperand.type instanceof classType
-                        && !node.leftOperand.type.name.equals(node.rightOperand.type.name)) {
-                    error.add(new semanticException("Left and Right Operand of Assign must be the same!" + node.loc.locString()));
-                }
-                if ((node.leftOperand.type.getClass() == node.rightOperand.type.getClass())
-                        && node.leftOperand.type instanceof arrayType
-                        && (((arrayType) node.leftOperand.type).baseType.getClass() != ((arrayType)node.rightOperand.type).baseType.getClass())){
-                    error.add(new semanticException("Left and Right Operand of Assign must be the same!"+node.loc.locString()));
-                }*/
                 node.type = node.rightOperand.type;
             }
         }
@@ -424,11 +349,8 @@ public class typeResolver implements ASTVisitor {
     @Override
     public void visit(identifier node) {
         astNode ent = node.ent;
-//        error.add(new semanticException("gg"+node.name));
 
         if (ent != null) {
- //           if(ent.type == null)
-//            error.add(new semanticException("jjj"+ent.type.toString()+node.name));
             node.type = ent.type;
         }
         else node.type = new voidType();//2333
@@ -448,9 +370,7 @@ public class typeResolver implements ASTVisitor {
             node.type = node.newName;
             if(node.type instanceof classType){
                 node.name = node.type.name;
-                //error.add(new semanticException("hh"+node.name));
             }
-          //  error.add(new semanticException("jjjj"+node.type));
         }
     }
 
@@ -495,7 +415,6 @@ public class typeResolver implements ASTVisitor {
             else
                 ent = ((toplevelScope) localResolver.scopeStack.peek()).get(error, className, node.loc);
 
-            //error.add(new semanticException("gggg"+ent));
             if (ent == null){
                 node.type = new voidType();
                 return;
@@ -526,14 +445,12 @@ public class typeResolver implements ASTVisitor {
                 return;
             }
             astNode memEnt = ent.scp.get(error, node.name, node.loc);
-            //error.add(new semanticException("class"+ent));
             if (memEnt == null) {
                 error.add(new semanticException("The member accessed not found!" + node.loc.locString()));
                 node.type = new voidType();
             } else {
                 node.type = ((varDec)memEnt).variableType;
             }
-            //error.add(new semanticException("hhh"+ent));
         }
     }
 
@@ -597,22 +514,6 @@ public class typeResolver implements ASTVisitor {
                 error.add(new semanticException("array index must be Inttype!"+node.loc.locString()));
             }
             node.name = node.array.name;
-            //error.add(new semanticException("ggg"+node.type));
-            /*if(node.array instanceof identifier) {
-                node.name= node.array.name;
-                astNode ent = node.scp.get(error, node.array.name, node.loc);
-                if(ent != null){
-                    node.type = ((arrayType)node.array.type).type;
-                    //error.add(new semanticException(node.loc.locString()+node.type));
-                }
-                else {
-                    node.type = new voidType();
-                }
-            }
-            else {
-                node.type = node.array.type;
-                node.name = node.array.name;
-            }*/
         }
     }
 
@@ -698,9 +599,7 @@ public class typeResolver implements ASTVisitor {
             }
         }
         node.type = node.baseType;
-        //if(node.baseType == null) return;
         node.name = node.baseType.name;
-        //error.add(new semanticException("hhh"+node.baseType));
     }
 
     @Override

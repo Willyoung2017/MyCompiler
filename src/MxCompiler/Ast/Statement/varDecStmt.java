@@ -6,7 +6,6 @@ import MxCompiler.Ast.TypeSpecifier.typ;
 
 public class varDecStmt extends stmt{
     public typ variableType;
-    //public String variableName;
     public expr variableExpr;
 
     public varDecStmt(){
