@@ -388,6 +388,7 @@ public class typeResolver implements ASTVisitor {
                 if(!equalType(node.leftOperand, node.rightOperand)){
                     error.add(new semanticException("Left and Right Operand of Assign must be the same!"+node.loc.locString()));
                 }
+                //error.add(new semanticException("hhh"+node.leftOperand.type+"hhhh"+node.rightOperand.type));
                 /*if ((node.rightOperand.type.getClass() != node.leftOperand.type.getClass())){
 //                      if (node.rightOperand.)
                       //error.add(new semanticException("kkk"+node.leftOperand.type.toString()));
@@ -404,7 +405,7 @@ public class typeResolver implements ASTVisitor {
                         && (((arrayType) node.leftOperand.type).baseType.getClass() != ((arrayType)node.rightOperand.type).baseType.getClass())){
                     error.add(new semanticException("Left and Right Operand of Assign must be the same!"+node.loc.locString()));
                 }*/
-                node.type = node.leftOperand.type;
+                node.type = node.rightOperand.type;
             }
         }
     }

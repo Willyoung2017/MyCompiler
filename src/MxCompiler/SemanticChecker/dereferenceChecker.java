@@ -3,6 +3,7 @@ package MxCompiler.SemanticChecker;
 import MxCompiler.Ast.BuildAST.ASTVisitor;
 import MxCompiler.Ast.Declaration.*;
 import MxCompiler.Ast.Expression.BinaryExpression.binaryExpr;
+import MxCompiler.Ast.Expression.BinaryExpression.binaryOp;
 import MxCompiler.Ast.Expression.PrimaryExpression.*;
 import MxCompiler.Ast.Expression.SuffixExpression.*;
 import MxCompiler.Ast.Expression.UnaryExpression.unaryExpr;
@@ -154,7 +155,7 @@ public class dereferenceChecker implements ASTVisitor {
     public void visit(binaryExpr node) {
         if(node == null) return;
         visit(node.leftOperand);
-        if(!node.leftOperand.isLvalue)
+        if(node.operator.equals(binaryOp.ASSIGN)&&!node.leftOperand.isLvalue)
             error.add(new semanticException("Left Operand must be leftvalue!"+node.loc.locString()));
         visit(node.rightOperand);
     }
@@ -222,7 +223,7 @@ public class dereferenceChecker implements ASTVisitor {
     public void visit(funcCall node) {
         if(node == null) return;
         visit(node.obj);
-        node.isLvalue = node.obj.isLvalue;
+        node.isLvalue = false;
     }
 
     @Override
