@@ -19,7 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class localResolver implements ASTVisitor {
-    public LinkedList<scope> scopeStack;
+    public static LinkedList<scope> scopeStack;
     public compilationError error;
     public classDec thisClass;
 

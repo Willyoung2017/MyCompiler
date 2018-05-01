@@ -20,6 +20,7 @@ public class typeResolver implements ASTVisitor {
     private MxCompiler.SemanticChecker.typeTable typeTable;
     public compilationError error;
     public classDec thisClass;
+    public typ funcreturnType;
     public typeResolver(){
         typeTable = new typeTable();
         error = new compilationError();
@@ -58,6 +59,7 @@ public class typeResolver implements ASTVisitor {
             boolean exist = false;
             visit(node.functionType);
             node.type = node.functionType;
+            funcreturnType = node.functionType;
             node.parameterList.stream().forEachOrdered(this::visit);
             visit(node.functionStmt);
             if (node.functionType instanceof classType){
@@ -65,32 +67,10 @@ public class typeResolver implements ASTVisitor {
             }
             if(node.functionType instanceof arrayType && ((arrayType)node.functionType).baseType instanceof classType)
                 typeTable.add(error, node.name, (node.functionType));
-            if (node.functionType != null){
-                for (stmt statement: node.functionStmt.stmtList){
-                    if(statement instanceof ifStmt){
-                         if(((ifStmt)statement).ifBody instanceof returnStmt) {
-                             exist = true;
-                             if(!equalType(node.functionType, ((ifStmt)statement).ifBody.type)){
-                                 error.add(new semanticException("Function's returnType is wrong!"+statement.loc.locString()));
-                             }
-                         }
-                         else if (((ifStmt)statement).elseBody instanceof returnStmt){
-                             exist = true;
-                             if(!equalType(node.functionType, ((ifStmt)statement).elseBody.type)){
-                                 error.add(new semanticException("Function's returnType is wrong!"+statement.loc.locString()));
-                             }
-                         }
-                    }
-                    if (statement instanceof returnStmt){
-                        exist = true;
-                        if(!equalType(node.functionType, ((returnStmt)statement).type)){
-                            error.add(new semanticException("Function's returnType is wrong!"+statement.loc.locString()));
-                        }
-                    }
-                }
+
                // if (!exist && !node.name.equals("main") && !(node.functionType instanceof voidType)) error.add(new semanticException("Function has no return!"+node.loc.locString()));
 
-            }
+            funcreturnType = null;
         }
     }
 
@@ -265,6 +245,9 @@ public class typeResolver implements ASTVisitor {
                 node.type = node.returnExpr.type;
             }
             else node.type = new voidType();
+            if(funcreturnType != null && funcreturnType.getClass() != node.type.getClass()){
+                error.add(new semanticException("Wrong returnType!"+node.loc.locString()));
+            }
         }
     }
 
@@ -510,7 +493,7 @@ public class typeResolver implements ASTVisitor {
             if(node.obj.name != null && node.obj.name.equals("this"))
                 ent = thisClass;
             else
-                ent = node.scp.get(error, className, node.loc);
+                ent = ((toplevelScope) localResolver.scopeStack.peek()).get(error, className, node.loc);
 
             //error.add(new semanticException("gggg"+ent));
             if (ent == null){
@@ -536,13 +519,14 @@ public class typeResolver implements ASTVisitor {
             if(node.obj.name != null && node.obj.name.equals("this"))
                 ent = thisClass;
             else
-                ent = node.scp.get(error, className, node.loc);
+                ent = ((toplevelScope) localResolver.scopeStack.peek()).get(error, className, node.loc);
 
             if (ent == null) {
                 node.type = new voidType();
                 return;
             }
-            astNode memEnt = ent.scp.entities.get(node.name);
+            astNode memEnt = ent.scp.get(error, node.name, node.loc);
+            //error.add(new semanticException("class"+ent));
             if (memEnt == null) {
                 error.add(new semanticException("The member accessed not found!" + node.loc.locString()));
                 node.type = new voidType();
