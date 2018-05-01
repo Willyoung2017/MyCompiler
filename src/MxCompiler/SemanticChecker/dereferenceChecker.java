@@ -173,12 +173,12 @@ public class dereferenceChecker implements ASTVisitor {
 
     @Override
     public void visit(identifier node) {
-        astNode ent = node.ent;
+        /*astNode ent = node.ent;
         if(ent != null){
             if(ent.type instanceof arrayType)
                 node.isLvalue = false;
             else node.isLvalue = true;
-        }
+        }*/
     }
 
     @Override
