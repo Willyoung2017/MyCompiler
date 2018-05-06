@@ -629,7 +629,7 @@ public class ASTBuilder extends MxBaseListener {
         else if (ctx.constant() != null){
             property.put(ctx, property.get(ctx.constant()));
         }
-        else if (ctx.LeftParen() != null){
+        else if (ctx.LeftParen() != null && ctx.expression() != null){
             property.put(ctx, property.get(ctx.expression()));
         }
         else if (ctx.New() != null){

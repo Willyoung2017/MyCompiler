@@ -176,7 +176,7 @@ primaryExpression
     :   Identifier
     |   constant
     |   LeftParen expression RightParen
-    |   New typeSpecifier
+    |   New typeSpecifier ('('')')?
     ;
 
 constant
@@ -221,7 +221,7 @@ Identifier
         )*
     ;
 
-fvck : StringConstant;
+//fvck : StringConstant;
 fragment
 Nondigit
     :   [a-zA-Z_]

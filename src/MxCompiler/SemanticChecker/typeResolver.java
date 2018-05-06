@@ -371,6 +371,9 @@ public class typeResolver implements ASTVisitor {
             if(node.type instanceof classType){
                 node.name = node.type.name;
             }
+            if(node.type instanceof voidType){
+                error.add(new semanticException("Cannot new a void type!"+node.loc.locString()));
+            }
         }
     }
 
@@ -477,24 +480,25 @@ public class typeResolver implements ASTVisitor {
                     node.type = new stringType();
                 }
                 else{
-                if(!(((identifier) node.obj).ent instanceof funcDec)){
-                    error.add(new semanticException("This is not a function!"+node.loc.locString()));
-                }
-                else {
-                    if (((funcDec) ((identifier) node.obj).ent).parameterList.size() != node.parameters.size()) {
-                        error.add(new semanticException("Parameters inconsistent!" + node.loc.locString()));
-                    } else {
-                        for (varDec para : ((funcDec) ((identifier) node.obj).ent).parameterList) {
-                            expr funccall_para = node.parameters.get(i);
-                            visit(funccall_para);
-                            if (funccall_para.type.getClass() != para.variableType.getClass() && !(funccall_para.type instanceof nullType)) {
-                                error.add(new semanticException("Parameter type is wrong" + node.loc.locString()));
-                            }
-                            ++i;
-                        }
+                    if(!(((identifier) node.obj).ent instanceof funcDec)){
+                        error.add(new semanticException("This is not a function!"+node.loc.locString()));
                     }
-                    node.type = ((funcDec) ((identifier) node.obj).ent).functionType;
-                }
+                    else {
+                        if (((funcDec) ((identifier) node.obj).ent).parameterList.size() != node.parameters.size()) {
+                            error.add(new semanticException("Parameters inconsistent!" + node.loc.locString()));
+                        }
+                        else {
+                            for (varDec para : ((funcDec) ((identifier) node.obj).ent).parameterList) {
+                                expr funccall_para = node.parameters.get(i);
+                                visit(funccall_para);
+                                if (funccall_para.type.getClass() != para.variableType.getClass() && !(funccall_para.type instanceof nullType)) {
+                                    error.add(new semanticException("Parameter type is wrong" + node.loc.locString()));
+                                }
+                                ++i;
+                            }
+                        }
+                        node.type = ((funcDec) ((identifier) node.obj).ent).functionType;
+                    }
                 }
             }
         }

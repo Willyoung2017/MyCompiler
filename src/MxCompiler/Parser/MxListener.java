@@ -358,14 +358,4 @@ public interface MxListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTypeSpecifier(MxParser.TypeSpecifierContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MxParser#fvck}.
-	 * @param ctx the parse tree
-	 */
-	void enterFvck(MxParser.FvckContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MxParser#fvck}.
-	 * @param ctx the parse tree
-	 */
-	void exitFvck(MxParser.FvckContext ctx);
 }
