@@ -147,6 +147,8 @@ unaryExpression
     |   Not suffixExpression
     |   Plus suffixExpression
     |   Minus suffixExpression
+    |   Tilde unaryExpression
+    |   Minus unaryExpression
     ;
 
 suffixExpression
