@@ -497,11 +497,15 @@ public class ASTBuilder extends MxBaseListener {
             treeNode.operator = unaryOp.DECREMENT;
             property.get(ctx).loc = new location(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine());
         }
-        else if (ctx.Tilde() != null){
+        else if (ctx.Tilde() != null) {
             unaryExpr treeNode = new unaryExpr();
             property.put(ctx, treeNode);
             treeNode.operator = unaryOp.BITWISE_NOT;
-            treeNode.operand = (expr) property.get(ctx.suffixExpression());
+            if (ctx.unaryExpression() != null) {
+                treeNode.operand = (expr) property.get(ctx.unaryExpression());
+            } else {
+                treeNode.operand = (expr) property.get(ctx.suffixExpression());
+            }
             property.get(ctx).loc = new location(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine());
         }
         else if (ctx.Not() != null){
@@ -518,12 +522,17 @@ public class ASTBuilder extends MxBaseListener {
             treeNode.operator = unaryOp.POS;
             property.get(ctx).loc = new location(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine());
         }
-        else if (ctx.Minus() != null){
+        else if (ctx.Minus() != null) {
             unaryExpr treeNode = new unaryExpr();
             property.put(ctx, treeNode);
-            treeNode.operand = (expr) property.get(ctx.suffixExpression());
+            if (ctx.unaryExpression() != null) {
+                treeNode.operand = (expr) property.get(ctx.unaryExpression());
+            } else {
+                treeNode.operand = (expr) property.get(ctx.suffixExpression());
+            }
             treeNode.operator = unaryOp.NEG;
             property.get(ctx).loc = new location(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine());
+
         }
         else {
             property.put(ctx, property.get(ctx.suffixExpression()));
