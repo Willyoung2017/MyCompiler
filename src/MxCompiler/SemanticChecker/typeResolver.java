@@ -511,9 +511,6 @@ public class typeResolver implements ASTVisitor {
     public void visit(indexAccessExpr node) {
         if (node != null){
             visit(node.array);
-            if(node.array instanceof newExpr){
-                error.add(new semanticException("New array cannot be accessed immediately!"+node.loc.locString()));
-            }
             if((node.array.type instanceof arrayType)){
                 node.type = ((arrayType)(node.array.type)).baseType;
             }

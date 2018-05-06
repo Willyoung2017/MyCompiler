@@ -3,6 +3,7 @@ package MxCompiler;
 import MxCompiler.Ast.BuildAST.ASTBuilder;
 import MxCompiler.Ast.BuildAST.ASTViewer;
 import MxCompiler.Ast.abstractSyntaxTree;
+import MxCompiler.Parser.verboseListener;
 import MxCompiler.SemanticChecker.dereferenceChecker;
 import MxCompiler.SemanticChecker.localResolver;
 import MxCompiler.SemanticChecker.typeResolver;
@@ -26,6 +27,9 @@ public class build {
                     MxLexer lexer = new MxLexer(input);
                     CommonTokenStream tokens = new CommonTokenStream(lexer);
                     MxParser parser = new MxParser(tokens);
+                    parser.removeErrorListeners();
+                    verboseListener verboseListener = new verboseListener();
+                    parser.addErrorListener(verboseListener);
                     ParseTree tree = parser.program();
 
                     ParseTreeWalker walker = new ParseTreeWalker();
@@ -34,8 +38,8 @@ public class build {
 
                     abstractSyntaxTree rootNode = astBuilder.getRootNode();
 
-                    //ASTViewer viewer = new ASTViewer(System.out);
-                    //rootNode.accept(viewer);
+                    ASTViewer viewer = new ASTViewer(System.out);
+                    rootNode.accept(viewer);
 
                     localResolver Localresolver = new localResolver();
                     rootNode.accept(Localresolver);
@@ -45,6 +49,11 @@ public class build {
 
                     dereferenceChecker DereferenceChecker = new dereferenceChecker();
                     rootNode.accept(DereferenceChecker);
+
+                    if(!verboseListener.error.exceptionList.isEmpty()){
+                        verboseListener.error.printExceptions();
+                        throw new Exception();
+                    }
 
                     if (!Localresolver.error.exceptionList.isEmpty()) {
                             Localresolver.error.printExceptions();
@@ -58,6 +67,8 @@ public class build {
                             DereferenceChecker.error.printExceptions();;
                             throw new Exception();
                     }
+
+
             }
             catch(Exception e){
                     System.err.println(e.getMessage());

@@ -217,13 +217,18 @@ New : 'new';
 Class : 'class';
 
 Identifier
-    :   Nondigit
+    :   Nondigit1
         (   Nondigit
         |   Digit
         )*
     ;
 
 //fvck : StringConstant;
+fragment
+Nondigit1
+    :   [a-zA-Z]
+    ;
+
 fragment
 Nondigit
     :   [a-zA-Z_]
