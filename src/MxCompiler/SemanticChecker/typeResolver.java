@@ -326,7 +326,7 @@ public class typeResolver implements ASTVisitor {
                 node.type = new boolType();
             }
             else if (node.operator.equals(binaryOp.ASSIGN)){
-                if(((identifier)(node.leftOperand)).name.equals("this")){
+                if(node.leftOperand instanceof identifier && ((identifier)(node.leftOperand)).name.equals("this")){
                     error.add(new semanticException("This cannot be assigned!"+node.loc.locString()));
                 }
                 if(!equalType(node.leftOperand, node.rightOperand)){
