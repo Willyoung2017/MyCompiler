@@ -12,8 +12,8 @@ public class move extends instruction {
         address = -1;
     }
 
-    public move(basicBlock bb, virturalRegister destReg, int address){
-        this.itsBlock = bb;
+    public move(basicBlock itsBlock, virturalRegister destReg, int address){
+        this.itsBlock = itsBlock;
         this.destReg = destReg;
         this.address = address;
     }

@@ -20,9 +20,9 @@ import java.io.InputStream;
 public class build {
     public static void main(String[] args) throws Exception{
             try {
-                    //String inputFilePath = "E:\\compiler\\testcase\\semantic\\compile_error\\test.mx";
-                    //InputStream is = new FileInputStream(inputFilePath);
-                    InputStream is = System.in;
+                    String inputFilePath = "E:\\compiler\\testcase\\semantic\\compile_error\\test.mx";
+                    InputStream is = new FileInputStream(inputFilePath);
+                    //InputStream is = System.in;
                     ANTLRInputStream input = new ANTLRInputStream(is);
                     MxLexer lexer = new MxLexer(input);
                     CommonTokenStream tokens = new CommonTokenStream(lexer);

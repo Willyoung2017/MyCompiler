@@ -25,6 +25,17 @@ public class func {
         this.parameterList = parameterList;
     }
 
+    public void setFuncType(typ funcType){
+        this.funcType = funcType;
+    }
+
+    public void setFirstBlock(basicBlock firstBlock){
+        this.firstBlock = firstBlock;
+    }
+
+    public void setLastBlock(basicBlock lastBlock){
+        this.lastBlock = lastBlock;
+    }
     public typ getFuncType(){
         return funcType;
     }
