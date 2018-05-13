@@ -1,20 +1,20 @@
 package MxCompiler.IR.IRnodes.instructions;
 
 import MxCompiler.IR.IRnodes.basicBlock;
+import MxCompiler.IR.IRnodes.intValue;
 import MxCompiler.IR.IRnodes.virturalRegister;
 
 public class move extends instruction {
-    private virturalRegister destReg;
-    private int address;
+    public virturalRegister destReg;
+    public intValue srcReg;
 
     public move(){
         destReg = null;
-        address = -1;
+        srcReg = null;
     }
 
-    public move(basicBlock itsBlock, virturalRegister destReg, int address){
-        this.itsBlock = itsBlock;
+    public move( intValue srcReg,virturalRegister destReg){
         this.destReg = destReg;
-        this.address = address;
+        this.srcReg = srcReg;
     }
 }

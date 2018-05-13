@@ -20,9 +20,9 @@ import java.io.InputStream;
 public class build {
     public static void main(String[] args) throws Exception{
             try {
-                    String inputFilePath = "E:\\compiler\\testcase\\semantic\\compile_error\\test.mx";
-                    InputStream is = new FileInputStream(inputFilePath);
-                    //InputStream is = System.in;
+                    //String inputFilePath = "E:\\compiler\\testcase\\semantic\\compile_error\\test.mx";
+                    //InputStream is = new FileInputStream(inputFilePath);
+                    InputStream is = System.in;
                     ANTLRInputStream input = new ANTLRInputStream(is);
                     MxLexer lexer = new MxLexer(input);
                     CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -38,8 +38,8 @@ public class build {
 
                     abstractSyntaxTree rootNode = astBuilder.getRootNode();
 
-                    ASTViewer viewer = new ASTViewer(System.out);
-                    rootNode.accept(viewer);
+                    //ASTViewer viewer = new ASTViewer(System.out);
+                    //rootNode.accept(viewer);
 
                     localResolver Localresolver = new localResolver();
                     rootNode.accept(Localresolver);
@@ -51,8 +51,8 @@ public class build {
                     rootNode.accept(DereferenceChecker);
 
                     if(!verboseListener.error.exceptionList.isEmpty()){
-                        verboseListener.error.printExceptions();
-                        throw new Exception();
+                            verboseListener.error.printExceptions();
+                            throw new Exception();
                     }
 
                     if (!Localresolver.error.exceptionList.isEmpty()) {
@@ -71,7 +71,6 @@ public class build {
 
             }
             catch(Exception e){
-                    System.err.println(e.getMessage());
                     System.exit(1);
            }
     }
