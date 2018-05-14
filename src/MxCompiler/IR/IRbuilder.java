@@ -243,10 +243,10 @@ public class IRbuilder implements ASTVisitor {
         visit(node.rightOperand);
         binaryOpInstr instr = new binaryOpInstr();
         instr.operator = node.operator;
-        instr.leftOperand = node.leftOperand.reg;
-        instr.rightOperand = node.rightOperand.reg;
-        node.reg = new virturalRegister();
-        instr.result = (virturalRegister) node.reg;
+        instr.leftOperand = node.leftOperand.nodeValue;
+        instr.rightOperand = node.rightOperand.nodeValue;
+        node.nodeValue = new virturalRegister();
+        instr.result = (virturalRegister) node.nodeValue;
         curBlock.pushBack(instr);
     }
 
@@ -259,10 +259,10 @@ public class IRbuilder implements ASTVisitor {
         visit(node.rightOperand);
         cmp instr = new cmp();
         instr.operator = node.operator;
-        instr.leftOperand = node.leftOperand.reg;
-        instr.rightOperand = node.rightOperand.reg;
-        node.reg = new virturalRegister();
-        instr.result = (virturalRegister) node.reg;
+        instr.leftOperand = node.leftOperand.nodeValue;
+        instr.rightOperand = node.rightOperand.nodeValue;
+        node.nodeValue = new virturalRegister();
+        instr.result = (virturalRegister) node.nodeValue;
         curBlock.pushBack(instr);
         if(node.jumpto != null) { // in condexpr
             branch condInstr = new branch();
@@ -280,6 +280,7 @@ public class IRbuilder implements ASTVisitor {
     private void processAssign(binaryExpr node){
         boolean logicExpr = false;
         boolean memAccessExpr = false;
+        int accessSize = node.rightOperand.type.size;
         if(node.rightOperand instanceof binaryExpr){
             binaryOp operator = ((binaryExpr)node.rightOperand).operator;
             if(operator.equals(binaryOp.LOGICAL_AND)||operator.equals(binaryOp.LOGICAL_OR))
@@ -304,11 +305,11 @@ public class IRbuilder implements ASTVisitor {
 
         if(node.rightOperand.jumpto != null) {// short-path-evaluation: 0_or_1_assign
             if (memAccessExpr) {
-                node.rightOperand.jumpto.pushBack(new store(new intImd(1), node.leftOperand.reg, node.leftOperand.offset));
-                node.rightOperand.jumpother.pushBack(new store(new intImd(0), node.leftOperand.reg, node.leftOperand.offset));
+                node.rightOperand.jumpto.pushBack(new store(new intImd(1), node.leftOperand.addr, node.leftOperand.offset, accessSize));
+                node.rightOperand.jumpother.pushBack(new store(new intImd(0), node.leftOperand.addr, node.leftOperand.offset, accessSize));
             } else {
-                node.rightOperand.jumpto.pushBack(new move(new intImd(1), (virturalRegister) node.leftOperand.reg));
-                node.rightOperand.jumpother.pushBack(new move(new intImd(0), (virturalRegister) node.leftOperand.reg));
+                node.rightOperand.jumpto.pushBack(new move(new intImd(1), (virturalRegister) node.leftOperand.nodeValue));
+                node.rightOperand.jumpother.pushBack(new move(new intImd(0), (virturalRegister) node.leftOperand.nodeValue));
             }
             basicBlock end = new basicBlock();
             node.rightOperand.jumpto.pushBack(new jump(end));
@@ -317,10 +318,10 @@ public class IRbuilder implements ASTVisitor {
         }
         else{// simple assign: reg to mem/reg
             if (memAccessExpr){
-                curBlock.pushBack(new store(node.rightOperand.reg, node.leftOperand.reg, node.leftOperand.offset));
+                curBlock.pushBack(new store(node.rightOperand.nodeValue, node.leftOperand.addr, node.leftOperand.offset, accessSize));
             }
             else{
-                curBlock.pushBack(new move(node.rightOperand.reg, (virturalRegister) node.leftOperand.reg));
+                curBlock.pushBack(new move(node.rightOperand.nodeValue, (virturalRegister) node.leftOperand.nodeValue));
             }
         }
 
@@ -354,16 +355,16 @@ public class IRbuilder implements ASTVisitor {
     @Override
     public void visit(boolConstant node) {
         if(node.value){
-            node.reg =  new intImd(1);
+            node.nodeValue =  new intImd(1);
         }
         else{
-            node.reg = new intImd(0);
+            node.nodeValue = new intImd(0);
         }
     }
 
     @Override
     public void visit(identifier node) {
-        expr expression = null;
+        expr expression = null; //Question remains
         if(node.ent instanceof varDec){
             expression = ((varDec) node.ent).variableExpression;
 
@@ -375,10 +376,10 @@ public class IRbuilder implements ASTVisitor {
             expression = ((varDecStmt) node.ent).variableExpr;
         }
         if(expression == null){
-            node.reg = new virturalRegister();
+            node.nodeValue = new virturalRegister();
         }
         else{
-            node.reg = expression.reg;
+            node.nodeValue = expression.nodeValue;
         }
         //node.reg = ((varDec)node.ent).variableExpression.reg;
         if(node.jumpto != null){ // in logicalExpr
@@ -391,7 +392,7 @@ public class IRbuilder implements ASTVisitor {
 
     @Override
     public void visit(intConstant node) {
-        node.reg = new intImd(node.value.intValue());
+        node.nodeValue = new intImd(node.value.intValue());
     }
 
     @Override
@@ -425,28 +426,91 @@ public class IRbuilder implements ASTVisitor {
     }
 
     @Override
-    public void visit(indexAccessExpr node) {
+    public void visit(indexAccessExpr node) { // Question remains about offset
+        boolean tmp = if_store;
+        if_store = false;
         visit(node.index);
         visit(node.array);
+        if_store = tmp;
+        int size = node.array.type.size;
+        virturalRegister reg = new virturalRegister();
+        curBlock.pushBack(new binaryOpInstr(binaryOp.MUL, node.index.nodeValue, new intImd(size), reg));
+        curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, node.array.nodeValue, reg, reg)); // address saved in reg
         //curBlock.pushBack(new binaryOpInstr(binaryOp.MUL,node.index.reg,));
-        //if(if_store) {
+        if(if_store) {
+            node.addr = reg;
+            node.offset = 0;
+        }
+        else{
+            curBlock.pushBack(new load(reg, reg, 0,size));
+        }
 
-        //}
+        if(node.jumpto != null){
+            branch instr = new branch();
+            instr.jumpto = node.jumpto;
+            instr.jumpother = node.jumpother;
+            curBlock.pushBack(instr);
+        }
+        node.nodeValue = reg;
     }
 
     @Override
     public void visit(selfDec node) {
-
+        boolean memAccess = false;
+        if(node.operand instanceof indexAccessExpr || node.operand instanceof fieldmemAccessExpr){
+            memAccess = true;
+        }
+        boolean tmp;
+        tmp = if_store;
+        //need store and load together in selfDec;
+        if_store = memAccess;
+        visit(node.operand);
+        if_store  = false;
+        visit(node.operand);
+        if_store = tmp;
+        virturalRegister oldValue = new virturalRegister();
+        curBlock.pushBack(new move(node.operand.nodeValue,oldValue));
+        node.nodeValue = oldValue;
+        if (memAccess) {
+            virturalRegister reg = new virturalRegister();
+            curBlock.pushBack(new binaryOpInstr(binaryOp.SUB, node.operand.nodeValue, new intImd(1), reg));
+            curBlock.pushBack(new store(reg, node.operand.addr, node.operand.offset, node.operand.type.size));
+        }
+        else {
+            curBlock.pushBack(new binaryOpInstr(binaryOp.SUB, node.operand.nodeValue, new intImd(1), (virturalRegister) node.operand.nodeValue));
+        }
     }
 
     @Override
     public void visit(selfInc node) {
-
+        boolean memAccess = false;
+        if(node.operand instanceof indexAccessExpr || node.operand instanceof fieldmemAccessExpr){
+            memAccess = true;
+        }
+        boolean tmp;
+        tmp = if_store;
+        if_store = memAccess;
+        visit(node.operand);
+        if_store  = false;
+        visit(node.operand);
+        if_store = tmp;
+        virturalRegister oldValue = new virturalRegister();
+        curBlock.pushBack(new move(node.operand.nodeValue,oldValue));
+        node.nodeValue = oldValue;
+        if (memAccess) {
+            virturalRegister reg = new virturalRegister();
+            curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, node.operand.nodeValue, new intImd(1), reg));
+            curBlock.pushBack(new store(reg, node.operand.addr, node.operand.offset, node.operand.type.size));
+        }
+        else {
+            curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, node.operand.nodeValue, new intImd(1), (virturalRegister) node.operand.nodeValue));
+        }
     }
 
     @Override
     public void visit(suffixExpr node) {
-
+        if(node == null) return;
+        node.accept(this);
     }
 
     @Override
@@ -460,27 +524,73 @@ public class IRbuilder implements ASTVisitor {
             case NEG:
                 visit(node.operand);
                 reg = new virturalRegister();
-                node.reg = reg;
-                curBlock.pushBack(new unaryOpInstr(unaryOp.NEG, node.operand.reg, reg));
+                node.nodeValue = reg;
+                curBlock.pushBack(new unaryOpInstr(unaryOp.NEG, node.operand.nodeValue, reg));
                 break;
             case POS:
                 visit(node.operand);
-                node.reg = node.operand.reg;
+                node.nodeValue = node.operand.nodeValue;
                 break;
             case DECREMENT:
-                visit(node.operand);
                 processDEC(node);
             case INCREMENT:
-                visit(node.operand);
                 processINC(node);
             case BITWISE_NOT:
                 visit(node.operand);
                 reg = new virturalRegister();
-                node.reg = reg;
-                curBlock.pushBack(new unaryOpInstr(unaryOp.BITWISE_NOT, node.operand.reg, reg));
+                node.nodeValue = reg;
+                curBlock.pushBack(new unaryOpInstr(unaryOp.BITWISE_NOT, node.operand.nodeValue, reg));
                 break;
         }
 
+    }
+
+    private void processDEC(unaryExpr node) {
+        boolean memAccess = false;
+        if(node.operand instanceof indexAccessExpr || node.operand instanceof fieldmemAccessExpr){
+            memAccess = true;
+        }
+        boolean tmp;
+        tmp = if_store;
+        if_store = memAccess;
+        visit(node.operand);
+        if_store  = false;
+        visit(node.operand);
+        if_store = tmp;
+        if (memAccess) {
+            virturalRegister reg = new virturalRegister();
+            curBlock.pushBack(new binaryOpInstr(binaryOp.SUB, node.operand.nodeValue, new intImd(1), reg));
+            curBlock.pushBack(new store(reg, node.operand.addr, node.operand.offset, node.operand.type.size));
+            node.nodeValue = reg;
+        }
+        else {
+            curBlock.pushBack(new binaryOpInstr(binaryOp.SUB, node.operand.nodeValue, new intImd(1), (virturalRegister) node.operand.nodeValue));
+            node.nodeValue = node.operand.nodeValue;
+        }
+    }
+
+    private void processINC(unaryExpr node){
+        boolean memAccess = false;
+        if(node.operand instanceof indexAccessExpr || node.operand instanceof fieldmemAccessExpr){
+            memAccess = true;
+        }
+        boolean tmp;
+        tmp = if_store;
+        if_store = memAccess;
+        visit(node.operand);
+        if_store  = false;
+        visit(node.operand);
+        if_store = tmp;
+        if (memAccess) {
+            virturalRegister reg = new virturalRegister();
+            curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, node.operand.nodeValue, new intImd(1), reg));
+            curBlock.pushBack(new store(reg, node.operand.addr, node.operand.offset, node.operand.type.size));
+            node.nodeValue = reg;
+        }
+        else {
+            curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, node.operand.nodeValue, new intImd(1), (virturalRegister) node.operand.nodeValue));
+            node.nodeValue = node.operand.nodeValue;
+        }
     }
 
     @Override

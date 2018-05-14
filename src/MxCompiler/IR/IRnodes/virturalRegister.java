@@ -1,6 +1,6 @@
 package MxCompiler.IR.IRnodes;
 
-public class virturalRegister extends intValue{
+public class virturalRegister extends register{
     private static int arrangedNum = 0;
     private int num;
     public String varName;

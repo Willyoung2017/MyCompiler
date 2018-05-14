@@ -4,6 +4,7 @@ import MxCompiler.Ast.BuildAST.ASTVisitor;
 
 public class classType extends typ{
     //public String className;
+    final public int size = 0;
 
     public classType(){
         name = null;

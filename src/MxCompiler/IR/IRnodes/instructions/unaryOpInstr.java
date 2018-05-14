@@ -2,11 +2,12 @@ package MxCompiler.IR.IRnodes.instructions;
 
 import MxCompiler.Ast.Expression.UnaryExpression.unaryOp;
 import MxCompiler.IR.IRnodes.intValue;
+import MxCompiler.IR.IRnodes.register;
 import MxCompiler.IR.IRnodes.virturalRegister;
 
 public class unaryOpInstr extends instruction{
     public intValue operand;
-    public virturalRegister result;
+    public register result;
     public unaryOp operator;
 
     public unaryOpInstr(){

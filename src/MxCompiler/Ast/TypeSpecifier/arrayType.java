@@ -6,6 +6,7 @@ import MxCompiler.Ast.Expression.expr;
 public class arrayType extends typ{
     public typ baseType;
     public expr index;
+    final public int size = 4;
 
     public arrayType(){
         baseType = null;

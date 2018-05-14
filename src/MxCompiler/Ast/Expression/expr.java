@@ -1,21 +1,24 @@
 package MxCompiler.Ast.Expression;
 import MxCompiler.Ast.BuildAST.ASTVisitor;
 import MxCompiler.Ast.astNode;
+import MxCompiler.IR.IRnodes.address;
 import MxCompiler.IR.IRnodes.basicBlock;
 import MxCompiler.IR.IRnodes.intValue;
 import MxCompiler.IR.IRnodes.virturalRegister;
 
 public class expr extends astNode{
     public boolean isLvalue;
-    public intValue reg;
     //for IR
     public basicBlock jumpto;
     public basicBlock jumpother;
+    public intValue nodeValue;
+    public intValue addr;
     public int offset;
 
     public expr(){
         isLvalue = true;
-        reg = null;
+        nodeValue = null;
+        addr = null;
         jumpother = null;
         jumpto = null;
     }
