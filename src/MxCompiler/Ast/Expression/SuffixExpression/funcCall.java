@@ -2,6 +2,7 @@ package MxCompiler.Ast.Expression.SuffixExpression;
 
 import MxCompiler.Ast.BuildAST.ASTVisitor;
 import MxCompiler.Ast.Expression.expr;
+import MxCompiler.IR.IRnodes.intValue;
 
 import java.util.LinkedList;
 import java.util.List;

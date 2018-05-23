@@ -13,16 +13,12 @@ import MxCompiler.Ast.Statement.*;
 import MxCompiler.Ast.TypeSpecifier.*;
 import MxCompiler.Ast.abstractSyntaxTree;
 import MxCompiler.Ast.astNode;
-import MxCompiler.IR.IRnodes.basicBlock;
-import MxCompiler.IR.IRnodes.func;
+import MxCompiler.Exception.semanticException;
+import MxCompiler.IR.IRnodes.*;
 import MxCompiler.IR.IRnodes.instructions.*;
-import MxCompiler.IR.IRnodes.intImd;
-import MxCompiler.IR.IRnodes.virturalRegister;
 
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 public class IRbuilder implements ASTVisitor {
     private basicBlock curBlock;
@@ -30,10 +26,15 @@ public class IRbuilder implements ASTVisitor {
     private boolean if_store;
     private Stack<basicBlock> breakLoopStack;
     private Stack<basicBlock> continueLoopStack;
-
+    private List<staticData> dataList;
     public Map<String, func> funcMap;
+
     public IRbuilder(){
         curBlock = null;
+        curFunc = null;
+        breakLoopStack = new Stack<>();
+        continueLoopStack = new Stack<>();
+        dataList = new LinkedList<>();
         funcMap = new HashMap<>();
     }
 
@@ -62,15 +63,50 @@ public class IRbuilder implements ASTVisitor {
             virturalRegister reg = new virturalRegister(p.name);
             curFunc.parameterList.add(reg);
         }
-        node.parameterList.stream().forEachOrdered(this::visit);
+        //node.parameterList.stream().forEachOrdered(this::visit);
+        basicBlock startBlock = new basicBlock(node.name);
+        curBlock = startBlock;
+        curFunc.setFirstBlock(startBlock);
         visit(node.functionStmt);
+        if(curFunc.returnInstrList.size() == 0){
+            if(node.functionType instanceof voidType){
+                returnInstr ret = new returnInstr(null);
+                curBlock.pushBack(ret);
+                curFunc.returnInstrList.add(ret);
+            }
+            else {
+                returnInstr ret = new returnInstr(new intImd(0));
+                curBlock.pushBack(ret);
+                curFunc.returnInstrList.add(ret);
+            }
+        }
 
+        if (curFunc.returnInstrList.size() > 1){
+            basicBlock lastBlock = new basicBlock(node.name+"_last");
+            virturalRegister newRetReg = new virturalRegister("ret");
+            for(returnInstr ret : curFunc.returnInstrList){
+                basicBlock thisBlock = ret.getItsBlock();
+                if(ret.retReg != null){
+                    ret.linkPrev(new move(ret.retReg, newRetReg));
+                }
+                ret.remove();
+                thisBlock.pushBack(new jump(lastBlock));
+            }
+            lastBlock.pushBack(new returnInstr(newRetReg));
+            curFunc.setLastBlock(lastBlock);
+        }
+        else {
+            curFunc.setLastBlock(curFunc.returnInstrList.get(0).getItsBlock());
+        }
+        curFunc = null;
     }
 
 
     @Override
     public void visit(globalVarDec node) {
-
+        staticData data = new staticData(node.name, node.type.size);
+        node.nodeValue = data;
+        dataList.add(data);
     }
 
     @Override
@@ -80,7 +116,36 @@ public class IRbuilder implements ASTVisitor {
 
     @Override
     public void visit(varDec node) {
+        virturalRegister reg = new virturalRegister(node.name);
+        node.nodeValue = reg;
+        if (node.variableExpression != null){
+            boolean logicExpr = false;
+            if(node.variableExpression instanceof binaryExpr){
+                binaryOp operator = ((binaryExpr)node.variableExpression).operator;
+                if(operator.equals(binaryOp.LOGICAL_AND)||operator.equals(binaryOp.LOGICAL_OR))
+                    logicExpr = true;
+            }
+            else if(node.variableExpression instanceof unaryExpr){
+                if(((unaryExpr)node.variableExpression).operator.equals(unaryOp.LOGIC_NOT))
+                    logicExpr = true;
+            }
 
+            if(logicExpr) {
+                node.variableExpression.setBlocks(new basicBlock(), new basicBlock());
+            }
+
+            visit(node.variableExpression);
+            if(logicExpr) {
+                boolean tmp = if_store;
+                if_store = false;
+                processShortPathEva(node.variableExpression, reg, 0, node.variableExpression.type.size);
+                if_store = tmp;
+            }
+        }
+        else {
+            //init
+            curBlock.pushBack(new move(new intImd(0), reg));
+        }
     }
 
     @Override
@@ -164,12 +229,78 @@ public class IRbuilder implements ASTVisitor {
 
     @Override
     public void visit(returnStmt node) {
-
+        if(node.returnExpr.type instanceof voidType){
+            curBlock.pushBack(new returnInstr(null));
+        }
+        else {
+            boolean logicExpr = false;
+            if(node.returnExpr instanceof binaryExpr){
+                binaryOp operator = ((binaryExpr)node.returnExpr).operator;
+                if(operator.equals(binaryOp.LOGICAL_AND)||operator.equals(binaryOp.LOGICAL_OR))
+                    logicExpr = true;
+            }
+            else if(node.returnExpr instanceof unaryExpr){
+                if(((unaryExpr)node.returnExpr).operator.equals(unaryOp.LOGIC_NOT))
+                    logicExpr = true;
+            }
+            if(logicExpr){
+                node.returnExpr.setBlocks(new basicBlock(), new basicBlock());
+                visit(node.returnExpr);
+                virturalRegister reg = new virturalRegister("ret");
+                node.returnExpr.jumpto.pushBack(new move(new intImd(1), reg));
+                node.returnExpr.jumpother.pushBack(new move(new intImd(0), reg));
+                basicBlock end = new basicBlock();
+                node.returnExpr.jumpto.pushBack(new jump(end));
+                node.returnExpr.jumpother.pushBack(new jump(end));
+                curBlock = end;
+                returnInstr ret = new returnInstr(reg);
+                ret.setItsBlock(curBlock);
+                curBlock.pushBack(ret);
+                curFunc.returnInstrList.add(ret);
+            }
+            else {
+                visit(node.returnExpr);
+                returnInstr ret = new returnInstr(node.returnExpr.nodeValue);
+                ret.setItsBlock(curBlock);
+                curBlock.pushBack(ret);
+                curFunc.returnInstrList.add(ret);
+            }
+        }
     }
 
     @Override
     public void visit(varDecStmt node) {
+        virturalRegister reg = new virturalRegister(node.name);
+        node.nodeValue = reg;
 
+        if (node.variableExpr != null){
+            boolean logicExpr = false;
+            if(node.variableExpr instanceof binaryExpr){
+                binaryOp operator = ((binaryExpr)node.variableExpr).operator;
+                if(operator.equals(binaryOp.LOGICAL_AND)||operator.equals(binaryOp.LOGICAL_OR))
+                    logicExpr = true;
+            }
+            else if(node.variableExpr instanceof unaryExpr){
+                if(((unaryExpr)node.variableExpr).operator.equals(unaryOp.LOGIC_NOT))
+                    logicExpr = true;
+            }
+
+            if(logicExpr) {
+                node.variableExpr.setBlocks(new basicBlock(), new basicBlock());
+            }
+
+            visit(node.variableExpr);
+            if(logicExpr) {
+                boolean tmp = if_store;
+                if_store = false;
+                processShortPathEva(node.variableExpr, reg, 0, node.variableExpr.type.size);
+                if_store = tmp;
+            }
+        }
+        else {
+            //init
+            curBlock.pushBack(new move(new intImd(0), reg));
+        }
     }
 
     @Override
@@ -364,24 +495,18 @@ public class IRbuilder implements ASTVisitor {
 
     @Override
     public void visit(identifier node) {
-        expr expression = null; //Question remains
+         //Question remains
         if(node.ent instanceof varDec){
-            expression = ((varDec) node.ent).variableExpression;
+            node.nodeValue = ((varDec) node.ent).nodeValue;
 
         }
         else if(node.ent instanceof globalVarDec){
-            expression = ((globalVarDec) node.ent).variableExpression;
+            node.nodeValue = ((globalVarDec)node.ent).nodeValue;
         }
         else if(node.ent instanceof varDecStmt){
-            expression = ((varDecStmt) node.ent).variableExpr;
+            node.nodeValue = ((varDecStmt)node.ent).nodeValue;
         }
-        if(expression == null){
-            node.nodeValue = new virturalRegister();
-        }
-        else{
-            node.nodeValue = expression.nodeValue;
-        }
-        //node.reg = ((varDec)node.ent).variableExpression.reg;
+
         if(node.jumpto != null){ // in logicalExpr
             branch instr = new branch();
             instr.jumpto = node.jumpto;
@@ -419,10 +544,29 @@ public class IRbuilder implements ASTVisitor {
     public void visit(fieldmemAccessExpr node) {
 
     }
-
+    private void processBuiltinFunc(funcCall node){
+        //To be done
+    }
     @Override
     public void visit(funcCall node) {
+        node.parameters.stream().forEachOrdered(this::visit);
+        if (node.obj.name.equals("getInt")||node.obj.name.equals("print") || node.obj.name.equals("println")||node.obj.name.equals("toString")||node.obj.name.equals("getString")){
+            processBuiltinFunc(node);
+        }
 
+        func function = funcMap.get(node.name);
+        virturalRegister reg = new virturalRegister();
+        funCall call = new funCall(reg,function);
+        for(expr p : node.parameters) {
+            call.parameters.add(p.nodeValue);
+        }
+        curBlock.pushBack(call);
+        if(node.jumpto != null){//bool rettype
+            branch instr = new branch();
+            instr.jumpto = node.jumpto;
+            instr.jumpother = node.jumpother;
+            curBlock.pushBack(instr);
+        }
     }
 
     @Override
@@ -592,7 +736,19 @@ public class IRbuilder implements ASTVisitor {
             node.nodeValue = node.operand.nodeValue;
         }
     }
-
+    private void processShortPathEva(expr node, intValue nodeValue, int offset, int accessSize){
+        if(if_store){
+            node.jumpto.pushBack(new store(new intImd(1), nodeValue, offset, accessSize));
+            node.jumpother.pushBack(new store(new intImd(0), nodeValue, offset, accessSize));
+        }
+        else{
+            node.jumpto.pushBack(new move(new intImd(1), (virturalRegister)nodeValue));
+            node.jumpother.pushBack(new move(new intImd(0), (virturalRegister)nodeValue));
+        }
+        basicBlock end  = new basicBlock();
+        node.jumpto.pushBack(new jump(end));
+        node.jumpother.pushBack(new jump(end));
+    }
     @Override
     public void visit(typ node) {
 

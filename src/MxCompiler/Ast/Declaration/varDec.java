@@ -3,12 +3,15 @@ package MxCompiler.Ast.Declaration;
 import MxCompiler.Ast.BuildAST.ASTVisitor;
 import MxCompiler.Ast.Expression.expr;
 import MxCompiler.Ast.TypeSpecifier.typ;
+import MxCompiler.IR.IRnodes.intValue;
 
 
 public class varDec extends dec{
     public typ variableType;
     //public String variableName;
     public expr variableExpression;
+    //for IR
+    public intValue nodeValue;
 
     public varDec(){
         variableType = null;

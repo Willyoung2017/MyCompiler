@@ -28,4 +28,19 @@ public abstract class instruction {
         next = instr;
         instr.prev = this;
     }
+
+    public void remove(){
+        if(prev != null) prev.next = next;
+        if(next != null) next.prev = prev;
+        if(this == itsBlock.getHead()) itsBlock.setHead(next);
+        if(this == itsBlock.getLast()) itsBlock.setLast(prev);
+    }
+
+    public void setItsBlock(basicBlock itsBlock) {
+        this.itsBlock = itsBlock;
+    }
+
+    public basicBlock getItsBlock(){
+        return  itsBlock;
+    }
 }

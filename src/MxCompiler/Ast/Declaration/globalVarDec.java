@@ -2,12 +2,14 @@ package MxCompiler.Ast.Declaration;
 import MxCompiler.Ast.BuildAST.ASTVisitor;
 import MxCompiler.Ast.Expression.expr;
 import MxCompiler.Ast.TypeSpecifier.typ;
+import MxCompiler.IR.IRnodes.intValue;
 
 public class globalVarDec extends dec{
     public typ variableType;
     //public String variableName;
     public expr variableExpression;
-
+    //for IR
+    public intValue nodeValue;
     public globalVarDec(){
         variableType = null;
         name = null;
