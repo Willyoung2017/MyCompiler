@@ -91,6 +91,7 @@ public class IRbuilder implements ASTVisitor {
                 }
                 ret.remove();
                 thisBlock.pushBack(new jump(lastBlock));
+                thisBlock.addNext(lastBlock);
             }
             lastBlock.pushBack(new returnInstr(newRetReg));
             curFunc.setLastBlock(lastBlock);
@@ -168,13 +169,14 @@ public class IRbuilder implements ASTVisitor {
     public void visit(breakStmt node) {
         basicBlock outBlock = breakLoopStack.peek();
         curBlock.pushBack(new jump(outBlock));
-
+        curBlock.addNext(outBlock);
     }
 
     @Override
     public void visit(continueStmt node) {
         basicBlock nextBlock = continueLoopStack.peek();
         curBlock.pushBack(new jump(nextBlock));
+        curBlock.addNext(nextBlock);
     }
 
     @Override
@@ -192,6 +194,7 @@ public class IRbuilder implements ASTVisitor {
             node.cond.setBlocks(bodyBlock,endBlock);
         visit(node.init);
         curBlock.pushBack(new jump(condBlock));
+        curBlock.addNext(condBlock);
         curBlock = condBlock;
         visit(node.cond);
         curBlock = bodyBlock;
@@ -201,9 +204,11 @@ public class IRbuilder implements ASTVisitor {
         continueLoopStack.pop();
         breakLoopStack.pop();
         curBlock.pushBack(new jump(stepBlock));
+        curBlock.addNext(stepBlock);
         curBlock = stepBlock;
         visit(node.step);
         curBlock.pushBack(new jump(condBlock));
+        curBlock.addNext(condBlock);
         curBlock = endBlock;
     }
 
@@ -221,9 +226,11 @@ public class IRbuilder implements ASTVisitor {
         curBlock = thenBlock;
         visit(node.ifBody);
         curBlock.pushBack(new jump(endBlock));
+        curBlock.addNext(endBlock);
         curBlock = elseBlock;
         visit(node.elseBody);
         curBlock.pushBack(new jump(endBlock));
+        curBlock.addNext(endBlock);
         curBlock = endBlock;
     }
 
@@ -247,12 +254,10 @@ public class IRbuilder implements ASTVisitor {
                 node.returnExpr.setBlocks(new basicBlock(), new basicBlock());
                 visit(node.returnExpr);
                 virturalRegister reg = new virturalRegister("ret");
-                node.returnExpr.jumpto.pushBack(new move(new intImd(1), reg));
-                node.returnExpr.jumpother.pushBack(new move(new intImd(0), reg));
-                basicBlock end = new basicBlock();
-                node.returnExpr.jumpto.pushBack(new jump(end));
-                node.returnExpr.jumpother.pushBack(new jump(end));
-                curBlock = end;
+                boolean tmp = if_store;
+                if_store = false;
+                processShortPathEva(node.returnExpr, reg, 0,node.returnExpr.type.size);
+                if_store = tmp;
                 returnInstr ret = new returnInstr(reg);
                 ret.setItsBlock(curBlock);
                 curBlock.pushBack(ret);
@@ -320,6 +325,7 @@ public class IRbuilder implements ASTVisitor {
         continueLoopStack.pop();
         breakLoopStack.pop();
         curBlock.pushBack(new jump(condBlock));
+        curBlock.addNext(condBlock);
         curBlock = endBlock;
     }
 
@@ -401,6 +407,8 @@ public class IRbuilder implements ASTVisitor {
             condInstr.jumpto = node.jumpto;
             condInstr.jumpother = node.jumpother;
             curBlock.pushBack(condInstr);
+            curBlock.addNext(condInstr.jumpto);
+            curBlock.addNext(condInstr.jumpother);
         }
     }
 
@@ -412,6 +420,7 @@ public class IRbuilder implements ASTVisitor {
         boolean logicExpr = false;
         boolean memAccessExpr = false;
         int accessSize = node.rightOperand.type.size;
+
         if(node.rightOperand instanceof binaryExpr){
             binaryOp operator = ((binaryExpr)node.rightOperand).operator;
             if(operator.equals(binaryOp.LOGICAL_AND)||operator.equals(binaryOp.LOGICAL_OR))
@@ -421,31 +430,24 @@ public class IRbuilder implements ASTVisitor {
             if(((unaryExpr)node.rightOperand).operator.equals(unaryOp.LOGIC_NOT))
                 logicExpr = true;
         }
+
         if(logicExpr){
             node.rightOperand.setBlocks(new basicBlock(), new basicBlock());
         }
+
         visit(node.rightOperand);
 
         if(node.leftOperand instanceof indexAccessExpr || node.leftOperand instanceof fieldmemAccessExpr){
             memAccessExpr = true;
         }
 
+        boolean tmp = if_store;
         if_store = memAccessExpr;
         visit(node.leftOperand);
-        if_store = false;
 
         if(node.rightOperand.jumpto != null) {// short-path-evaluation: 0_or_1_assign
-            if (memAccessExpr) {
-                node.rightOperand.jumpto.pushBack(new store(new intImd(1), node.leftOperand.addr, node.leftOperand.offset, accessSize));
-                node.rightOperand.jumpother.pushBack(new store(new intImd(0), node.leftOperand.addr, node.leftOperand.offset, accessSize));
-            } else {
-                node.rightOperand.jumpto.pushBack(new move(new intImd(1), (virturalRegister) node.leftOperand.nodeValue));
-                node.rightOperand.jumpother.pushBack(new move(new intImd(0), (virturalRegister) node.leftOperand.nodeValue));
-            }
-            basicBlock end = new basicBlock();
-            node.rightOperand.jumpto.pushBack(new jump(end));
-            node.rightOperand.jumpother.pushBack(new jump(end));
-            curBlock = end;
+            if_store = memAccessExpr;
+            processShortPathEva(node.rightOperand, node.leftOperand.nodeValue, node.leftOperand.offset, accessSize);
         }
         else{// simple assign: reg to mem/reg
             if (memAccessExpr){
@@ -455,8 +457,7 @@ public class IRbuilder implements ASTVisitor {
                 curBlock.pushBack(new move(node.rightOperand.nodeValue, (virturalRegister) node.leftOperand.nodeValue));
             }
         }
-
-        //instr.destReg = node.leftOperand.reg;
+        if_store = tmp;
     }
 
     private void processLogicalExpr(binaryExpr node){
@@ -509,9 +510,12 @@ public class IRbuilder implements ASTVisitor {
 
         if(node.jumpto != null){ // in logicalExpr
             branch instr = new branch();
+            instr.operator = binaryOp.EQUAL;
             instr.jumpto = node.jumpto;
             instr.jumpother = node.jumpother;
             curBlock.pushBack(instr);
+            curBlock.addNext(instr.jumpto);
+            curBlock.addNext(instr.jumpother);
         }
     }
 
@@ -563,9 +567,12 @@ public class IRbuilder implements ASTVisitor {
         curBlock.pushBack(call);
         if(node.jumpto != null){//bool rettype
             branch instr = new branch();
+            instr.operator = binaryOp.EQUAL;
             instr.jumpto = node.jumpto;
             instr.jumpother = node.jumpother;
             curBlock.pushBack(instr);
+            curBlock.addNext(instr.jumpto);
+            curBlock.addNext(instr.jumpother);
         }
     }
 
@@ -591,9 +598,12 @@ public class IRbuilder implements ASTVisitor {
 
         if(node.jumpto != null){
             branch instr = new branch();
+            instr.operator = binaryOp.EQUAL;
             instr.jumpto = node.jumpto;
             instr.jumpother = node.jumpother;
             curBlock.pushBack(instr);
+            curBlock.addNext(instr.jumpto);
+            curBlock.addNext(instr.jumpother);
         }
         node.nodeValue = reg;
     }
@@ -736,6 +746,7 @@ public class IRbuilder implements ASTVisitor {
             node.nodeValue = node.operand.nodeValue;
         }
     }
+
     private void processShortPathEva(expr node, intValue nodeValue, int offset, int accessSize){
         if(if_store){
             node.jumpto.pushBack(new store(new intImd(1), nodeValue, offset, accessSize));
@@ -747,8 +758,12 @@ public class IRbuilder implements ASTVisitor {
         }
         basicBlock end  = new basicBlock();
         node.jumpto.pushBack(new jump(end));
+        node.jumpto.addNext(end);
         node.jumpother.pushBack(new jump(end));
+        node.jumpother.addNext(end);
+        curBlock = end;
     }
+
     @Override
     public void visit(typ node) {
 
