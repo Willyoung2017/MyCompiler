@@ -27,14 +27,18 @@ public class IRbuilder implements ASTVisitor {
     private Stack<basicBlock> breakLoopStack;
     private Stack<basicBlock> continueLoopStack;
     private List<staticData> dataList;
+    private List<arrayType> dimList;
+    private symbolTable symTable;
     public Map<String, func> funcMap;
 
     public IRbuilder(){
         curBlock = null;
         curFunc = null;
+        symTable = new symbolTable();
         breakLoopStack = new Stack<>();
         continueLoopStack = new Stack<>();
         dataList = new LinkedList<>();
+        dimList = new LinkedList<>();
         funcMap = new HashMap<>();
     }
 
@@ -51,7 +55,19 @@ public class IRbuilder implements ASTVisitor {
 
     @Override
     public void visit(classDec node) {
-        node.classMems.stream().forEachOrdered(this::visit);
+        symbol sym = new symbol();
+        sym.setSymbol(node);
+        symTable.classMap.put(node, sym);
+        for(dec mem : node.classMems){
+            if(mem instanceof funcDec){
+                //Todo
+                visit(mem);
+            }
+            else if (mem instanceof constructFuncDec){
+                //Todo
+                visit(mem);
+            }
+        }
     }
 
     @Override
@@ -141,6 +157,9 @@ public class IRbuilder implements ASTVisitor {
                 if_store = false;
                 processShortPathEva(node.variableExpression, reg, 0, node.variableExpression.type.size);
                 if_store = tmp;
+            }
+            else{
+                curBlock.pushBack(new move(node.variableExpression.nodeValue, reg));
             }
         }
         else {
@@ -300,6 +319,9 @@ public class IRbuilder implements ASTVisitor {
                 if_store = false;
                 processShortPathEva(node.variableExpr, reg, 0, node.variableExpr.type.size);
                 if_store = tmp;
+            }
+            else{
+                curBlock.pushBack(new move(node.variableExpr.nodeValue, reg));
             }
         }
         else {
@@ -507,7 +529,10 @@ public class IRbuilder implements ASTVisitor {
         else if(node.ent instanceof varDecStmt){
             node.nodeValue = ((varDecStmt)node.ent).nodeValue;
         }
-
+        else if(node.ent instanceof classDec){
+            symbol sym = symTable.symbolMap.get(node.ent.name);
+            symTable.symbolMap.putIfAbsent(node.name, sym);
+        }
         if(node.jumpto != null){ // in logicalExpr
             branch instr = new branch();
             instr.operator = binaryOp.EQUAL;
@@ -524,9 +549,37 @@ public class IRbuilder implements ASTVisitor {
         node.nodeValue = new intImd(node.value.intValue());
     }
 
+    private void allocateArray(int dim){
+        typ curNode = dimList.get(dim);
+        /*
+            for i = 0; i < curNode.nodeValue; ++i
+             [addr(preNode[i])]  = new curNode.basetype[nxtNode.nodeValue]
+        */
+    }
+
     @Override
     public void visit(newExpr node) {
-
+        virturalRegister reg = new virturalRegister();
+        if(node.type instanceof classType){
+            symbol sym = symTable.symbolMap.get(node.type.name);
+            int classSize = sym.size;
+            curBlock.pushBack(new heapAllocate(reg, new intImd(classSize)));
+        }
+        else if(node.type instanceof arrayType){
+            //Todo
+            dimList.clear();
+            visit(node.type);
+            allocateArray(0);
+            int sizeofInt = 8;
+            expr index = ((arrayType) node.type).index;
+            typ baseType = ((arrayType) node.type).baseType;
+            curBlock.pushBack(new binaryOpInstr(binaryOp.MUL, index.nodeValue, new intImd(baseType.size), reg));
+            //allocate space for storing size
+            curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, reg, new intImd(sizeofInt), reg));
+            curBlock.pushBack(new heapAllocate(reg, reg));
+            curBlock.pushBack(new store(index.nodeValue, reg, 0, sizeofInt));
+        }
+        node.nodeValue = reg;
     }
 
     @Override
@@ -536,20 +589,43 @@ public class IRbuilder implements ASTVisitor {
 
     @Override
     public void visit(stringConstant node) {
-
+        //Todo
     }
 
     @Override
     public void visit(fieldfuncAccessExpr node) {
-
+        //Todo
     }
 
     @Override
     public void visit(fieldmemAccessExpr node) {
+        boolean tmp = if_store;
+        if_store = false;
+        visit(node.obj);
+        if_store = tmp;
+
+        intValue addr = node.obj.nodeValue;
+        symbol sym = symTable.symbolMap.get(node.obj.type.name);
+        int offset = sym.offsetMap.get(node.name);
+        int accessSize = sym.sizeMap.get(node.name);
+        if(if_store){ // if store give addr & offset
+            node.addr = addr;
+            node.offset = offset;
+        }
+        else{
+            virturalRegister reg = new virturalRegister();
+            curBlock.pushBack(new load(addr, reg, offset, accessSize));
+            if(node.jumpto != null){
+                curBlock.pushBack(new branch(binaryOp.EQUAL, node.jumpto, node.jumpother));
+                curBlock.addNext(node.jumpto);
+                curBlock.addNext(node.jumpother);
+            }
+            node.nodeValue = reg;
+        }
 
     }
     private void processBuiltinFunc(funcCall node){
-        //To be done
+        //Todo
     }
     @Override
     public void visit(funcCall node) {
@@ -579,6 +655,7 @@ public class IRbuilder implements ASTVisitor {
     @Override
     public void visit(indexAccessExpr node) { // Question remains about offset
         boolean tmp = if_store;
+        int sizeofInt = 8;
         if_store = false;
         visit(node.index);
         visit(node.array);
@@ -587,13 +664,13 @@ public class IRbuilder implements ASTVisitor {
         virturalRegister reg = new virturalRegister();
         curBlock.pushBack(new binaryOpInstr(binaryOp.MUL, node.index.nodeValue, new intImd(size), reg));
         curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, node.array.nodeValue, reg, reg)); // address saved in reg
-        //curBlock.pushBack(new binaryOpInstr(binaryOp.MUL,node.index.reg,));
         if(if_store) {
             node.addr = reg;
-            node.offset = 0;
+            node.offset = sizeofInt; // consider baseAddr has stored size of array;
         }
         else{
-            curBlock.pushBack(new load(reg, reg, 0,size));
+            curBlock.pushBack(new load(reg, reg, sizeofInt, size));
+            node.nodeValue = reg;
         }
 
         if(node.jumpto != null){
@@ -605,7 +682,6 @@ public class IRbuilder implements ASTVisitor {
             curBlock.addNext(instr.jumpto);
             curBlock.addNext(instr.jumpother);
         }
-        node.nodeValue = reg;
     }
 
     @Override
@@ -766,12 +842,15 @@ public class IRbuilder implements ASTVisitor {
 
     @Override
     public void visit(typ node) {
-
+        if(node == null) return;
+        node.accept(this);
     }
 
     @Override
     public void visit(arrayType node) {
-
+        visit(node.baseType);
+        visit(node.index);
+        dimList.add(node);
     }
 
     @Override

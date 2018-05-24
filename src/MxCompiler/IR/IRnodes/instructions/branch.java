@@ -13,4 +13,10 @@ public class branch extends instruction{
         jumpto = null;
         jumpother = null;
     }
+
+    public branch(binaryOp operator, basicBlock jumpto, basicBlock jumpother){
+        this.operator = operator;
+        this.jumpto = jumpto;
+        this.jumpother = jumpother;
+    }
 }
