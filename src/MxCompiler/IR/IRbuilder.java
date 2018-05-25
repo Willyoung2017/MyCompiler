@@ -23,12 +23,14 @@ import java.util.*;
 public class IRbuilder implements ASTVisitor {
     private basicBlock curBlock;
     private func curFunc;
+    private builtinFunc builtinFunction;
     private boolean isinClass;
     private boolean if_store;
     private classDec thisClass;
     private virturalRegister thisReg;
     private Stack<basicBlock> breakLoopStack;
     private Stack<basicBlock> continueLoopStack;
+    private Map<String, staticString> stringMap;
     private List<staticData> dataList;
     private List<arrayType> dimList;
     private symbolTable symTable;
@@ -40,12 +42,14 @@ public class IRbuilder implements ASTVisitor {
         curBlock = null;
         curFunc = null;
         thisReg = null;
+        builtinFunction = new builtinFunc();
         symTable = new symbolTable();
         breakLoopStack = new Stack<>();
         continueLoopStack = new Stack<>();
         dataList = new LinkedList<>();
         dimList = new LinkedList<>();
         funcMap = new HashMap<>();
+        stringMap = new HashMap<>();
     }
 
     @Override
@@ -184,7 +188,8 @@ public class IRbuilder implements ASTVisitor {
 
     @Override
     public void visit(memberDec node) {
-
+        if(node == null) return;
+        node.accept(this);
     }
 
     @Override
@@ -386,7 +391,7 @@ public class IRbuilder implements ASTVisitor {
             case RIGHT_SHIFT:
                 if(node.leftOperand.type instanceof intType)
                     processArithmeticExpr(node);
-                else processStrArithmeticExpr(node);
+                else processStrExpr(node);
                 break;
 
             case GEQ:
@@ -397,7 +402,7 @@ public class IRbuilder implements ASTVisitor {
             case NOT_EQUAL:
                 if(node.leftOperand.type instanceof intType)
                     processComparisonExpr(node);
-                else processStrComparisonExpr(node);
+                else processStrExpr(node);
                 break;
 
             case ASSIGN:
@@ -423,8 +428,45 @@ public class IRbuilder implements ASTVisitor {
         curBlock.pushBack(instr);
     }
 
-    private void processStrArithmeticExpr(binaryExpr node){
-        binaryOpInstr instr = new binaryOpInstr();
+    private void processStrExpr(binaryExpr node){
+        visit(node.leftOperand);
+        visit(node.rightOperand);
+        virturalRegister reg = new virturalRegister();
+        funCall call = null;
+        switch(node.operator){
+            case ADD:
+                call = new funCall(reg, builtinFunction.builtinStringAdd);
+                break;
+            case EQUAL:
+                call = new funCall(reg, builtinFunction.builtinStringEqual);
+                break;
+            case LEQ:
+                call = new funCall(reg, builtinFunction.builtinStingLessEqual);
+                break;
+            case LESS:
+                call = new funCall(reg, builtinFunction.builtinStringLess);
+                break;
+            case GEQ:
+                call = new funCall(reg, builtinFunction.builtinStringGreaterEqual);
+                break;
+            case GREATER:
+                call = new funCall(reg, builtinFunction.builtinStringGreater);
+        }
+        call.parameters.add(node.leftOperand.nodeValue);
+        call.parameters.add(node.rightOperand.nodeValue);
+        curBlock.pushBack(call);
+        node.nodeValue = reg;
+
+        if(node.jumpto != null){ // in condexpr
+            branch condInstr = new branch();
+            condInstr.operator = node.operator;
+            condInstr.jumpto = node.jumpto;
+            condInstr.jumpother = node.jumpother;
+            curBlock.pushBack(condInstr);
+            curBlock.addNext(condInstr.jumpto);
+            curBlock.addNext(condInstr.jumpother);
+        }
+
     }
 
     private void processComparisonExpr(binaryExpr node){
@@ -446,10 +488,6 @@ public class IRbuilder implements ASTVisitor {
             curBlock.addNext(condInstr.jumpto);
             curBlock.addNext(condInstr.jumpother);
         }
-    }
-
-    private void processStrComparisonExpr(binaryExpr node){
-
     }
 
     private void processAssign(binaryExpr node){
@@ -575,13 +613,21 @@ public class IRbuilder implements ASTVisitor {
         node.nodeValue = new intImd(node.value.intValue());
     }
 
-    private void allocateArray(int dim){
-        typ curNode = dimList.get(dim);
-        /*
-            for i = 0; i < curNode.nodeValue; ++i
-             [addr(preNode[i])]  = new curNode.basetype[nxtNode.nodeValue]
-        */
+    private virturalRegister processIndexList(){
+        int offset = 0;
+        virturalRegister addr = new virturalRegister();
+        for(arrayType dim : dimList){
+
+            curBlock.pushBack(new store(dim.index.nodeValue, addr,offset*8,8));
+            ++offset;
+        }
+        return addr;
     }
+
+    private void newArray(){
+
+    }
+
 
     @Override
     public void visit(newExpr node) {
@@ -596,33 +642,81 @@ public class IRbuilder implements ASTVisitor {
             //consider it as a builtin func
             dimList.clear();
             visit(node.type);
-            allocateArray(0);
-            int sizeofInt = 8;
+            newArray();
+            //int dim;
+            typ rootType = ((arrayType) node.type).rootType;
+            /*funCall call = new funCall(reg, builtinFunction.buildinNewArray);
+            call.parameters.add(new intImd(rootType.size)); //registerSize
+            call.parameters.add(new intImd(dim)); //dim
+            virturalRegister indexBase = processIndexList();
+            call.parameters.add(indexBase);//indexList
+
             expr index = ((arrayType) node.type).index;
             typ baseType = ((arrayType) node.type).baseType;
             curBlock.pushBack(new binaryOpInstr(binaryOp.MUL, index.nodeValue, new intImd(baseType.size), reg));
             //allocate space for storing size
-            curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, reg, new intImd(sizeofInt), reg));
+            curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, reg, new intImd(8), reg));
             curBlock.pushBack(new heapAllocate(reg, reg));
-            curBlock.pushBack(new store(index.nodeValue, reg, 0, sizeofInt));
+            curBlock.pushBack(new store(index.nodeValue, reg, 0, 8));
+            */
         }
         node.nodeValue = reg;
     }
 
     @Override
     public void visit(Null node) {
-
+        node.nodeValue = new intImd(0);
     }
 
     @Override
     public void visit(stringConstant node) {
-        //Todo
+        staticString str = stringMap.get(node.value);
+        if(str == null){
+            str = new staticString(node.value);
+            stringMap.put(node.value, str);
+        }
+        node.nodeValue = str;
+    }
+
+    private void processBuiltinMemFunc(fieldfuncAccessExpr node){
+        //Question remains
+        virturalRegister reg = null;
+        if(node.name.equals("size") || node.name.equals("length")){
+            //Question remains
+            reg = new virturalRegister("size");
+            curBlock.pushBack(new load(node.obj.nodeValue, reg,0,8));
+        }
+        else if(node.name.equals("substring")){
+            reg = new virturalRegister("substring");
+            funCall call = new funCall(reg, builtinFunction.builtinSubstring);
+            call.parameters.add(node.obj.nodeValue);
+            call.parameters.add(node.parameters.get(0).nodeValue);
+            call.parameters.add(node.parameters.get(1).nodeValue);
+            curBlock.pushBack(call);
+        }
+        else if(node.name.equals("parseInt")){
+            reg = new virturalRegister("parseInt");
+            funCall call = new funCall(reg, builtinFunction.builtinParseInt);
+            call.parameters.add(node.obj.nodeValue);
+            curBlock.pushBack(call);
+        }
+        else if(node.name.equals("ord")){
+            //Question remains
+            reg = new virturalRegister("ord");
+            curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, node.obj.nodeValue, node.parameters.get(0).nodeValue, reg));
+            curBlock.pushBack(new load(reg,reg, 8,1);
+        }
+        node.nodeValue = reg;
     }
 
     @Override
     public void visit(fieldfuncAccessExpr node) {
         visit(node.obj);
         node.parameters.stream().forEachOrdered(this::visit);
+        if(node.name.equals("size")||node.name.equals("length")||node.name.equals("substring")||node.name.equals("parseInt")||node.name.equals("ord")){
+            processBuiltinMemFunc(node);
+            return;
+        }
         func function = funcMap.get(node.name);
         virturalRegister reg = new virturalRegister();
         funCall call = new funCall(reg,function);
@@ -671,14 +765,56 @@ public class IRbuilder implements ASTVisitor {
         }
 
     }
-    private void processBuiltinFunc(funcCall node){
+
+    private void processPrint(expr para, boolean println){
         //Todo
+        if(para instanceof binaryExpr){
+
+        }
+        else if(para instanceof funcCall && ((funcCall)para).obj.name.equals("toString")){
+
+        }
+        else{
+
+        }
     }
+    private void processBuiltinFunc(funcCall node){
+        virturalRegister reg = null;
+        if(node.name.equals("getInt")){
+            reg = new virturalRegister("getInt");
+            funCall call = new funCall(reg, builtinFunction.builtinGetInt);
+            curBlock.pushBack(call);
+        }
+        else if(node.name.equals("getString")){
+            reg = new virturalRegister("getString");
+            funCall call = new funCall(reg, builtinFunction.builtinGetString);
+            curBlock.pushBack(call);
+        }
+        else if(node.name.equals("print")){
+            funCall call = new funCall(null, builtinFunction.builtinPrintString);
+            call.parameters.add(node.parameters.get(0).nodeValue);
+            curBlock.pushBack(call);
+        }
+        else if(node.name.equals("println")){
+            funCall call = new funCall(null, builtinFunction.builtinPrintlnString);
+            call.parameters.add(node.parameters.get(0).nodeValue);
+            curBlock.pushBack(call);
+        }
+        else if(node.name.equals("toString")){
+            reg = new virturalRegister("toString");
+            funCall call = new funCall(reg, builtinFunction.builtintoString);
+            call.parameters.add(node.parameters.get(0).nodeValue);
+            curBlock.pushBack(call);
+        }
+        node.nodeValue = reg;
+    }
+
     @Override
     public void visit(funcCall node) {
         node.parameters.stream().forEachOrdered(this::visit);
         if (node.obj.name.equals("getInt")||node.obj.name.equals("print") || node.obj.name.equals("println")||node.obj.name.equals("toString")||node.obj.name.equals("getString")){
             processBuiltinFunc(node);
+            return;
         }
 
         func function = funcMap.get(node.name);

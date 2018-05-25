@@ -586,6 +586,7 @@ public class typeResolver implements ASTVisitor {
     @Override
     public void visit(arrayType node) {
         if (node == null) return;
+        node.rootType = getType(node);
         visit(node.baseType);
         if (node.baseType instanceof voidType){
             error.add(new semanticException("Variable cannot be VOID!"+node.loc.locString()));
