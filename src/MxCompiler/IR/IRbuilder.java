@@ -23,7 +23,10 @@ import java.util.*;
 public class IRbuilder implements ASTVisitor {
     private basicBlock curBlock;
     private func curFunc;
+    private boolean isinClass;
     private boolean if_store;
+    private classDec thisClass;
+    private virturalRegister thisReg;
     private Stack<basicBlock> breakLoopStack;
     private Stack<basicBlock> continueLoopStack;
     private List<staticData> dataList;
@@ -32,8 +35,11 @@ public class IRbuilder implements ASTVisitor {
     public Map<String, func> funcMap;
 
     public IRbuilder(){
+        isinClass = false;
+        if_store = false;
         curBlock = null;
         curFunc = null;
+        thisReg = null;
         symTable = new symbolTable();
         breakLoopStack = new Stack<>();
         continueLoopStack = new Stack<>();
@@ -55,6 +61,8 @@ public class IRbuilder implements ASTVisitor {
 
     @Override
     public void visit(classDec node) {
+        isinClass = true;
+        thisClass = node;
         symbol sym = new symbol();
         sym.setSymbol(node);
         symTable.classMap.put(node, sym);
@@ -68,6 +76,7 @@ public class IRbuilder implements ASTVisitor {
                 visit(mem);
             }
         }
+        isinClass = false;
     }
 
     @Override
@@ -78,6 +87,11 @@ public class IRbuilder implements ASTVisitor {
         for (varDec p : node.parameterList) {
             virturalRegister reg = new virturalRegister(p.name);
             curFunc.parameterList.add(reg);
+            p.nodeValue = reg; // important!!!
+        }
+        if(isinClass){
+            thisReg = new virturalRegister("this");
+            curFunc.parameterList.add(thisReg);
         }
         //node.parameterList.stream().forEachOrdered(this::visit);
         basicBlock startBlock = new basicBlock(node.name);
@@ -521,7 +535,13 @@ public class IRbuilder implements ASTVisitor {
          //Question remains
         if(node.ent instanceof varDec){
             node.nodeValue = ((varDec) node.ent).nodeValue;
-
+            if(isinClass && node.nodeValue == null){ // memaccess in memFunc
+                symbol sym = symTable.classMap.get(thisClass);
+                int offset = sym.offsetMap.get(node.name);
+                virturalRegister reg = new virturalRegister();
+                curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, thisReg, new intImd(offset),reg));
+                node.nodeValue = reg;
+            }
         }
         else if(node.ent instanceof globalVarDec){
             node.nodeValue = ((globalVarDec)node.ent).nodeValue;
@@ -529,10 +549,16 @@ public class IRbuilder implements ASTVisitor {
         else if(node.ent instanceof varDecStmt){
             node.nodeValue = ((varDecStmt)node.ent).nodeValue;
         }
-        else if(node.ent instanceof classDec){
-            symbol sym = symTable.symbolMap.get(node.ent.name);
+        else if (node.ent instanceof  classDec){ // mem this
+            node.nodeValue = thisReg;
+        }
+
+        if(node.ent.type instanceof classType && !node.name.equals("this")){ // class shili name
+            symbol sym = symTable.symbolMap.get(node.ent.type.name);
             symTable.symbolMap.putIfAbsent(node.name, sym);
         }
+
+
         if(node.jumpto != null){ // in logicalExpr
             branch instr = new branch();
             instr.operator = binaryOp.EQUAL;
@@ -567,6 +593,7 @@ public class IRbuilder implements ASTVisitor {
         }
         else if(node.type instanceof arrayType){
             //Todo
+            //consider it as a builtin func
             dimList.clear();
             visit(node.type);
             allocateArray(0);
@@ -594,7 +621,27 @@ public class IRbuilder implements ASTVisitor {
 
     @Override
     public void visit(fieldfuncAccessExpr node) {
-        //Todo
+        visit(node.obj);
+        node.parameters.stream().forEachOrdered(this::visit);
+        func function = funcMap.get(node.name);
+        virturalRegister reg = new virturalRegister();
+        funCall call = new funCall(reg,function);
+        for(expr p : node.parameters) {
+            call.parameters.add(p.nodeValue);
+        }
+        call.parameters.add(node.obj.nodeValue);
+        curBlock.pushBack(call);
+
+        if(node.jumpto != null){//bool rettype
+            branch instr = new branch();
+            instr.operator = binaryOp.EQUAL;
+            instr.jumpto = node.jumpto;
+            instr.jumpother = node.jumpother;
+            curBlock.pushBack(instr);
+            curBlock.addNext(instr.jumpto);
+            curBlock.addNext(instr.jumpother);
+        }
+        node.nodeValue = reg;
     }
 
     @Override
@@ -650,6 +697,7 @@ public class IRbuilder implements ASTVisitor {
             curBlock.addNext(instr.jumpto);
             curBlock.addNext(instr.jumpother);
         }
+        node.nodeValue = reg;
     }
 
     @Override
