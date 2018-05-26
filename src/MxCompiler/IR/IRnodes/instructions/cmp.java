@@ -17,4 +17,10 @@ public class cmp extends instruction{
         result = null;
         operator = null;
     }
+    public cmp(binaryOp operator, intValue leftOperand, intValue rightOperand, register result){
+        this.operator = operator;
+        this.leftOperand = leftOperand;
+        this.rightOperand = rightOperand;
+        this.result = result;
+    }
 }

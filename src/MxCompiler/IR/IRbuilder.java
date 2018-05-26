@@ -624,8 +624,91 @@ public class IRbuilder implements ASTVisitor {
         return addr;
     }
 
-    private void newArray(){
+    private void newArray(int order, virturalRegister reg){
+        int dim = dimList.size();
+        arrayType node = dimList.get(order);
+        typ baseType = dimList.get(dim-1-order).baseType;
+        expr index = node.index;
+        /*
+         int[][][] a = new int[3][4][5]
+         convert  to:
 
+         int[][][] a = new int[3][][];
+
+         for int i = 0; i < 3; ++i
+             a[i] = new int[4][];
+             for int j = 0; j < 4; ++j
+                 a[i][j] = new int[5]
+
+        needed_order:
+        indexList: 3, 4, 5
+        typeList: int[3][4][5].baseType, int[3][4].baseType, int[3].baseType
+        actual_order:
+        dimList: arrayNode int[3], arrayNode int[3][4], arrayNode int[3][4][5]
+
+        for int i = 0; i < prv_order_dim; ++i
+           prv_order_type[i] = new order_type[order_dim]
+        */
+        if(order == 0){
+            curBlock.pushBack(new binaryOpInstr(binaryOp.MUL, index.nodeValue, new intImd(baseType.size), reg));
+            //allocate space for storing size
+            curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, reg, new intImd(8), reg));
+            curBlock.pushBack(new heapAllocate(reg, reg));
+            curBlock.pushBack(new store(index.nodeValue, reg, 0, 8));
+            newArray(order + 1, reg);
+        }
+        else {
+            if(order == dim) return;
+
+            arrayType prvNode = dimList.get(order - 1);
+            expr prvIndex = prvNode.index;
+            typ prvBaseType = dimList.get(dim-order).baseType;
+            basicBlock condBlock = new basicBlock("for_cond");
+            basicBlock stepBlock = new basicBlock("for_step");
+            basicBlock bodyBlock = new basicBlock("for_body");
+            basicBlock endBlock = new basicBlock("for_end");
+
+            //init
+            virturalRegister init_reg = new virturalRegister("init_i");
+            curBlock.pushBack(new move(new intImd(0), init_reg));
+            curBlock.pushBack(new jump(condBlock));
+            curBlock.addNext(condBlock);
+
+            //cond
+            curBlock = condBlock;
+            virturalRegister cmp_reg = new virturalRegister("cond_result");
+            curBlock.pushBack(new cmp(binaryOp.LESS, init_reg, prvIndex.nodeValue,cmp_reg));
+            curBlock.pushBack(new branch(binaryOp.LESS,bodyBlock, endBlock));
+            curBlock.addNext(bodyBlock);
+            curBlock.addNext(endBlock);
+
+            //body
+            curBlock = bodyBlock;
+            virturalRegister leftAddrReg = new virturalRegister();
+            curBlock.pushBack(new binaryOpInstr(binaryOp.MUL, init_reg, new intImd(prvBaseType.size),leftAddrReg));
+            curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, leftAddrReg, reg, leftAddrReg)); //reg is the baseAddr of the prvNewArray
+                                                                                               // & leftAddrReg + offset(8) is the place to store the addr of newArray
+            virturalRegister rightAddrReg= new virturalRegister();
+            curBlock.pushBack(new binaryOpInstr(binaryOp.MUL, index.nodeValue, new intImd(baseType.size), rightAddrReg));
+            //allocate space for storing size
+            curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, reg, new intImd(8), rightAddrReg));
+            curBlock.pushBack(new heapAllocate(rightAddrReg, rightAddrReg)); //rightAddrReg is baseAddr of the NewArray
+            curBlock.pushBack(new store(index.nodeValue, rightAddrReg, 0, 8)); //store size in rightAddrReg
+            curBlock.pushBack(new store(rightAddrReg, leftAddrReg, 8, 8));
+            curBlock.pushBack(new jump(stepBlock));
+            curBlock.addNext(stepBlock);
+
+            //step
+            curBlock = stepBlock;
+            curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, init_reg, new intImd(1), init_reg));
+            curBlock.pushBack(new jump(condBlock));
+            curBlock.addNext(condBlock);
+            curBlock = endBlock;
+
+            //end
+            newArray(order + 1, rightAddrReg);
+
+        }
     }
 
 
@@ -642,7 +725,7 @@ public class IRbuilder implements ASTVisitor {
             //consider it as a builtin func
             dimList.clear();
             visit(node.type);
-            newArray();
+            newArray(0, reg);
             //int dim;
             typ rootType = ((arrayType) node.type).rootType;
             /*funCall call = new funCall(reg, builtinFunction.buildinNewArray);
@@ -704,7 +787,7 @@ public class IRbuilder implements ASTVisitor {
             //Question remains
             reg = new virturalRegister("ord");
             curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, node.obj.nodeValue, node.parameters.get(0).nodeValue, reg));
-            curBlock.pushBack(new load(reg,reg, 8,1);
+            curBlock.pushBack(new load(reg,reg, 8,1));
         }
         node.nodeValue = reg;
     }
