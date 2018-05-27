@@ -2,6 +2,7 @@ package MxCompiler.IR.IRnodes.instructions;
 
 import MxCompiler.IR.IRnodes.address;
 import MxCompiler.IR.IRnodes.intValue;
+import MxCompiler.IR.IRnodes.register;
 
 public class store extends instruction{
     public int offset;
@@ -19,5 +20,15 @@ public class store extends instruction{
         this.addr = addr;
         this.offset = offset;
         this.accessSize = accessSize;
+        setUsedRegister();
+    }
+
+    @Override
+    public register getDefRegister() {
+        return null;
+    }
+
+    public void setUsedRegister(){
+        if(src instanceof register) usedRegister.add((register) src);
     }
 }

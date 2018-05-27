@@ -23,5 +23,17 @@ public class binaryOpInstr extends instruction{
         this.leftOperand = leftOperand;
         this.rightOperand = rightOperand;
         this.result = result;
+        setUsedRegister();
+    }
+
+    @Override
+    public register getDefRegister() {
+        return result;
+    }
+
+    @Override
+    public void setUsedRegister() {
+        if(leftOperand instanceof register) usedRegister.add((register) leftOperand);
+        if(rightOperand instanceof register) usedRegister.add((register) rightOperand);
     }
 }

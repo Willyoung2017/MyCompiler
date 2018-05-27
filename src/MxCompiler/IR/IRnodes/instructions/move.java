@@ -17,5 +17,15 @@ public class move extends instruction {
     public move(intValue srcReg, register destReg){
         this.destReg = destReg;
         this.srcReg = srcReg;
+        setUsedRegister();
+    }
+
+    @Override
+    public register getDefRegister() {
+        return destReg;
+    }
+
+    public void setUsedRegister(){
+        if(srcReg instanceof register) usedRegister.add((register)srcReg);
     }
 }

@@ -20,5 +20,20 @@ public class funCall extends instruction{
     public funCall(register returnReg, func function){
         this.returnReg = returnReg;
         this.function = function;
+        setUsedRegister();
+    }
+
+    @Override
+    public register getDefRegister() {
+        return returnReg;
+    }
+
+    @Override
+    public void setUsedRegister() {
+        for(intValue para : parameters){
+            if(para instanceof register){
+                usedRegister.add((register) para);
+            }
+        }
     }
 }

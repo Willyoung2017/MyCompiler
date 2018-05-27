@@ -10,5 +10,17 @@ public class heapAllocate extends instruction{
     public heapAllocate(register destReg, intValue allocSize){
         this.destReg = destReg;
         this.allocSize = allocSize;
+        setUsedRegister();
+    }
+
+    public register getDefRegister(){
+        return destReg;
+    }
+
+    @Override
+    public void setUsedRegister() {
+        if(allocSize instanceof register){
+            usedRegister.add((register) allocSize);
+        }
     }
 }

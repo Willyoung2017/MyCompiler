@@ -2,11 +2,12 @@ package MxCompiler.IR.IRnodes.instructions;
 
 import MxCompiler.IR.IRnodes.address;
 import MxCompiler.IR.IRnodes.intValue;
+import MxCompiler.IR.IRnodes.register;
 
 public class load extends instruction{
     public int offset;
     public int accessSize;
-    public intValue dest;
+    public register dest;
     public intValue addr;
 
     public load(){
@@ -14,10 +15,21 @@ public class load extends instruction{
         addr = null;
     }
 
-    public load(intValue addr, intValue dest, int offset, int accessSize){
+    public load(intValue addr, register dest, int offset, int accessSize){
         this.addr = addr;
         this.dest = dest;
         this.offset = offset;
         this.accessSize = accessSize;
+        setUsedRegister();
+    }
+
+    @Override
+    public register getDefRegister() {
+        return dest;
+    }
+
+    @Override
+    public void setUsedRegister() {
+
     }
 }

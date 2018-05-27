@@ -419,12 +419,9 @@ public class IRbuilder implements ASTVisitor {
     private void processArithmeticExpr(binaryExpr node){
         visit(node.leftOperand);
         visit(node.rightOperand);
-        binaryOpInstr instr = new binaryOpInstr();
-        instr.operator = node.operator;
-        instr.leftOperand = node.leftOperand.nodeValue;
-        instr.rightOperand = node.rightOperand.nodeValue;
-        node.nodeValue = new virturalRegister();
-        instr.result = (virturalRegister) node.nodeValue;
+        virturalRegister reg = new virturalRegister();
+        binaryOpInstr instr = new binaryOpInstr(node.operator, node.leftOperand.nodeValue, node.rightOperand.nodeValue, reg);
+        node.nodeValue = reg;
         curBlock.pushBack(instr);
     }
 
@@ -458,10 +455,8 @@ public class IRbuilder implements ASTVisitor {
         node.nodeValue = reg;
 
         if(node.jumpto != null){ // in condexpr
-            branch condInstr = new branch();
-            condInstr.operator = node.operator;
-            condInstr.jumpto = node.jumpto;
-            condInstr.jumpother = node.jumpother;
+            branch condInstr = new branch(node.operator, node.jumpto, node.jumpother);
+
             curBlock.pushBack(condInstr);
             curBlock.addNext(condInstr.jumpto);
             curBlock.addNext(condInstr.jumpother);
@@ -472,18 +467,12 @@ public class IRbuilder implements ASTVisitor {
     private void processComparisonExpr(binaryExpr node){
         visit(node.leftOperand);
         visit(node.rightOperand);
-        cmp instr = new cmp();
-        instr.operator = node.operator;
-        instr.leftOperand = node.leftOperand.nodeValue;
-        instr.rightOperand = node.rightOperand.nodeValue;
-        node.nodeValue = new virturalRegister();
-        instr.result = (virturalRegister) node.nodeValue;
+        virturalRegister reg = new virturalRegister();
+        cmp instr = new cmp(node.operator, node.leftOperand.nodeValue, node.rightOperand.nodeValue, reg);
+        node.nodeValue = reg;
         curBlock.pushBack(instr);
         if(node.jumpto != null) { // in condexpr
-            branch condInstr = new branch();
-            condInstr.operator = node.operator;
-            condInstr.jumpto = node.jumpto;
-            condInstr.jumpother = node.jumpother;
+            branch condInstr = new branch(node.operator, node.jumpto, node.jumpother);
             curBlock.pushBack(condInstr);
             curBlock.addNext(condInstr.jumpto);
             curBlock.addNext(condInstr.jumpother);
@@ -598,10 +587,7 @@ public class IRbuilder implements ASTVisitor {
 
 
         if(node.jumpto != null){ // in logicalExpr
-            branch instr = new branch();
-            instr.operator = binaryOp.EQUAL;
-            instr.jumpto = node.jumpto;
-            instr.jumpother = node.jumpother;
+            branch instr = new branch(binaryOp.EQUAL, node.jumpto, node.jumpother);
             curBlock.pushBack(instr);
             curBlock.addNext(instr.jumpto);
             curBlock.addNext(instr.jumpother);
@@ -810,10 +796,7 @@ public class IRbuilder implements ASTVisitor {
         curBlock.pushBack(call);
 
         if(node.jumpto != null){//bool rettype
-            branch instr = new branch();
-            instr.operator = binaryOp.EQUAL;
-            instr.jumpto = node.jumpto;
-            instr.jumpother = node.jumpother;
+            branch instr = new branch(binaryOp.EQUAL, node.jumpto, node.jumpother);
             curBlock.pushBack(instr);
             curBlock.addNext(instr.jumpto);
             curBlock.addNext(instr.jumpother);
@@ -908,10 +891,7 @@ public class IRbuilder implements ASTVisitor {
         }
         curBlock.pushBack(call);
         if(node.jumpto != null){//bool rettype
-            branch instr = new branch();
-            instr.operator = binaryOp.EQUAL;
-            instr.jumpto = node.jumpto;
-            instr.jumpother = node.jumpother;
+            branch instr = new branch(binaryOp.EQUAL, node.jumpto, node.jumpother);
             curBlock.pushBack(instr);
             curBlock.addNext(instr.jumpto);
             curBlock.addNext(instr.jumpother);
@@ -941,10 +921,7 @@ public class IRbuilder implements ASTVisitor {
         }
 
         if(node.jumpto != null){
-            branch instr = new branch();
-            instr.operator = binaryOp.EQUAL;
-            instr.jumpto = node.jumpto;
-            instr.jumpother = node.jumpother;
+            branch instr = new branch(binaryOp.EQUAL, node.jumpto, node.jumpother);
             curBlock.pushBack(instr);
             curBlock.addNext(instr.jumpto);
             curBlock.addNext(instr.jumpother);
@@ -1015,7 +992,7 @@ public class IRbuilder implements ASTVisitor {
         virturalRegister reg;
         switch (node.operator){
             case LOGIC_NOT:
-                node.operand.setBlocks(node.jumpto, node.jumpother);
+                node.operand.setBlocks(node.jumpother, node.jumpto);
                 visit(node.operand);
                 break;
             case NEG:

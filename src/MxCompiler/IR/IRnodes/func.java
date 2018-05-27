@@ -21,6 +21,11 @@ public class func {
         returnInstrList = new LinkedList<>();
     }
 
+    public List<basicBlock> getReverseOrder(){
+        List<basicBlock> reverseOrder = new LinkedList<>();
+        //Todo
+        return reverseOrder;
+    }
 
     public void setFuncType(typ funcType){
         this.funcType = funcType;
@@ -33,6 +38,7 @@ public class func {
     public void setLastBlock(basicBlock lastBlock){
         this.lastBlock = lastBlock;
     }
+
     public typ getFuncType(){
         return funcType;
     }

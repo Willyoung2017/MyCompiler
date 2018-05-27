@@ -20,5 +20,16 @@ public class unaryOpInstr extends instruction{
         this.operand = operand;
         this.operator = operator;
         this.result = result;
+        setUsedRegister();
+    }
+
+    public register getDefRegister(){
+        return result;
+    }
+
+    public void setUsedRegister(){
+        if(operand instanceof register){
+            usedRegister.add((register) operand);
+        }
     }
 }
