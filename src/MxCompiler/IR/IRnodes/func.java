@@ -3,8 +3,7 @@ package MxCompiler.IR.IRnodes;
 import MxCompiler.Ast.TypeSpecifier.typ;
 import MxCompiler.IR.IRnodes.instructions.returnInstr;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class func {
     private basicBlock firstBlock;
@@ -12,7 +11,7 @@ public class func {
     private typ funcType;
     public List<virturalRegister> parameterList;
     public List<returnInstr> returnInstrList;
-
+    public List<basicBlock> reversePreOrder = null;
     public func(){
         firstBlock = null;
         lastBlock = null;
@@ -21,10 +20,21 @@ public class func {
         returnInstrList = new LinkedList<>();
     }
 
-    public List<basicBlock> getReverseOrder(){
-        List<basicBlock> reverseOrder = new LinkedList<>();
-        //Todo
-        return reverseOrder;
+    private void preOrderVist(basicBlock curBlock, Set<basicBlock> visited){
+        if(visited.contains(curBlock)) return;
+        visited.add(curBlock);
+        reversePreOrder.add(curBlock);
+        for(basicBlock nxtBlock : curBlock.getNext()){
+            preOrderVist(nxtBlock, visited);
+        }
+    }
+
+    public List<basicBlock> getReversePreOrder(){
+        if(reversePreOrder != null) return reversePreOrder;
+        Set<basicBlock> visited = new HashSet<>();
+        preOrderVist(firstBlock, visited);
+        Collections.reverse(reversePreOrder);
+        return reversePreOrder;
     }
 
     public void setFuncType(typ funcType){

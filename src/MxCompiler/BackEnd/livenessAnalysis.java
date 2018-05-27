@@ -23,9 +23,9 @@ public class livenessAnalysis {
     }
 
     private void livenessProcess(func function){
-        List<basicBlock> reverseOrder = function.getReverseOrder();
+        List<basicBlock> reversePreOrder = function.getReversePreOrder();
         //init
-        for(basicBlock bb : reverseOrder){
+        for(basicBlock bb : reversePreOrder){
             for(instruction instr = bb.getHead(); instr != null; instr = instr.getNext()){
                 if(instr.liveIn != null){
                     instr.liveIn.clear();
@@ -43,7 +43,7 @@ public class livenessAnalysis {
         boolean changed = true;
         while(changed){
             changed = false;
-            for(basicBlock bb :reverseOrder){
+            for(basicBlock bb :reversePreOrder){
                 for(instruction instr = bb.getLast(); instr != null; instr = instr.getPrev()) {
                     in.clear();
                     out.clear();
