@@ -2,8 +2,11 @@ package MxCompiler.IR.IRnodes.instructions;
 
 import MxCompiler.Ast.Expression.UnaryExpression.unaryOp;
 import MxCompiler.IR.IRnodes.intValue;
+import MxCompiler.IR.IRnodes.physicRegister;
 import MxCompiler.IR.IRnodes.register;
 import MxCompiler.IR.IRnodes.virturalRegister;
+
+import java.util.Map;
 
 public class unaryOpInstr extends instruction{
     public intValue operand;
@@ -28,8 +31,20 @@ public class unaryOpInstr extends instruction{
     }
 
     public void setUsedRegister(){
+        usedRegister.clear();
         if(operand instanceof register){
             usedRegister.add((register) operand);
         }
+    }
+
+    public void setDefRegister(register reg){
+        result = reg;
+    }
+
+    public void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap){
+        if(operand instanceof virturalRegister){
+            operand = allocateMap.get(operand);
+        }
+        setUsedRegister();
     }
 }

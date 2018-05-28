@@ -1,11 +1,10 @@
 package MxCompiler.IR.IRnodes.instructions;
 
-import MxCompiler.IR.IRnodes.func;
-import MxCompiler.IR.IRnodes.intValue;
-import MxCompiler.IR.IRnodes.register;
+import MxCompiler.IR.IRnodes.*;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class funCall extends instruction{
     public register returnReg;
@@ -30,10 +29,26 @@ public class funCall extends instruction{
 
     @Override
     public void setUsedRegister() {
+        usedRegister.clear();
         for(intValue para : parameters){
             if(para instanceof register){
                 usedRegister.add((register) para);
             }
         }
+    }
+
+
+    public void setDefRegister(register reg){
+        returnReg = reg;
+    }
+
+
+    public void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap){
+        for(intValue para : parameters){
+            if(para instanceof virturalRegister){
+                para = allocateMap.get(para);
+            }
+        }
+        setUsedRegister();
     }
 }

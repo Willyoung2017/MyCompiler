@@ -1,8 +1,8 @@
 package MxCompiler.IR.IRnodes.instructions;
 
-import MxCompiler.IR.IRnodes.address;
-import MxCompiler.IR.IRnodes.intValue;
-import MxCompiler.IR.IRnodes.register;
+import MxCompiler.IR.IRnodes.*;
+
+import java.util.Map;
 
 public class load extends instruction{
     public int offset;
@@ -30,6 +30,14 @@ public class load extends instruction{
 
     @Override
     public void setUsedRegister() {
+
+    }
+
+    public void setDefRegister(register reg){
+        dest = reg;
+    }
+
+    public void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap){
 
     }
 }

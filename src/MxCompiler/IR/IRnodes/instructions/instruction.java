@@ -1,13 +1,11 @@
 package MxCompiler.IR.IRnodes.instructions;
 
 import MxCompiler.IR.IRnodes.basicBlock;
+import MxCompiler.IR.IRnodes.physicRegister;
 import MxCompiler.IR.IRnodes.register;
 import MxCompiler.IR.IRnodes.virturalRegister;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public abstract class instruction {
     private instruction prev;
@@ -16,7 +14,6 @@ public abstract class instruction {
 
     //for liveness
     public List<register> usedRegister = new LinkedList<>();
-    public register defRegister = null;
     public Set<virturalRegister> liveIn = null;
     public Set<virturalRegister> liveOut = null;
 
@@ -71,4 +68,6 @@ public abstract class instruction {
 
     public abstract register getDefRegister();
     public abstract void setUsedRegister();
+    public abstract void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap);
+    public abstract void setDefRegister(register reg);
 }

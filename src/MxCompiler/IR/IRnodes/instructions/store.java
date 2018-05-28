@@ -1,8 +1,8 @@
 package MxCompiler.IR.IRnodes.instructions;
 
-import MxCompiler.IR.IRnodes.address;
-import MxCompiler.IR.IRnodes.intValue;
-import MxCompiler.IR.IRnodes.register;
+import MxCompiler.IR.IRnodes.*;
+
+import java.util.Map;
 
 public class store extends instruction{
     public int offset;
@@ -29,6 +29,19 @@ public class store extends instruction{
     }
 
     public void setUsedRegister(){
+        usedRegister.clear();
         if(src instanceof register) usedRegister.add((register) src);
+    }
+
+
+    public void setDefRegister(register reg){
+
+    }
+
+    public void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap){
+        if(src instanceof  virturalRegister){
+            src = allocateMap.get(src);
+        }
+        setUsedRegister();
     }
 }

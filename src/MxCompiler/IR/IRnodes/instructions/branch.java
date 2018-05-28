@@ -2,7 +2,11 @@ package MxCompiler.IR.IRnodes.instructions;
 
 import MxCompiler.Ast.Expression.BinaryExpression.binaryOp;
 import MxCompiler.IR.IRnodes.basicBlock;
+import MxCompiler.IR.IRnodes.physicRegister;
 import MxCompiler.IR.IRnodes.register;
+import MxCompiler.IR.IRnodes.virturalRegister;
+
+import java.util.Map;
 
 public class branch extends instruction{
     public binaryOp operator;
@@ -27,8 +31,17 @@ public class branch extends instruction{
         return null;
     }
 
+    public void setDefRegister(register reg){
+
+    }
+
     @Override
     public void setUsedRegister() {
 
     }
-}
+
+    public void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap){
+
+    }
+
+    }

@@ -11,6 +11,7 @@ public class func {
     private typ funcType;
     public List<virturalRegister> parameterList;
     public List<returnInstr> returnInstrList;
+    public List<basicBlock> preOrder = null;
     public List<basicBlock> reversePreOrder = null;
     public func(){
         firstBlock = null;
@@ -27,6 +28,22 @@ public class func {
         for(basicBlock nxtBlock : curBlock.getNext()){
             preOrderVist(nxtBlock, visited);
         }
+    }
+
+    private void preOrder_Vist(basicBlock curBlock, Set<basicBlock> visited){
+        if(visited.contains(curBlock)) return;
+        visited.add(curBlock);
+        preOrder.add(curBlock);
+        for(basicBlock nxtBlock : curBlock.getNext()){
+            preOrderVist(nxtBlock, visited);
+        }
+    }
+
+    public List<basicBlock> getPreOrder(){
+        if(preOrder != null) return preOrder;
+        Set<basicBlock> visited = new HashSet<>();
+        preOrder_Vist(firstBlock, visited);
+        return preOrder;
     }
 
     public List<basicBlock> getReversePreOrder(){
