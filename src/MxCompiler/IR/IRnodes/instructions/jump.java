@@ -11,7 +11,8 @@ import java.util.Map;
 public class jump extends instruction{
     public basicBlock jumpto;
 
-    public jump(basicBlock jumpto){
+    public jump(basicBlock itsBlock, basicBlock jumpto){
+        this.itsBlock = itsBlock;
         this.jumpto = jumpto;
         setUsedRegister();
     }

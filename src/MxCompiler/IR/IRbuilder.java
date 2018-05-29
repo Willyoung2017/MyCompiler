@@ -68,6 +68,7 @@ public class IRbuilder implements ASTVisitor {
                 func function = new func(declaration.name, ((funcDec)declaration).functionType);
                 funcMap.put(declaration.name, function);
             }
+
             if(declaration instanceof classDec){
                 symbol sym = new symbol();
                 sym.setSymbol((classDec) declaration);
@@ -87,10 +88,26 @@ public class IRbuilder implements ASTVisitor {
             }
         }
         for(dec declaration : node.declarations){
+            if(declaration instanceof classDec){
+                for(memberDec mem: ((classDec)declaration).classMems){
+                    dec memDec = mem.declaration;
+                    if(memDec instanceof varDec){
+                        if(((varDec) memDec).variableType instanceof classType){
+                            symbol sym = symTable.classMap.get(((varDec) memDec).variableType.name);
+                            symTable.symbolMap.put(memDec.name, sym);
+                        }
+                        else if(((varDec) memDec).variableType instanceof arrayType && ((arrayType)((varDec) memDec).variableType).rootType instanceof classType){
+                            symbol sym = symTable.classMap.get(((arrayType)((varDec) memDec).variableType).rootType.name);
+                            symTable.symbolMap.put(memDec.name, sym);
+                        }
+                    }
+                }
+            }
             if(!(declaration instanceof globalVarDec)){
                 visit(declaration);
             }
         }
+        funcMap.values().stream().forEach(func::clearUnreachableBlocks);
     }
 
     @Override
@@ -146,22 +163,24 @@ public class IRbuilder implements ASTVisitor {
                 //visit(vardec.variableExpression);
                 identifier var = new identifier(vardec.name);
                 var.ent = vardec;
-                binaryExpr globalVarAssign = new binaryExpr(var, vardec.variableExpression, binaryOp.ASSIGN);
-                processAssign(globalVarAssign);
+                if(vardec.variableExpression != null) {
+                    binaryExpr globalVarAssign = new binaryExpr(var, vardec.variableExpression, binaryOp.ASSIGN);
+                    processAssign(globalVarAssign);
+                }
             }
         }
         visit(node.functionStmt);
-        if(curFunc.returnInstrList.size() == 0){
-            if(node.functionType instanceof voidType){
-                returnInstr ret = new returnInstr(null);
-                curBlock.pushBack(ret);
-                curFunc.returnInstrList.add(ret);
-            }
-            else {
-                returnInstr ret = new returnInstr(new intImd(0));
-                curBlock.pushBack(ret);
-                curFunc.returnInstrList.add(ret);
-            }
+
+        if(node.functionType instanceof voidType){
+            returnInstr ret = new returnInstr(curBlock, null);
+            curBlock.pushBack(ret);
+            curFunc.returnInstrList.add(ret);
+        }
+
+        if(curFunc.returnInstrList.size() == 0){//functiontype must not be voidType;
+            returnInstr ret = new returnInstr(curBlock, new intImd(0));
+            curBlock.pushBack(ret);
+            curFunc.returnInstrList.add(ret);
         }
 
         if (curFunc.returnInstrList.size() > 1){
@@ -170,14 +189,19 @@ public class IRbuilder implements ASTVisitor {
             for(returnInstr ret : curFunc.returnInstrList){
                 basicBlock thisBlock = ret.getItsBlock();
                 if(ret.retReg != null){
-                    ret.linkPrev(new move(ret.retReg, newRetReg));
+                    ret.linkPrev(new move(curBlock, ret.retReg, newRetReg));
                 }
-                ret.linkPrev(new jump(lastBlock));
+                ret.linkPrev(new jump(thisBlock, lastBlock));
                 ret.remove();
                 //thisBlock.pushBack(new jump(lastBlock));
                 thisBlock.addNext(lastBlock);
             }
-            lastBlock.pushBack(new returnInstr(newRetReg));
+            if(node.functionType instanceof voidType){
+                lastBlock.pushBack(new returnInstr(lastBlock, null));
+            }
+            else {
+                lastBlock.pushBack(new returnInstr(lastBlock, newRetReg));
+            }
             curFunc.setLastBlock(lastBlock);
         }
         else {
@@ -218,26 +242,19 @@ public class IRbuilder implements ASTVisitor {
         curFunc.setFirstBlock(startBlock);
 
         visit(node.funcStmt);
-        if(curFunc.returnInstrList.size() == 0){
-            returnInstr ret = new returnInstr(null);
-            curBlock.pushBack(ret);
-            curFunc.returnInstrList.add(ret);
-        }
+        returnInstr ret = new returnInstr(curBlock, null);
+        curBlock.pushBack(ret);
+        curFunc.returnInstrList.add(ret);
 
         if (curFunc.returnInstrList.size() > 1){
             basicBlock lastBlock = new basicBlock(node.name+"_last");
-            virturalRegister newRetReg = new virturalRegister("new_ret");
-            for(returnInstr ret : curFunc.returnInstrList){
-                basicBlock thisBlock = ret.getItsBlock();
-                if(ret.retReg != null){
-                    ret.linkPrev(new move(ret.retReg, newRetReg));
-                }
-                ret.linkPrev(new jump(lastBlock));
-                ret.remove();
-                //thisBlock.pushBack(new jump(lastBlock));
+            for(returnInstr ret1 : curFunc.returnInstrList){
+                basicBlock thisBlock = ret1.getItsBlock();
+                ret1.linkPrev(new jump(thisBlock, lastBlock));
+                ret1.remove();
                 thisBlock.addNext(lastBlock);
             }
-            lastBlock.pushBack(new returnInstr(newRetReg));
+            lastBlock.pushBack(new returnInstr(lastBlock, null));
             curFunc.setLastBlock(lastBlock);
         }
         else {
@@ -274,12 +291,12 @@ public class IRbuilder implements ASTVisitor {
                 if_store = tmp;
             }
             else{
-                curBlock.pushBack(new move(node.variableExpression.nodeValue, reg));
+                curBlock.pushBack(new move(curBlock, node.variableExpression.nodeValue, reg));
             }
         }
         else {
             //init
-            curBlock.pushBack(new move(new intImd(0), reg));
+            curBlock.pushBack(new move(curBlock, new intImd(0), reg));
         }
     }
 
@@ -303,14 +320,14 @@ public class IRbuilder implements ASTVisitor {
     @Override
     public void visit(breakStmt node) {
         basicBlock outBlock = breakLoopStack.peek();
-        curBlock.pushBack(new jump(outBlock));
+        curBlock.pushBack(new jump(curBlock, outBlock));
         curBlock.addNext(outBlock);
     }
 
     @Override
     public void visit(continueStmt node) {
         basicBlock nextBlock = continueLoopStack.peek();
-        curBlock.pushBack(new jump(nextBlock));
+        curBlock.pushBack(new jump(curBlock, nextBlock));
         curBlock.addNext(nextBlock);
     }
 
@@ -325,28 +342,48 @@ public class IRbuilder implements ASTVisitor {
         basicBlock stepBlock = new basicBlock("for_step");
         basicBlock bodyBlock = new basicBlock("for_body");
         basicBlock endBlock = new basicBlock("for_end");
-        if(node.cond != null)
-            node.cond.setBlocks(bodyBlock,endBlock);
+        /*order: init ->
+                cond -> body -> step -> cond -> ...
+        */
         visit(node.init);
-        curBlock.pushBack(new jump(condBlock));
-        curBlock.addNext(condBlock);
-        curBlock = condBlock;
-        visit(node.cond);
+
+        if(node.cond != null){
+            node.cond.setBlocks(bodyBlock,endBlock);
+            curBlock.pushBack(new jump(curBlock, condBlock));
+            curBlock.addNext(condBlock);
+            curBlock = condBlock;
+            visit(node.cond);
+        }
+        else{
+            curBlock.pushBack(new jump(curBlock, bodyBlock));
+            curBlock.addNext(bodyBlock);
+        }
         curBlock = bodyBlock;
-        continueLoopStack.push(stepBlock);
+        if(node.step != null)
+            continueLoopStack.push(stepBlock);
+        else
+            continueLoopStack.push(bodyBlock);
         breakLoopStack.push(endBlock);
         visit(node.forBody);
         continueLoopStack.pop();
         breakLoopStack.pop();
+
         if(node.step != null) {
-            curBlock.pushBack(new jump(stepBlock));
+            curBlock.pushBack(new jump(curBlock, stepBlock));
             curBlock.addNext(stepBlock);
             curBlock = stepBlock;
             visit(node.step);
         }
 
-        curBlock.pushBack(new jump(condBlock));
-        curBlock.addNext(condBlock);
+        if(node.cond != null) {
+            curBlock.pushBack(new jump(curBlock, condBlock));
+            curBlock.addNext(condBlock);
+        }
+        else{
+            curBlock.pushBack(new jump(curBlock, bodyBlock));
+            curBlock.addNext(bodyBlock);
+        }
+
         curBlock = endBlock;
     }
 
@@ -361,18 +398,18 @@ public class IRbuilder implements ASTVisitor {
                 node.cond.setBlocks(thenBlock, elseBlock);
             else node.cond.setBlocks(thenBlock, endBlock);
         }
-        curBlock.pushBack(new jump(condBlock));
+        curBlock.pushBack(new jump(curBlock, condBlock));
         curBlock.addNext(condBlock);
         curBlock = condBlock;
         visit(node.cond);
         curBlock = thenBlock;
         visit(node.ifBody);
-        curBlock.pushBack(new jump(endBlock));
+        curBlock.pushBack(new jump(curBlock, endBlock));
         curBlock.addNext(endBlock);
         if(node.elseBody != null){
             curBlock = elseBlock;
             visit(node.elseBody);
-            curBlock.pushBack(new jump(endBlock));
+            curBlock.pushBack(new jump(curBlock, endBlock));
             curBlock.addNext(endBlock);
         }
         curBlock = endBlock;
@@ -381,7 +418,7 @@ public class IRbuilder implements ASTVisitor {
     @Override
     public void visit(returnStmt node) {
         if(node.returnExpr == null || node.returnExpr.type instanceof nullType || node.returnExpr.type instanceof voidType){
-            returnInstr ret = new returnInstr(null);
+            returnInstr ret = new returnInstr(curBlock, null);
             ret.setItsBlock(curBlock);
             curBlock.pushBack(ret);
             curFunc.returnInstrList.add(ret);
@@ -405,14 +442,14 @@ public class IRbuilder implements ASTVisitor {
                 if_store = false;
                 processShortPathEva(node.returnExpr, reg, 0,node.returnExpr.type.size);
                 if_store = tmp;
-                returnInstr ret = new returnInstr(reg);
+                returnInstr ret = new returnInstr(curBlock, reg);
                 ret.setItsBlock(curBlock);
                 curBlock.pushBack(ret);
                 curFunc.returnInstrList.add(ret);
             }
             else {
                 visit(node.returnExpr);
-                returnInstr ret = new returnInstr(node.returnExpr.nodeValue);
+                returnInstr ret = new returnInstr(curBlock, node.returnExpr.nodeValue);
                 ret.setItsBlock(curBlock);
                 curBlock.pushBack(ret);
                 curFunc.returnInstrList.add(ret);
@@ -449,12 +486,12 @@ public class IRbuilder implements ASTVisitor {
                 if_store = tmp;
             }
             else{
-                curBlock.pushBack(new move(node.variableExpr.nodeValue, reg));
+                curBlock.pushBack(new move(curBlock, node.variableExpr.nodeValue, reg));
             }
         }
         else {
             //init
-            curBlock.pushBack(new move(new intImd(0), reg));
+            curBlock.pushBack(new move(curBlock, new intImd(0), reg));
         }
     }
 
@@ -466,7 +503,7 @@ public class IRbuilder implements ASTVisitor {
         if(node.cond != null){
             node.cond.setBlocks(bodyBlock,endBlock);
         }
-        curBlock.pushBack(new jump(condBlock));
+        curBlock.pushBack(new jump(curBlock, condBlock));
         curBlock.addNext(condBlock);
         curBlock = condBlock;
         visit(node.cond);
@@ -476,7 +513,7 @@ public class IRbuilder implements ASTVisitor {
         visit(node.whileBody);
         continueLoopStack.pop();
         breakLoopStack.pop();
-        curBlock.pushBack(new jump(condBlock));
+        curBlock.pushBack(new jump(curBlock, condBlock));
         curBlock.addNext(condBlock);
         curBlock = endBlock;
     }
@@ -532,7 +569,7 @@ public class IRbuilder implements ASTVisitor {
         visit(node.leftOperand);
         visit(node.rightOperand);
         virturalRegister reg = new virturalRegister();
-        binaryOpInstr instr = new binaryOpInstr(node.operator, node.leftOperand.nodeValue, node.rightOperand.nodeValue, reg);
+        binaryOpInstr instr = new binaryOpInstr(curBlock, node.operator, node.leftOperand.nodeValue, node.rightOperand.nodeValue, reg);
         node.nodeValue = reg;
         curBlock.pushBack(instr);
     }
@@ -544,22 +581,22 @@ public class IRbuilder implements ASTVisitor {
         funCall call = null;
         switch(node.operator){
             case ADD:
-                call = new funCall(reg, builtinFunction.builtinStringAdd);
+                call = new funCall(curBlock, reg, builtinFunction.builtinStringAdd);
                 break;
             case EQUAL:
-                call = new funCall(reg, builtinFunction.builtinStringEqual);
+                call = new funCall(curBlock, reg, builtinFunction.builtinStringEqual);
                 break;
             case LEQ:
-                call = new funCall(reg, builtinFunction.builtinStingLessEqual);
+                call = new funCall(curBlock, reg, builtinFunction.builtinStingLessEqual);
                 break;
             case LESS:
-                call = new funCall(reg, builtinFunction.builtinStringLess);
+                call = new funCall(curBlock, reg, builtinFunction.builtinStringLess);
                 break;
             case GEQ:
-                call = new funCall(reg, builtinFunction.builtinStringGreaterEqual);
+                call = new funCall(curBlock, reg, builtinFunction.builtinStringGreaterEqual);
                 break;
             case GREATER:
-                call = new funCall(reg, builtinFunction.builtinStringGreater);
+                call = new funCall(curBlock, reg, builtinFunction.builtinStringGreater);
         }
         call.parameters.add(node.leftOperand.nodeValue);
         call.parameters.add(node.rightOperand.nodeValue);
@@ -567,8 +604,8 @@ public class IRbuilder implements ASTVisitor {
         node.nodeValue = reg;
 
         if(node.jumpto != null){ // in condexpr
-            cmp comparasion = new cmp(binaryOp.EQUAL,node.nodeValue, new intImd(1), null);
-            branch condInstr = new branch(node.operator, node.jumpto, node.jumpother);
+            cmp comparasion = new cmp(curBlock, binaryOp.EQUAL,node.nodeValue, new intImd(1), null);
+            branch condInstr = new branch(curBlock, node.operator, node.jumpto, node.jumpother);
             curBlock.pushBack(comparasion);
             curBlock.pushBack(condInstr);
             curBlock.addNext(condInstr.jumpto);
@@ -581,11 +618,11 @@ public class IRbuilder implements ASTVisitor {
         visit(node.leftOperand);
         visit(node.rightOperand);
         virturalRegister reg = new virturalRegister();
-        cmp instr = new cmp(node.operator, node.leftOperand.nodeValue, node.rightOperand.nodeValue, reg);
+        cmp instr = new cmp(curBlock, node.operator, node.leftOperand.nodeValue, node.rightOperand.nodeValue, reg);
         node.nodeValue = reg;
         curBlock.pushBack(instr);
         if(node.jumpto != null) { // in logicalexpr || condexpr
-            branch condInstr = new branch(node.operator, node.jumpto, node.jumpother);
+            branch condInstr = new branch(curBlock, node.operator, node.jumpto, node.jumpother);
             curBlock.pushBack(condInstr);
             curBlock.addNext(condInstr.jumpto);
             curBlock.addNext(condInstr.jumpother);
@@ -639,10 +676,10 @@ public class IRbuilder implements ASTVisitor {
         }
         else {// simple assign: reg to mem/reg
             if (memAccessExpr) {
-                curBlock.pushBack(new store(node.rightOperand.nodeValue, node.leftOperand.addr, node.leftOperand.offset, accessSize));
+                curBlock.pushBack(new store(curBlock, node.rightOperand.nodeValue, node.leftOperand.addr, node.leftOperand.offset, accessSize));
             }
             else {
-                curBlock.pushBack(new move(node.rightOperand.nodeValue, (register) node.leftOperand.nodeValue));
+                curBlock.pushBack(new move(curBlock, node.rightOperand.nodeValue, (register) node.leftOperand.nodeValue));
             }
         }
         if_store = tmp;
@@ -681,8 +718,8 @@ public class IRbuilder implements ASTVisitor {
             node.nodeValue = new intImd(0);
         }
         if(node.jumpto != null){ // in condexpr
-            cmp comparasion = new cmp(binaryOp.EQUAL,node.nodeValue, new intImd(1), null);
-            branch condInstr = new branch(binaryOp.EQUAL, node.jumpto, node.jumpother);
+            cmp comparasion = new cmp(curBlock, binaryOp.EQUAL,node.nodeValue, new intImd(1), null);
+            branch condInstr = new branch(curBlock, binaryOp.EQUAL, node.jumpto, node.jumpother);
             curBlock.pushBack(comparasion);
             curBlock.pushBack(condInstr);
             curBlock.addNext(condInstr.jumpto);
@@ -706,7 +743,7 @@ public class IRbuilder implements ASTVisitor {
                 }
                 else{
                     virturalRegister reg = new virturalRegister();
-                    curBlock.pushBack(new load(thisReg, reg, offset, accessSize));
+                    curBlock.pushBack(new load(curBlock, thisReg, reg, offset, accessSize));
                     node.nodeValue = reg;
                 }
             }
@@ -725,10 +762,14 @@ public class IRbuilder implements ASTVisitor {
             symbol sym = symTable.classMap.get(node.ent.type.name);
             symTable.symbolMap.putIfAbsent(node.name, sym);
         }
+        else if(node.ent != null && node.ent.type instanceof arrayType && ((arrayType) node.ent.type).rootType instanceof classType){
+            symbol sym = symTable.classMap.get(((arrayType) node.ent.type).rootType.name);
+            symTable.symbolMap.putIfAbsent(node.name, sym);
+        }
 
         if(node.jumpto != null){ // in logicalExpr
-            cmp comparasion = new cmp(binaryOp.EQUAL,node.nodeValue, new intImd(1), null);
-            branch instr = new branch(binaryOp.EQUAL, node.jumpto, node.jumpother);
+            cmp comparasion = new cmp(curBlock, binaryOp.EQUAL,node.nodeValue, new intImd(1), null);
+            branch instr = new branch(curBlock, binaryOp.EQUAL, node.jumpto, node.jumpother);
             curBlock.pushBack(comparasion);
             curBlock.pushBack(instr);
             curBlock.addNext(instr.jumpto);
@@ -741,7 +782,7 @@ public class IRbuilder implements ASTVisitor {
         node.nodeValue = new intImd(node.value.intValue());
     }
 
-    private void newArray(int order, virturalRegister reg){
+    private void newArray(int order, register reg){
         int dim = dimList.size();
         if(order == dim) return;
         arrayType node = dimList.get(order);
@@ -768,11 +809,11 @@ public class IRbuilder implements ASTVisitor {
            prv_order_type[i] = new order_type[order_dim]
         */
         if(order == 0){
-            curBlock.pushBack(new binaryOpInstr(binaryOp.MUL, index.nodeValue, new intImd(baseType.size), reg));
+            curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.MUL, index.nodeValue, new intImd(baseType.size), reg));
             //allocate space for storing size
-            curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, reg, new intImd(8), reg));
-            curBlock.pushBack(new heapAllocate(reg, reg));
-            curBlock.pushBack(new store(index.nodeValue, reg, 0, 8));
+            curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.ADD, reg, new intImd(8), reg));
+            curBlock.pushBack(new heapAllocate(curBlock, reg, reg));
+            curBlock.pushBack(new store(curBlock, index.nodeValue, reg, 0, 8));
             newArray(order + 1, reg);
         }
         else {
@@ -786,38 +827,38 @@ public class IRbuilder implements ASTVisitor {
 
             //init
             virturalRegister init_reg = new virturalRegister("init_i");
-            curBlock.pushBack(new move(new intImd(0), init_reg));
-            curBlock.pushBack(new jump(condBlock));
+            curBlock.pushBack(new move(curBlock, new intImd(0), init_reg));
+            curBlock.pushBack(new jump(curBlock, condBlock));
             curBlock.addNext(condBlock);
 
             //cond
             curBlock = condBlock;
             virturalRegister cmp_reg = new virturalRegister("cond_result");
-            curBlock.pushBack(new cmp(binaryOp.LESS, init_reg, prvIndex.nodeValue,cmp_reg));
-            curBlock.pushBack(new branch(binaryOp.LESS,bodyBlock, endBlock));
+            curBlock.pushBack(new cmp(curBlock, binaryOp.LESS, init_reg, prvIndex.nodeValue,cmp_reg));
+            curBlock.pushBack(new branch(curBlock, binaryOp.LESS,bodyBlock, endBlock));
             curBlock.addNext(bodyBlock);
             curBlock.addNext(endBlock);
 
             //body
             curBlock = bodyBlock;
             virturalRegister leftAddrReg = new virturalRegister();
-            curBlock.pushBack(new binaryOpInstr(binaryOp.MUL, init_reg, new intImd(prvBaseType.size),leftAddrReg));
-            curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, leftAddrReg, reg, leftAddrReg)); //reg is the baseAddr of the prvNewArray
+            curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.MUL, init_reg, new intImd(prvBaseType.size),leftAddrReg));
+            curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.ADD, leftAddrReg, reg, leftAddrReg)); //reg is the baseAddr of the prvNewArray
                                                                                                // & leftAddrReg + offset(8) is the place to store the addr of newArray
             virturalRegister rightAddrReg= new virturalRegister();
-            curBlock.pushBack(new binaryOpInstr(binaryOp.MUL, index.nodeValue, new intImd(baseType.size), rightAddrReg));
+            curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.MUL, index.nodeValue, new intImd(baseType.size), rightAddrReg));
             //allocate space for storing size
-            curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, reg, new intImd(8), rightAddrReg));
-            curBlock.pushBack(new heapAllocate(rightAddrReg, rightAddrReg)); //rightAddrReg is baseAddr of the NewArray
-            curBlock.pushBack(new store(index.nodeValue, rightAddrReg, 0, 8)); //store size in rightAddrReg
-            curBlock.pushBack(new store(rightAddrReg, leftAddrReg, 8, 8));
-            curBlock.pushBack(new jump(stepBlock));
+            curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.ADD, reg, new intImd(8), rightAddrReg));
+            curBlock.pushBack(new heapAllocate(curBlock, rightAddrReg, rightAddrReg)); //rightAddrReg is baseAddr of the NewArray
+            curBlock.pushBack(new store(curBlock, index.nodeValue, rightAddrReg, 0, 8)); //store size in rightAddrReg
+            curBlock.pushBack(new store(curBlock, rightAddrReg, leftAddrReg, 8, 8));
+            curBlock.pushBack(new jump(curBlock, stepBlock));
             curBlock.addNext(stepBlock);
 
             //step
             curBlock = stepBlock;
-            curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, init_reg, new intImd(1), init_reg));
-            curBlock.pushBack(new jump(condBlock));
+            curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.ADD, init_reg, new intImd(1), init_reg));
+            curBlock.pushBack(new jump(curBlock, condBlock));
             curBlock.addNext(condBlock);
             curBlock = endBlock;
 
@@ -835,10 +876,10 @@ public class IRbuilder implements ASTVisitor {
             symbol sym = symTable.classMap.get(node.type.name);
             int classSize = sym.size;
             boolean hasConstructFunc = sym.hasConstructFunc;
-            curBlock.pushBack(new heapAllocate(reg, new intImd(classSize)));
+            curBlock.pushBack(new heapAllocate(curBlock, reg, new intImd(classSize)));
             if(hasConstructFunc) {
                 func function = new func(node.type.name, new voidType());
-                funCall call = new funCall(null, function);
+                funCall call = new funCall(curBlock, null, function);
                 call.parameters.add(reg);
                 curBlock.pushBack(call);
             }
@@ -890,11 +931,11 @@ public class IRbuilder implements ASTVisitor {
         if(node.name.equals("size") || node.name.equals("length")){
             //Question remains
             reg = new virturalRegister("size");
-            curBlock.pushBack(new load(node.obj.nodeValue, reg,0,8));
+            curBlock.pushBack(new load(curBlock, node.obj.nodeValue, reg,0,8));
         }
         else if(node.name.equals("substring")){
             reg = new virturalRegister("substring");
-            funCall call = new funCall(reg, builtinFunction.builtinSubstring);
+            funCall call = new funCall(curBlock, reg, builtinFunction.builtinSubstring);
             call.parameters.add(node.obj.nodeValue);
             call.parameters.add(node.parameters.get(0).nodeValue);
             call.parameters.add(node.parameters.get(1).nodeValue);
@@ -902,15 +943,15 @@ public class IRbuilder implements ASTVisitor {
         }
         else if(node.name.equals("parseInt")){
             reg = new virturalRegister("parseInt");
-            funCall call = new funCall(reg, builtinFunction.builtinParseInt);
+            funCall call = new funCall(curBlock, reg, builtinFunction.builtinParseInt);
             call.parameters.add(node.obj.nodeValue);
             curBlock.pushBack(call);
         }
         else if(node.name.equals("ord")){
             //Question remains
             reg = new virturalRegister("ord");
-            curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, node.obj.nodeValue, node.parameters.get(0).nodeValue, reg));
-            curBlock.pushBack(new load(reg,reg, 8,1));
+            curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.ADD, node.obj.nodeValue, node.parameters.get(0).nodeValue, reg));
+            curBlock.pushBack(new load(curBlock, reg,reg, 8,1));
         }
         node.nodeValue = reg;
     }
@@ -930,22 +971,21 @@ public class IRbuilder implements ASTVisitor {
         func function = funcMap.get(node.name);
 
         virturalRegister reg = new virturalRegister();
-        funCall call = new funCall(reg,function);
+        funCall call = new funCall(curBlock, reg,function);
         for(expr p : node.parameters) {
             call.parameters.add(p.nodeValue);
         }
         call.parameters.add(node.obj.nodeValue);
         curBlock.pushBack(call);
-
+        node.nodeValue = reg;
         if(node.jumpto != null){//bool rettype
-            cmp comparasion = new cmp(binaryOp.EQUAL,node.nodeValue, new intImd(1), null);
-            branch instr = new branch(binaryOp.EQUAL, node.jumpto, node.jumpother);
+            cmp comparasion = new cmp(curBlock, binaryOp.EQUAL,node.nodeValue, new intImd(1), null);
+            branch instr = new branch(curBlock, binaryOp.EQUAL, node.jumpto, node.jumpother);
             curBlock.pushBack(comparasion);
             curBlock.pushBack(instr);
             curBlock.addNext(instr.jumpto);
             curBlock.addNext(instr.jumpother);
         }
-        node.nodeValue = reg;
     }
 
     @Override
@@ -963,6 +1003,8 @@ public class IRbuilder implements ASTVisitor {
         else{
             sym = symTable.classMap.get(thisClass);
         }
+
+
         offset = sym.offsetMap.get(node.name);
         accessSize = sym.sizeMap.get(node.name);
 
@@ -972,11 +1014,11 @@ public class IRbuilder implements ASTVisitor {
         }
         else{
             virturalRegister reg = new virturalRegister();
-            curBlock.pushBack(new load(addr, reg, offset, accessSize));
+            curBlock.pushBack(new load(curBlock, addr, reg, offset, accessSize));
             if(node.jumpto != null){
-                cmp comparasion = new cmp(binaryOp.EQUAL,node.nodeValue, new intImd(1), null);
+                cmp comparasion = new cmp(curBlock, binaryOp.EQUAL,node.nodeValue, new intImd(1), null);
                 curBlock.pushBack(comparasion);
-                curBlock.pushBack(new branch(binaryOp.EQUAL, node.jumpto, node.jumpother));
+                curBlock.pushBack(new branch(curBlock, binaryOp.EQUAL, node.jumpto, node.jumpother));
                 curBlock.addNext(node.jumpto);
                 curBlock.addNext(node.jumpother);
             }
@@ -1002,27 +1044,27 @@ public class IRbuilder implements ASTVisitor {
         String name = node.obj.name;
         if(name.equals("getInt")){
             reg = new virturalRegister("getInt");
-            funCall call = new funCall(reg, builtinFunction.builtinGetInt);
+            funCall call = new funCall(curBlock, reg, builtinFunction.builtinGetInt);
             curBlock.pushBack(call);
         }
         else if(name.equals("getString")){
             reg = new virturalRegister("getString");
-            funCall call = new funCall(reg, builtinFunction.builtinGetString);
+            funCall call = new funCall(curBlock, reg, builtinFunction.builtinGetString);
             curBlock.pushBack(call);
         }
         else if(name.equals("print")){
-            funCall call = new funCall(null, builtinFunction.builtinPrintString);
+            funCall call = new funCall(curBlock, null, builtinFunction.builtinPrintString);
             call.parameters.add(node.parameters.get(0).nodeValue);
             curBlock.pushBack(call);
         }
         else if(name.equals("println")){
-            funCall call = new funCall(null, builtinFunction.builtinPrintlnString);
+            funCall call = new funCall(curBlock, null, builtinFunction.builtinPrintlnString);
             call.parameters.add(node.parameters.get(0).nodeValue);
             curBlock.pushBack(call);
         }
         else if(name.equals("toString")){
             reg = new virturalRegister("toString");
-            funCall call = new funCall(reg, builtinFunction.builtintoString);
+            funCall call = new funCall(curBlock, reg, builtinFunction.builtintoString);
             call.parameters.add(node.parameters.get(0).nodeValue);
             curBlock.pushBack(call);
         }
@@ -1040,20 +1082,20 @@ public class IRbuilder implements ASTVisitor {
         func function = funcMap.get(node.obj.name);
 
         virturalRegister reg = new virturalRegister();
-        funCall call = new funCall(reg,function);
+        funCall call = new funCall(curBlock, reg,function);
         for(expr p : node.parameters) {
             call.parameters.add(p.nodeValue);
         }
         curBlock.pushBack(call);
+        node.nodeValue = reg;
         if(node.jumpto != null){//bool rettype
-            cmp comparasion = new cmp(binaryOp.EQUAL,node.nodeValue, new intImd(1), null);
-            branch instr = new branch(binaryOp.EQUAL, node.jumpto, node.jumpother);
+            cmp comparasion = new cmp(curBlock, binaryOp.EQUAL,node.nodeValue, new intImd(1), null);
+            branch instr = new branch(curBlock, binaryOp.EQUAL, node.jumpto, node.jumpother);
             curBlock.pushBack(comparasion);
             curBlock.pushBack(instr);
             curBlock.addNext(instr.jumpto);
             curBlock.addNext(instr.jumpother);
         }
-        node.nodeValue = reg;
     }
 
     @Override
@@ -1066,20 +1108,20 @@ public class IRbuilder implements ASTVisitor {
         if_store = tmp;
         int size = node.array.type.size;
         virturalRegister reg = new virturalRegister();
-        curBlock.pushBack(new binaryOpInstr(binaryOp.MUL, node.index.nodeValue, new intImd(size), reg));
-        curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, node.array.nodeValue, reg, reg)); // address saved in reg
+        curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.MUL, node.index.nodeValue, new intImd(size), reg));
+        curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.ADD, node.array.nodeValue, reg, reg)); // address saved in reg
         if(if_store) {
             node.addr = reg;
             node.offset = sizeofInt; // consider baseAddr has stored size of array;
         }
         else{
-            curBlock.pushBack(new load(reg, reg, sizeofInt, size));
+            curBlock.pushBack(new load(curBlock, reg, reg, sizeofInt, size));
             node.nodeValue = reg;
         }
 
         if(node.jumpto != null){
-            cmp comparasion = new cmp(binaryOp.EQUAL,node.nodeValue, new intImd(1), null);
-            branch instr = new branch(binaryOp.EQUAL, node.jumpto, node.jumpother);
+            cmp comparasion = new cmp(curBlock, binaryOp.EQUAL,node.nodeValue, new intImd(1), null);
+            branch instr = new branch(curBlock, binaryOp.EQUAL, node.jumpto, node.jumpother);
             curBlock.pushBack(comparasion);
             curBlock.pushBack(instr);
             curBlock.addNext(instr.jumpto);
@@ -1102,15 +1144,15 @@ public class IRbuilder implements ASTVisitor {
         visit(node.operand);
         if_store = tmp;
         virturalRegister oldValue = new virturalRegister();
-        curBlock.pushBack(new move(node.operand.nodeValue,oldValue));
+        curBlock.pushBack(new move(curBlock, node.operand.nodeValue,oldValue));
         node.nodeValue = oldValue;
         if (memAccess) {
             virturalRegister reg = new virturalRegister();
-            curBlock.pushBack(new binaryOpInstr(binaryOp.SUB, node.operand.nodeValue, new intImd(1), reg));
-            curBlock.pushBack(new store(reg, node.operand.addr, node.operand.offset, node.operand.type.size));
+            curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.SUB, node.operand.nodeValue, new intImd(1), reg));
+            curBlock.pushBack(new store(curBlock, reg, node.operand.addr, node.operand.offset, node.operand.type.size));
         }
         else {
-            curBlock.pushBack(new binaryOpInstr(binaryOp.SUB, node.operand.nodeValue, new intImd(1), (virturalRegister) node.operand.nodeValue));
+            curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.SUB, node.operand.nodeValue, new intImd(1), (register) node.operand.nodeValue));
         }
     }
 
@@ -1128,15 +1170,15 @@ public class IRbuilder implements ASTVisitor {
         visit(node.operand);
         if_store = tmp;
         virturalRegister oldValue = new virturalRegister();
-        curBlock.pushBack(new move(node.operand.nodeValue,oldValue));
+        curBlock.pushBack(new move(curBlock, node.operand.nodeValue,oldValue));
         node.nodeValue = oldValue;
         if (memAccess) {
             virturalRegister reg = new virturalRegister();
-            curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, node.operand.nodeValue, new intImd(1), reg));
-            curBlock.pushBack(new store(reg, node.operand.addr, node.operand.offset, node.operand.type.size));
+            curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.ADD, node.operand.nodeValue, new intImd(1), reg));
+            curBlock.pushBack(new store(curBlock, reg, node.operand.addr, node.operand.offset, node.operand.type.size));
         }
         else {
-            curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, node.operand.nodeValue, new intImd(1), (virturalRegister) node.operand.nodeValue));
+            curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.ADD, node.operand.nodeValue, new intImd(1), (register) node.operand.nodeValue));
         }
     }
 
@@ -1158,7 +1200,7 @@ public class IRbuilder implements ASTVisitor {
                 visit(node.operand);
                 reg = new virturalRegister();
                 node.nodeValue = reg;
-                curBlock.pushBack(new unaryOpInstr(unaryOp.NEG, node.operand.nodeValue, reg));
+                curBlock.pushBack(new unaryOpInstr(curBlock, unaryOp.NEG, node.operand.nodeValue, reg));
                 break;
             case POS:
                 visit(node.operand);
@@ -1174,7 +1216,7 @@ public class IRbuilder implements ASTVisitor {
                 visit(node.operand);
                 reg = new virturalRegister();
                 node.nodeValue = reg;
-                curBlock.pushBack(new unaryOpInstr(unaryOp.BITWISE_NOT, node.operand.nodeValue, reg));
+                curBlock.pushBack(new unaryOpInstr(curBlock, unaryOp.BITWISE_NOT, node.operand.nodeValue, reg));
         }
 
     }
@@ -1193,12 +1235,12 @@ public class IRbuilder implements ASTVisitor {
         if_store = tmp;
         if (memAccess) {
             virturalRegister reg = new virturalRegister();
-            curBlock.pushBack(new binaryOpInstr(binaryOp.SUB, node.operand.nodeValue, new intImd(1), reg));
-            curBlock.pushBack(new store(reg, node.operand.addr, node.operand.offset, node.operand.type.size));
+            curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.SUB, node.operand.nodeValue, new intImd(1), reg));
+            curBlock.pushBack(new store(curBlock, reg, node.operand.addr, node.operand.offset, node.operand.type.size));
             node.nodeValue = reg;
         }
         else {
-            curBlock.pushBack(new binaryOpInstr(binaryOp.SUB, node.operand.nodeValue, new intImd(1), (virturalRegister) node.operand.nodeValue));
+            curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.SUB, node.operand.nodeValue, new intImd(1), (register) node.operand.nodeValue));
             node.nodeValue = node.operand.nodeValue;
         }
     }
@@ -1217,29 +1259,29 @@ public class IRbuilder implements ASTVisitor {
         if_store = tmp;
         if (memAccess) {
             virturalRegister reg = new virturalRegister();
-            curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, node.operand.nodeValue, new intImd(1), reg));
-            curBlock.pushBack(new store(reg, node.operand.addr, node.operand.offset, node.operand.type.size));
+            curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.ADD, node.operand.nodeValue, new intImd(1), reg));
+            curBlock.pushBack(new store(curBlock, reg, node.operand.addr, node.operand.offset, node.operand.type.size));
             node.nodeValue = reg;
         }
         else {
-            curBlock.pushBack(new binaryOpInstr(binaryOp.ADD, node.operand.nodeValue, new intImd(1), (virturalRegister) node.operand.nodeValue));
+            curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.ADD, node.operand.nodeValue, new intImd(1), (register) node.operand.nodeValue));
             node.nodeValue = node.operand.nodeValue;
         }
     }
 
     private void processShortPathEva(expr node, intValue nodeValue, int offset, int accessSize){
         if(if_store){
-            node.jumpto.pushBack(new store(new intImd(1), nodeValue, offset, accessSize));
-            node.jumpother.pushBack(new store(new intImd(0), nodeValue, offset, accessSize));
+            node.jumpto.pushBack(new store(curBlock, new intImd(1), nodeValue, offset, accessSize));
+            node.jumpother.pushBack(new store(curBlock, new intImd(0), nodeValue, offset, accessSize));
         }
         else{
-            node.jumpto.pushBack(new move(new intImd(1), (virturalRegister)nodeValue));
-            node.jumpother.pushBack(new move(new intImd(0), (virturalRegister)nodeValue));
+            node.jumpto.pushBack(new move(curBlock, new intImd(1), (register)nodeValue));
+            node.jumpother.pushBack(new move(curBlock, new intImd(0), (register)nodeValue));
         }
         basicBlock end  = new basicBlock("merge_shortPath");
-        node.jumpto.pushBack(new jump(end));
+        node.jumpto.pushBack(new jump(curBlock, end));
         node.jumpto.addNext(end);
-        node.jumpother.pushBack(new jump(end));
+        node.jumpother.pushBack(new jump(curBlock, end));
         node.jumpother.addNext(end);
         curBlock = end;
     }
@@ -1254,7 +1296,8 @@ public class IRbuilder implements ASTVisitor {
     public void visit(arrayType node) {
         visit(node.baseType);
         visit(node.index);
-        dimList.add(node);
+        if(node.index != null)
+            dimList.add(node);
     }
 
     @Override
@@ -1286,5 +1329,6 @@ public class IRbuilder implements ASTVisitor {
     public void visit(voidType node) {
 
     }
+
 }
 

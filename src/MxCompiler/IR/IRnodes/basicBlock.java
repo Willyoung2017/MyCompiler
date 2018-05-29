@@ -1,6 +1,7 @@
 package MxCompiler.IR.IRnodes;
 
 import MxCompiler.IR.IRnodes.instructions.instruction;
+import MxCompiler.IR.IRnodes.instructions.jump;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,6 +20,29 @@ public class basicBlock {
 
     public basicBlock(String name){
         this.name = name;
+    }
+
+    public void remove(){
+            if(pred != null) {
+                for (basicBlock bb : pred) {
+                    bb.next.remove(this);
+                    for(instruction instr = bb.getLast(); instr != null; instr = instr.getPrev()){
+                        if(instr instanceof jump && ((jump)instr).jumpto == this){
+                            instr.remove();
+                        }
+                    }
+                }
+            }
+            if(next != null) {
+                for (basicBlock bb : next) {
+                    bb.pred.remove(this);
+                    for(instruction instr = bb.getLast(); instr != null; instr = instr.getPrev()){
+                        if(instr instanceof jump && ((jump)instr).jumpto == this){
+                            instr.remove();
+                        }
+                    }
+                }
+            }
     }
 
     public void pushBack(instruction next){

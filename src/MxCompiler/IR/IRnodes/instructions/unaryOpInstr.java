@@ -2,10 +2,7 @@ package MxCompiler.IR.IRnodes.instructions;
 
 import MxCompiler.Ast.Expression.UnaryExpression.unaryOp;
 import MxCompiler.IR.IRVisitor;
-import MxCompiler.IR.IRnodes.intValue;
-import MxCompiler.IR.IRnodes.physicRegister;
-import MxCompiler.IR.IRnodes.register;
-import MxCompiler.IR.IRnodes.virturalRegister;
+import MxCompiler.IR.IRnodes.*;
 
 import java.util.Map;
 
@@ -20,7 +17,8 @@ public class unaryOpInstr extends instruction{
         operator = null;
     }
 
-    public unaryOpInstr(unaryOp operator, intValue operand, virturalRegister result){
+    public unaryOpInstr(basicBlock itsBlock, unaryOp operator, intValue operand, register result){
+        this.itsBlock = itsBlock;
         this.operand = operand;
         this.operator = operator;
         this.result = result;

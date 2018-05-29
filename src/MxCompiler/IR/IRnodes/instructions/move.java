@@ -14,7 +14,8 @@ public class move extends instruction {
         srcReg = null;
     }
 
-    public move(intValue srcReg, register destReg){
+    public move(basicBlock itsBlock, intValue srcReg, register destReg){
+        this.itsBlock = itsBlock;
         this.destReg = destReg;
         this.srcReg = srcReg;
         setUsedRegister();

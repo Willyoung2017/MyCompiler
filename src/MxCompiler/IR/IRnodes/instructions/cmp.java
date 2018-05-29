@@ -2,10 +2,7 @@ package MxCompiler.IR.IRnodes.instructions;
 
 import MxCompiler.Ast.Expression.BinaryExpression.binaryOp;
 import MxCompiler.IR.IRVisitor;
-import MxCompiler.IR.IRnodes.intValue;
-import MxCompiler.IR.IRnodes.physicRegister;
-import MxCompiler.IR.IRnodes.register;
-import MxCompiler.IR.IRnodes.virturalRegister;
+import MxCompiler.IR.IRnodes.*;
 
 import java.util.Map;
 
@@ -21,7 +18,8 @@ public class cmp extends instruction{
         result = null;
         operator = null;
     }
-    public cmp(binaryOp operator, intValue leftOperand, intValue rightOperand, register result){
+    public cmp(basicBlock itsBlock, binaryOp operator, intValue leftOperand, intValue rightOperand, register result){
+        this.itsBlock = itsBlock;
         this.operator = operator;
         this.leftOperand = leftOperand;
         this.rightOperand = rightOperand;

@@ -35,7 +35,7 @@ public abstract class instruction {
         instr.next = this;
         if(prev != null) prev.next = instr;
         prev = instr;
-        if(itsBlock != null && this == itsBlock.getHead()) itsBlock.setHead(instr);
+        if(this == itsBlock.getHead()) itsBlock.setHead(instr);
     }
 
     public void linkNext(instruction instr){
@@ -43,7 +43,7 @@ public abstract class instruction {
         instr.next = next;
         if(next != null) next.prev = instr;
         next = instr;
-        if(itsBlock != null && this == itsBlock.getLast()) itsBlock.setLast(instr);
+        if(this == itsBlock.getLast()) itsBlock.setLast(instr);
 
     }
 

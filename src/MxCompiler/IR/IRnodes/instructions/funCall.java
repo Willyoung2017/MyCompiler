@@ -16,7 +16,8 @@ public class funCall extends instruction{
         function = null;
     }
 
-    public funCall(register returnReg, func function){
+    public funCall(basicBlock itsBlock, register returnReg, func function){
+        this.itsBlock = itsBlock;
         this.returnReg = returnReg;
         this.function = function;
         setUsedRegister();

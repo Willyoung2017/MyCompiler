@@ -15,7 +15,7 @@ public class IRprinter implements IRVisitor{
     private Set<basicBlock> visitedBlocks = new HashSet<>();
     private Map<String, Integer> counter = new HashMap<>();
     private Map<basicBlock, String> labelMap = new HashMap<>();
-    private Map<virturalRegister, String> virturalRegisterMap = new HashMap<>();
+    private Map<register, String> registerMap = new HashMap<>();
     private Map<staticData, String> dataMap = new HashMap<>();
     private Map<staticString, String> stringMap = new HashMap<>();
 
@@ -32,7 +32,7 @@ public class IRprinter implements IRVisitor{
     public void visit(func node) {
         out.printf("func %s ", node.getFuncName());
         for(register paraReg : node.parameterList){
-            out.printf("$ %s ", paraReg.getName());
+            out.printf("$%s ", getRegName(paraReg));
         }
         out.println("{");
         node.getPreOrder().stream().forEach(this::visit);
@@ -210,6 +210,8 @@ public class IRprinter implements IRVisitor{
     public void visit(returnInstr node) {
         out.print("    ret ");
         visit(node.retReg);
+        if(node.retReg == null)
+            out.print("-1");
         out.println();
         out.println();
     }
@@ -258,16 +260,16 @@ public class IRprinter implements IRVisitor{
         node.accept(this);
     }
 
-    private String getRegName(virturalRegister node){
-        String regName = virturalRegisterMap.get(node);
+    private String getRegName(register node){
+        String regName = registerMap.get(node);
         if(regName == null){
             if(node.getName() != null){
                 regName = allocateID(node.getName(), counter);
-                virturalRegisterMap.put(node, regName);
+                registerMap.put(node, regName);
             }
             else {
                 regName = allocateID("tmp", counter);
-                virturalRegisterMap.put(node, regName);
+                registerMap.put(node, regName);
             }
         }
         return regName;

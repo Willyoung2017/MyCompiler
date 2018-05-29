@@ -16,7 +16,8 @@ public class load extends instruction{
         addr = null;
     }
 
-    public load(intValue addr, register dest, int offset, int accessSize){
+    public load(basicBlock itsBlock, intValue addr, register dest, int offset, int accessSize){
+        this.itsBlock = itsBlock;
         this.addr = addr;
         this.dest = dest;
         this.offset = offset;

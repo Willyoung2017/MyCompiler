@@ -1,5 +1,6 @@
 // Generated from Mx.g4 by ANTLR 4.5
 package MxCompiler.Parser;
+
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -358,4 +359,14 @@ public interface MxListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTypeSpecifier(MxParser.TypeSpecifierContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MxParser#kk}.
+	 * @param ctx the parse tree
+	 */
+	void enterKk(MxParser.KkContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MxParser#kk}.
+	 * @param ctx the parse tree
+	 */
+	void exitKk(MxParser.KkContext ctx);
 }

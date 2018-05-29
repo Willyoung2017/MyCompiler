@@ -2,6 +2,7 @@ package MxCompiler;
 
 import MxCompiler.Ast.BuildAST.ASTBuilder;
 import MxCompiler.Ast.abstractSyntaxTree;
+import MxCompiler.BackEnd.registerAllocator;
 import MxCompiler.IR.IRVisitor;
 import MxCompiler.IR.IRbuilder;
 import MxCompiler.IR.IRnodes.func;
@@ -90,6 +91,12 @@ public class mxcompiler {
         iRprinter.runPrinter();
     }
 
+    private void allocateReg(){
+        //registerAllocator allocator = new registerAllocator(funcMap, physicRegisterList);
+
+
+    }
+
     private void runMain() throws Exception{
         buildAST();
         //throw new Exception();
@@ -97,18 +104,23 @@ public class mxcompiler {
         //throw new Exception();
         printIR();
         //throw new Exception();
+
     }
 
     public static void main(String[] argv) throws Exception {
         // check options
-        String inFile = "E:\\compiler\\codgentest\\2.mx";
-        String outFile = "E:\\compiler\\MyCode\\2.ir";
-
-        // run compiler
-        InputStream in = new FileInputStream(inFile);
-        PrintStream out = new PrintStream(new FileOutputStream(outFile));
-        //throw new Exception();
-        new mxcompiler(in, out).runMain();
+        String inFile = null;
+        String outFile = null;
+        for(int i = 60; i <= 60; ++i) {
+            String num = i + ".";
+            inFile = "E:\\compiler\\codgentest\\" + num + "mx";
+            outFile = "E:\\compiler\\MyCode\\phy\\" + num + "ir";
+            // run compiler
+            InputStream in = new FileInputStream(inFile);
+            PrintStream out = new PrintStream(new FileOutputStream(outFile));
+            //throw new Exception();
+            new mxcompiler(in, out).runMain();
+        }
 
     }
 }

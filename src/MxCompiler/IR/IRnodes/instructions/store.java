@@ -16,7 +16,8 @@ public class store extends instruction{
         addr = null;
     }
 
-    public store(intValue src, intValue addr, int offset, int accessSize){
+    public store(basicBlock itsBlock, intValue src, intValue addr, int offset, int accessSize){
+        this.itsBlock = itsBlock;
         this.src = src;
         this.addr = addr;
         this.offset = offset;

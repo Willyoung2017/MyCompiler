@@ -42,6 +42,37 @@ public class func {
         }
     }
 
+    private void bottomup_Visit(basicBlock curBlock, Set<basicBlock> visited){
+        if(visited.contains(curBlock)) return;
+        visited.add(curBlock);
+        for(basicBlock nxtBlock : curBlock.getPred()){
+            bottomup_Visit(nxtBlock, visited);
+        }
+    }
+    public void clearUnreachableBlocks(){
+        Set<basicBlock> visited = new HashSet<>();
+        Set<basicBlock> bothVisited = new HashSet<>();
+        if(preOrder == null) {
+            preOrder = new LinkedList<>();
+            preOrder_Visit(firstBlock, visited);
+        }
+        visited.clear();
+        bottomup_Visit(lastBlock, visited);
+
+        for(basicBlock bb : visited){
+            if(preOrder.contains(bb)){
+                bothVisited.add(bb);
+            }
+        }
+
+        for(basicBlock bb : preOrder){
+            if(!bothVisited.contains(bb)){
+                bb.remove();
+            }
+        }
+        preOrder = null;
+    }
+
     public List<basicBlock> getPreOrder(){
         if(preOrder != null) return preOrder;
         Set<basicBlock> visited = new HashSet<>();

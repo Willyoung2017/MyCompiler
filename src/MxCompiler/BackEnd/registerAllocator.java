@@ -47,7 +47,7 @@ public class registerAllocator {
                             allocateMap.put((virturalRegister) usedReg, allocatedReg);
                             stackSlot slot = slotMap.get(usedReg);
                             if (slot != null) {
-                                instr.linkPrev(new load(slot, allocatedReg, 0, 8));
+                                instr.linkPrev(new load(curBlock, slot, allocatedReg, 0, 8));
                             }
                         }
                         instr.resetUsedRegister(allocateMap);
@@ -64,7 +64,7 @@ public class registerAllocator {
                         stackSlot slot = new stackSlot();
                         slotMap.put((virturalRegister)defReg, slot);
                         stackSlotList.add(slot);
-                        instr.linkNext(new store(allocatedReg, slot, 0, 8));
+                        instr.linkNext(new store(curBlock, allocatedReg, slot, 0, 8));
                         instr = instr.getNext();
                     }
                     instr.setDefRegister(allocatedReg);
