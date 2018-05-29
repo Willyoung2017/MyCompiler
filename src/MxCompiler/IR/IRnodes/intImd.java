@@ -1,5 +1,7 @@
 package MxCompiler.IR.IRnodes;
 
+import MxCompiler.IR.IRVisitor;
+
 import java.math.BigInteger;
 
 public class intImd extends intValue{
@@ -11,5 +13,10 @@ public class intImd extends intValue{
 
     public int getValue() {
         return value;
+    }
+
+    @Override
+    public void accept(IRVisitor visitor) {
+        visitor.visit(this);
     }
 }

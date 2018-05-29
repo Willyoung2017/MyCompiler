@@ -1,5 +1,6 @@
 package MxCompiler.IR.IRnodes.instructions;
 
+import MxCompiler.IR.IRVisitor;
 import MxCompiler.IR.IRnodes.*;
 
 import java.util.Map;
@@ -39,5 +40,9 @@ public class load extends instruction{
 
     public void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap){
 
+    }
+
+    public void accept(IRVisitor visitor){
+        visitor.visit(this);
     }
 }

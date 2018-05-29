@@ -1,5 +1,6 @@
 package MxCompiler.IR.IRnodes.instructions;
 
+import MxCompiler.IR.IRVisitor;
 import MxCompiler.IR.IRnodes.basicBlock;
 import MxCompiler.IR.IRnodes.physicRegister;
 import MxCompiler.IR.IRnodes.register;
@@ -70,4 +71,5 @@ public abstract class instruction {
     public abstract void setUsedRegister();
     public abstract void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap);
     public abstract void setDefRegister(register reg);
+    public abstract void accept(IRVisitor visitor);
 }

@@ -1,5 +1,6 @@
 package MxCompiler.IR.IRnodes.instructions;
 
+import MxCompiler.IR.IRVisitor;
 import MxCompiler.IR.IRnodes.*;
 
 import java.util.Map;
@@ -43,5 +44,9 @@ public class store extends instruction{
             src = allocateMap.get(src);
         }
         setUsedRegister();
+    }
+
+    public void accept(IRVisitor visitor){
+        visitor.visit(this);
     }
 }

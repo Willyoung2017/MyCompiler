@@ -399,7 +399,9 @@ public class typeResolver implements ASTVisitor {
     public void visit(fieldfuncAccessExpr node) {
         if (node != null){
            visit(node.obj);
-           boolean neijian = false;
+           node.parameters.stream().forEachOrdered(this::visit);
+
+            boolean neijian = false;
            if (node.name.equals("size")){
                 node.type = new intType();
                 neijian = true;

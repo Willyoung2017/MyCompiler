@@ -7,9 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class symbolTable {
-    public Map<classDec, symbol> classMap;
+    public Map<String, symbol> classMap;
     public Map<String, symbol> symbolMap;
     public symbolTable(){
+        classMap = new HashMap<>();
         symbolMap = new HashMap<>();
     }
 }

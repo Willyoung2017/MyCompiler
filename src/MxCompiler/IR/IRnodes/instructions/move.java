@@ -1,5 +1,6 @@
 package MxCompiler.IR.IRnodes.instructions;
 
+import MxCompiler.IR.IRVisitor;
 import MxCompiler.IR.IRnodes.*;
 
 import java.util.Map;
@@ -38,5 +39,9 @@ public class move extends instruction {
             srcReg = allocateMap.get(srcReg);
         }
         setUsedRegister();
+    }
+
+    public void accept(IRVisitor visitor){
+        visitor.visit(this);
     }
 }

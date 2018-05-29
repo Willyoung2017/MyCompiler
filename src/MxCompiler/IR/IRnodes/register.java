@@ -1,4 +1,5 @@
 package MxCompiler.IR.IRnodes;
 
-public class register extends intValue{
+public abstract class register extends intValue{
+    public abstract String getName();
 }

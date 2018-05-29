@@ -1,28 +1,30 @@
 package MxCompiler.IR.IRnodes;
 
+import MxCompiler.IR.IRVisitor;
+
 public class virturalRegister extends register{
-    private static int arrangedNum = 0;
-    private int num;
-    public String varName;
+    //private static int arrangedNum = 0;
+    //private int num;
+    private String name;
 
     public virturalRegister(){
-        varName = null;
-        num = arrangedNum;
-        arrangedNum++;
+        name = null;
+        //num = arrangedNum;
+        //arrangedNum++;
     }
 
-    public virturalRegister(String varName){
-        this.varName = varName;
-        num = arrangedNum;
-        arrangedNum++;
+    public virturalRegister(String name){
+        this.name = name;
+        //num = arrangedNum;
+        //arrangedNum++;
     }
 
-    public void setNum(int value){
-        num = value;
+    public String getName(){
+        return name;
     }
 
-    public int getNum(){
-        return num;
+    @Override
+    public void accept(IRVisitor visitor) {
+        visitor.visit(this);
     }
-
 }

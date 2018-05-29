@@ -1,5 +1,6 @@
 package MxCompiler.IR.IRnodes.instructions;
 
+import MxCompiler.IR.IRVisitor;
 import MxCompiler.IR.IRnodes.intValue;
 import MxCompiler.IR.IRnodes.physicRegister;
 import MxCompiler.IR.IRnodes.register;
@@ -8,8 +9,8 @@ import MxCompiler.IR.IRnodes.virturalRegister;
 import java.util.Map;
 
 public class heapAllocate extends instruction{
-    private register destReg;
-    private intValue allocSize;
+    public register destReg;
+    public intValue allocSize;
 
     public heapAllocate(register destReg, intValue allocSize){
         this.destReg = destReg;
@@ -29,7 +30,6 @@ public class heapAllocate extends instruction{
         }
     }
 
-
     public void setDefRegister(register reg){
         destReg = reg;
     }
@@ -39,5 +39,9 @@ public class heapAllocate extends instruction{
             allocSize = allocateMap.get(allocSize);
         }
         setUsedRegister();
+    }
+
+    public void accept(IRVisitor visitor){
+        visitor.visit(this);
     }
 }

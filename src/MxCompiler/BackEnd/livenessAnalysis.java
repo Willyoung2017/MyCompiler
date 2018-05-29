@@ -73,8 +73,9 @@ public class livenessAnalysis {
                             instr.liveIn.add((virturalRegister) usedReg);
                     }
                     instr.liveIn.addAll(instr.liveOut);
-                    if(instr.defRegister instanceof virturalRegister){
-                        instr.liveIn.remove(instr.defRegister);
+                    register defRegister = instr.getDefRegister();
+                    if(defRegister instanceof virturalRegister){
+                        instr.liveIn.remove(defRegister);
                     }
 
                     if(!instr.liveIn.equals(in) || !instr.liveOut.equals(out)){

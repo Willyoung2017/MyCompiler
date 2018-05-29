@@ -4,14 +4,15 @@ import MxCompiler.Ast.BuildAST.ASTVisitor;
 
 public class classType extends typ{
     //public String className;
-    final public int size = 8;
 
     public classType(){
         name = null;
+        size = 8;
     }
 
     public classType(String className){
         this.name = className;
+        size = 8;
     }
 
     public void accept(ASTVisitor visitor){

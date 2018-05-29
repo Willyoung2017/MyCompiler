@@ -1,6 +1,7 @@
 package MxCompiler.IR.IRnodes.instructions;
 
 import MxCompiler.Ast.Expression.UnaryExpression.unaryOp;
+import MxCompiler.IR.IRVisitor;
 import MxCompiler.IR.IRnodes.intValue;
 import MxCompiler.IR.IRnodes.physicRegister;
 import MxCompiler.IR.IRnodes.register;
@@ -46,5 +47,9 @@ public class unaryOpInstr extends instruction{
             operand = allocateMap.get(operand);
         }
         setUsedRegister();
+    }
+
+    public void accept(IRVisitor visitor){
+        visitor.visit(this);
     }
 }

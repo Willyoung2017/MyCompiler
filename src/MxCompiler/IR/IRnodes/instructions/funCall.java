@@ -1,5 +1,6 @@
 package MxCompiler.IR.IRnodes.instructions;
 
+import MxCompiler.IR.IRVisitor;
 import MxCompiler.IR.IRnodes.*;
 
 import java.util.LinkedList;
@@ -9,11 +10,10 @@ import java.util.Map;
 public class funCall extends instruction{
     public register returnReg;
     public func function;
-    public List<intValue> parameters;
+    public List<intValue> parameters = new LinkedList<>();
     public funCall(){
         returnReg = null;
         function = null;
-        parameters = new LinkedList<>();
     }
 
     public funCall(register returnReg, func function){
@@ -37,11 +37,9 @@ public class funCall extends instruction{
         }
     }
 
-
     public void setDefRegister(register reg){
         returnReg = reg;
     }
-
 
     public void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap){
         for(intValue para : parameters){
@@ -50,5 +48,9 @@ public class funCall extends instruction{
             }
         }
         setUsedRegister();
+    }
+
+    public void accept(IRVisitor visitor){
+        visitor.visit(this);
     }
 }

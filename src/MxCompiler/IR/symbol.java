@@ -1,26 +1,28 @@
 package MxCompiler.IR;
 
-import MxCompiler.Ast.Declaration.classDec;
-import MxCompiler.Ast.Declaration.constructFuncDec;
-import MxCompiler.Ast.Declaration.dec;
-import MxCompiler.Ast.Declaration.funcDec;
+import MxCompiler.Ast.Declaration.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class symbol {
     public int size = 0;
+    boolean hasConstructFunc = false;
     public Map<String, Integer> offsetMap = new HashMap<>();
     public Map<String, Integer> sizeMap = new HashMap<>();
 
     public void setSymbol(classDec node){
         int offset = 0;
-        for(dec mem: node.classMems){
-            if(!(mem instanceof funcDec) && !(mem instanceof constructFuncDec)){
-                size += mem.type.size;
-                offsetMap.put(mem.name, offset);
-                sizeMap.put(mem.name, mem.type.size);
+        for(memberDec mem: node.classMems){
+            dec memDec = mem.declaration;
+            if(!(memDec instanceof funcDec) && !(memDec instanceof constructFuncDec)){
+                size += memDec.type.size;
+                offsetMap.put(memDec.name, offset);
+                sizeMap.put(memDec.name, memDec.type.size);
                 offset = size;
+            }
+            else if(memDec instanceof constructFuncDec){
+                hasConstructFunc = true;
             }
         }
     }

@@ -1,6 +1,7 @@
 package MxCompiler.IR.IRnodes.instructions;
 
 import MxCompiler.Ast.Expression.BinaryExpression.binaryOp;
+import MxCompiler.IR.IRVisitor;
 import MxCompiler.IR.IRnodes.basicBlock;
 import MxCompiler.IR.IRnodes.physicRegister;
 import MxCompiler.IR.IRnodes.register;
@@ -44,4 +45,7 @@ public class branch extends instruction{
 
     }
 
+    public void accept(IRVisitor visitor){
+        visitor.visit(this);
+    }
     }

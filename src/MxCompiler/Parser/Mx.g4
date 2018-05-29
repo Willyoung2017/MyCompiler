@@ -338,3 +338,8 @@ LineComment
     :   '//' ~[\r\n]*
         -> skip
     ;
+
+Comments
+    :   '/*' ~[\\S]*'*/'
+        ->skip
+     ;

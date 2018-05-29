@@ -1,6 +1,7 @@
 package MxCompiler.IR.IRnodes.instructions;
 
 import MxCompiler.Ast.Expression.BinaryExpression.binaryOp;
+import MxCompiler.IR.IRVisitor;
 import MxCompiler.IR.IRnodes.intValue;
 import MxCompiler.IR.IRnodes.physicRegister;
 import MxCompiler.IR.IRnodes.register;
@@ -45,11 +46,13 @@ public class cmp extends instruction{
 
     }
 
-
-
     public void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap){
         if(leftOperand instanceof  virturalRegister)  leftOperand = allocateMap.get(leftOperand);
         if(rightOperand instanceof virturalRegister) rightOperand = allocateMap.get(rightOperand);
         setUsedRegister();
+    }
+
+    public void accept(IRVisitor visitor){
+        visitor.visit(this);
     }
 }

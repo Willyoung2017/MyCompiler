@@ -6,18 +6,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class basicBlock {
-    private instruction head;
-    private instruction last;
+    private instruction head = null;
+    private instruction last = null;
     private String name;
-    private Set<basicBlock> pred;
-    private Set<basicBlock> next;
+    private Set<basicBlock> pred = new HashSet<>();
+    private Set<basicBlock> next = new HashSet<>();
 
     public basicBlock(){
-        head = null;
-        last = null;
         name = null;
-        pred = new HashSet<>();
-        next = new HashSet<>();
     }
 
 

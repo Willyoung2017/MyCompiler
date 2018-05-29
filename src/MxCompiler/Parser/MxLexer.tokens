@@ -54,6 +54,7 @@ Comma=53
 WhiteSpace=54
 NewLine=55
 LineComment=56
+Comments=57
 '{'=1
 '}'=2
 'bool'=3

@@ -1,5 +1,6 @@
 package MxCompiler.IR.IRnodes.instructions;
 
+import MxCompiler.IR.IRVisitor;
 import MxCompiler.IR.IRnodes.basicBlock;
 import MxCompiler.IR.IRnodes.physicRegister;
 import MxCompiler.IR.IRnodes.register;
@@ -30,5 +31,9 @@ public class jump extends instruction{
 
     public void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap){
 
+    }
+
+    public void accept(IRVisitor visitor){
+        visitor.visit(this);
     }
 }
