@@ -31,20 +31,27 @@ public abstract class instruction {
     }
 
     public void linkPrev(instruction instr){
-        prev = instr;
+        instr.prev= prev;
         instr.next = this;
+        if(prev != null) prev.next = instr;
+        prev = instr;
+        if(itsBlock != null && this == itsBlock.getHead()) itsBlock.setHead(instr);
     }
 
     public void linkNext(instruction instr){
-        next = instr;
         instr.prev = this;
+        instr.next = next;
+        if(next != null) next.prev = instr;
+        next = instr;
+        if(itsBlock != null && this == itsBlock.getLast()) itsBlock.setLast(instr);
+
     }
 
     public void remove(){
         if(prev != null) prev.next = next;
         if(next != null) next.prev = prev;
-        if(this == itsBlock.getHead()) itsBlock.setHead(next);
-        if(this == itsBlock.getLast()) itsBlock.setLast(prev);
+        if(itsBlock != null && this == itsBlock.getHead()) itsBlock.setHead(next);
+        if(itsBlock != null && this == itsBlock.getLast()) itsBlock.setLast(prev);
     }
 
     public void setItsBlock(basicBlock itsBlock) {

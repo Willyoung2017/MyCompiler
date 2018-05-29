@@ -149,7 +149,8 @@ public class IRprinter implements IRVisitor{
             case GEQ:
                 op = "sge";
         }
-        visit(node.result);
+        //visit(node.result);
+        out.printf("$cond");
         out.printf(" = %s ", op);
         visit(node.leftOperand);
         out.print(" ");
