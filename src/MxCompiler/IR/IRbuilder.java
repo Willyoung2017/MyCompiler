@@ -35,6 +35,7 @@ public class IRbuilder implements ASTVisitor {
     private Map<staticData, globalVarDec> staticDataMap;
     private List<arrayType> dimList;
     private symbolTable symTable;
+    private List<staticString> stringPool;
     public Map<String, func> funcMap;
 
     public IRbuilder(){
@@ -52,6 +53,7 @@ public class IRbuilder implements ASTVisitor {
         dimList = new LinkedList<>();
         funcMap = new HashMap<>();
         stringMap = new HashMap<>();
+        stringPool = new LinkedList<>();
     }
 
     public Map<String, func> getFuncMap() {
@@ -924,6 +926,7 @@ public class IRbuilder implements ASTVisitor {
         if(str == null){
             str = new staticString(node.value, node.value.length());
             stringMap.put(node.value, str);
+            stringPool.add(str);
         }
         node.nodeValue = str;
     }
@@ -931,10 +934,14 @@ public class IRbuilder implements ASTVisitor {
     private void processBuiltinMemFunc(fieldfuncAccessExpr node){
         //Question remains
         virturalRegister reg = null;
-        if(node.name.equals("size") || node.name.equals("length")){
+        if(node.name.equals("size")){
             //Question remains
             reg = new virturalRegister("size");
             curBlock.pushBack(new load(curBlock, node.obj.nodeValue, reg,0,8));
+        }
+        else if(node.name.equals("length")){
+            reg = new virturalRegister("length");
+            curBlock.pushBack(new load(curBlock, node.obj.nodeValue, reg,-8,8));
         }
         else if(node.name.equals("substring")){
             reg = new virturalRegister("substring");

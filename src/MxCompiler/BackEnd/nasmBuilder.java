@@ -16,6 +16,7 @@ public class nasmBuilder implements IRVisitor {
     private int cmpFlag = -1;
     private Map<String, func> funcMap;
     private List<staticData> dataList;
+    private List<staticString> stringPool;
     private basicBlock nextBlock;
     private func curFunction;
     private PrintStream out;
@@ -23,9 +24,10 @@ public class nasmBuilder implements IRVisitor {
     private Map<String, Integer> counter = new HashMap<>();
     private Map<basicBlock, String> labelMap = new HashMap<>();
 
-    public nasmBuilder(Map<String, func> funcMap, List<staticData> dataList, PrintStream out){
+    public nasmBuilder(Map<String, func> funcMap, List<staticData> dataList, List<staticString> stringPool, PrintStream out){
         this.funcMap = funcMap;
         this.dataList = dataList;
+        this.stringPool = stringPool;
         this.out = out;
     }
 
@@ -59,11 +61,22 @@ public class nasmBuilder implements IRVisitor {
             out.println("global"+function.getFuncName());
         }
     }
+    private String getstaticString(String value){
+        StringBuilder sb  = new StringBuilder();
+        value.chars().forEach(i->sb.append(String.format("%02X",i)).append("H, "));
+        sb.append("00H");
+        return sb.toString();
+    }
 
     private void printStaticData(){
         out.println("SECTION .data\talign=8");
         for(staticData data : dataList){
-            out.println(data.getName() + ":\n\tdq 0\n");
+            out.print(data.getName() + ":\n\tdq\t 0\n");
+        }
+        for(staticString str : stringPool){
+            out.printf("\n\tdq\t %d\n", str.len);
+            out.print(str.getName()+ ":\n\tdb\t ");
+            out.print(getstaticString(str.value)+"\n");
         }
         out.println("intbuffer:\n\tdq 0\n" +
                 "format1:\n\tdb\"%lld\",0\n" +
@@ -391,16 +404,35 @@ public class nasmBuilder implements IRVisitor {
 
     @Override
     public void visit(load node) {
-        out.print("\tmov\t");
-        visit(node.dest);
-        out.print(", qword [");
-        visit(node.addr);
-        if(node.offset < 0){
-            out.print(node.offset + "]");
-        }else{
-            out.print("+" + node.offset + "]");
+        if(node.addr instanceof staticData){
+            out.print("\tmove\t ");
+            visit(node.dest);
+            out.print(", ");
+            visit(node.addr);
+            out.println();
+            out.print("\tmov\t");
+            visit(node.dest);
+            out.print(", qword [");
+            visit(node.dest);
+            if(node.offset < 0){
+                out.print(node.offset + "]");
+            }else{
+                out.print("+" + node.offset + "]");
+            }
+            out.println();
         }
-        System.out.println();
+        else {
+            out.print("\tmov\t");
+            visit(node.dest);
+            out.print(", qword [");
+            visit(node.addr);
+            if (node.offset < 0) {
+                out.print(node.offset + "]");
+            } else {
+                out.print("+" + node.offset + "]");
+            }
+            out.println();
+        }
     }
 
     @Override
@@ -426,8 +458,17 @@ public class nasmBuilder implements IRVisitor {
 
     @Override
     public void visit(store node) {
-        out.print("\tmov\t qword [");
-        visit(node.addr);
+        if(node.addr instanceof staticData){
+            out.print("\tmove\t ");
+            out.print("r15, ");
+            visit(node.addr);
+            out.println();
+            out.print("\tmov\t qword [r15");
+        }
+        else {
+            out.print("\tmov\t qword [");
+            visit(node.addr);
+        }
         if(node.offset < 0){
             out.print(node.offset + "]");
         }else{
@@ -494,12 +535,13 @@ public class nasmBuilder implements IRVisitor {
         }
         else{//var that has been allocated reg i.e. in mem
 
+
         }
     }
 
     @Override
     public void visit(staticData node) {
-        out.println( "qword [" + node.getName() + "]");
+        out.println( "qword [rel " + node.getName() + "]");
     }
 
     @Override
