@@ -10,7 +10,7 @@ public class func {
     private basicBlock firstBlock = null;
     private basicBlock lastBlock = null;
     private typ funcType;
-    public List<virturalRegister> parameterList = new LinkedList<>();
+    public List<register> parameterList = new LinkedList<>();
     public List<returnInstr> returnInstrList = new LinkedList<>();
     public List<basicBlock> preOrder = null;
     public List<basicBlock> reversePreOrder = null;

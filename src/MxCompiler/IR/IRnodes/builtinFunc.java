@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class builtinFunc {
+    public func builtinOrd = new func("ord", new intType());
     public func builtinPrintString = new func("print_string", new voidType());
     public func builtinPrintlnString = new func("println_string", new voidType());
     public func builtinGetString = new func("get_string", new stringType());

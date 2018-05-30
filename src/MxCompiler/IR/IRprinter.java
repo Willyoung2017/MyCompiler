@@ -32,7 +32,9 @@ public class IRprinter implements IRVisitor{
     public void visit(func node) {
         out.printf("func %s ", node.getFuncName());
         for(register paraReg : node.parameterList){
-            out.printf("$%s ", getRegName(paraReg));
+            visit(paraReg);
+            out.print(" ");
+            //out.printf("$%s ", getRegName(paraReg));
         }
         out.println("{");
         node.getPreOrder().stream().forEach(this::visit);
@@ -282,12 +284,12 @@ public class IRprinter implements IRVisitor{
 
     @Override
     public void visit(physicRegister node) {
-
+        out.print("$" + getRegName(node));
     }
 
     @Override
     public void visit(stackSlot node) {
-
+        out.print("$"+"_"+getRegName(node));
     }
 
     private String dataId(intValue node){

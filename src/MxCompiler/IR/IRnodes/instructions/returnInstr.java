@@ -15,6 +15,7 @@ public class returnInstr extends instruction{
     public returnInstr(basicBlock itsBlock, intValue retReg){
         this.itsBlock = itsBlock;
         this.retReg = retReg;
+        setUsedRegister();
     }
 
     @Override

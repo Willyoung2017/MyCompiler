@@ -4,20 +4,33 @@ import MxCompiler.IR.IRVisitor;
 
 public class physicRegister extends register{
     private String name;
-    private boolean isCallerave;
+    private boolean isCallerSave;
     private boolean isCalleeSave;
     private boolean isGeneral;
+
     public physicRegister(){
         name = null;
-        isGeneral = false;
-        isCallerave = false;
         isCalleeSave = false;
+        isCallerSave = false;
+        isGeneral = false;
     }
     public physicRegister(String name, boolean isCallerSave, boolean isCalleeSave, boolean isGeneral){
         this.name = name;
+        this.isCallerSave = isCallerSave;
         this.isCalleeSave = isCalleeSave;
-        this.isCallerave = isCallerSave;
         this.isGeneral = isGeneral;
+    }
+
+    public boolean isCallerSave(){
+        return isCallerSave;
+    }
+
+    public boolean isCalleeSave(){
+        return isCalleeSave;
+    }
+
+    public boolean isGeneral() {
+        return isGeneral;
     }
 
     public String getName(){

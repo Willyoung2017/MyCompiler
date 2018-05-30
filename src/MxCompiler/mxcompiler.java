@@ -13,6 +13,7 @@ import MxCompiler.Parser.verboseListener;
 import MxCompiler.SemanticChecker.dereferenceChecker;
 import MxCompiler.SemanticChecker.localResolver;
 import MxCompiler.SemanticChecker.typeResolver;
+import MxCompiler.X86Related.x86RegisterSet;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -92,9 +93,8 @@ public class mxcompiler {
     }
 
     private void allocateReg(){
-        //registerAllocator allocator = new registerAllocator(funcMap, physicRegisterList);
-
-
+        registerAllocator allocator = new registerAllocator(funcMap, x86RegisterSet.GeneralRegs);
+        allocator.runAllocator();
     }
 
     private void runMain() throws Exception{
@@ -102,8 +102,11 @@ public class mxcompiler {
         //throw new Exception();
         buildIR();
         //throw new Exception();
-        printIR();
+        //printIR();
         //throw new Exception();
+        allocateReg();
+
+        printIR();
 
     }
 
@@ -111,7 +114,7 @@ public class mxcompiler {
         // check options
         String inFile = null;
         String outFile = null;
-        for(int i = 60; i <= 60; ++i) {
+        for(int i = 0; i <= 0; ++i) {
             String num = i + ".";
             inFile = "E:\\compiler\\codgentest\\" + num + "mx";
             outFile = "E:\\compiler\\MyCode\\phy\\" + num + "ir";

@@ -189,7 +189,7 @@ public class IRbuilder implements ASTVisitor {
             for(returnInstr ret : curFunc.returnInstrList){
                 basicBlock thisBlock = ret.getItsBlock();
                 if(ret.retReg != null){
-                    ret.linkPrev(new move(curBlock, ret.retReg, newRetReg));
+                    ret.linkPrev(new move(thisBlock, ret.retReg, newRetReg));
                 }
                 ret.linkPrev(new jump(thisBlock, lastBlock));
                 ret.remove();
@@ -600,6 +600,7 @@ public class IRbuilder implements ASTVisitor {
         }
         call.parameters.add(node.leftOperand.nodeValue);
         call.parameters.add(node.rightOperand.nodeValue);
+        call.setUsedRegister();
         curBlock.pushBack(call);
         node.nodeValue = reg;
 
@@ -794,10 +795,11 @@ public class IRbuilder implements ASTVisitor {
 
          int[][][] a = new int[3][][];
 
-         for int i = 0; i < 3; ++i
+         for int i = 0; i < 3; ++i{
              a[i] = new int[4][];
              for int j = 0; j < 4; ++j
                  a[i][j] = new int[5]
+        }
 
         needed_order:
         indexList: 3, 4, 5
@@ -881,6 +883,7 @@ public class IRbuilder implements ASTVisitor {
                 func function = new func(node.type.name, new voidType());
                 funCall call = new funCall(curBlock, null, function);
                 call.parameters.add(reg);
+                call.setUsedRegister();
                 curBlock.pushBack(call);
             }
         }
@@ -939,19 +942,25 @@ public class IRbuilder implements ASTVisitor {
             call.parameters.add(node.obj.nodeValue);
             call.parameters.add(node.parameters.get(0).nodeValue);
             call.parameters.add(node.parameters.get(1).nodeValue);
+            call.setUsedRegister();
             curBlock.pushBack(call);
         }
         else if(node.name.equals("parseInt")){
             reg = new virturalRegister("parseInt");
             funCall call = new funCall(curBlock, reg, builtinFunction.builtinParseInt);
             call.parameters.add(node.obj.nodeValue);
+            call.setUsedRegister();
             curBlock.pushBack(call);
         }
         else if(node.name.equals("ord")){
             //Question remains
             reg = new virturalRegister("ord");
-            curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.ADD, node.obj.nodeValue, node.parameters.get(0).nodeValue, reg));
-            curBlock.pushBack(new load(curBlock, reg,reg, 8,1));
+            funCall call = new funCall(curBlock, reg, builtinFunction.builtinOrd);
+            call.parameters.add(node.obj.nodeValue);
+            call.setUsedRegister();
+            curBlock.pushBack(call);
+           /* curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.ADD, node.obj.nodeValue, node.parameters.get(0).nodeValue, reg));
+            curBlock.pushBack(new load(curBlock, reg,reg, 8,1));*/
         }
         node.nodeValue = reg;
     }
@@ -976,6 +985,7 @@ public class IRbuilder implements ASTVisitor {
             call.parameters.add(p.nodeValue);
         }
         call.parameters.add(node.obj.nodeValue);
+        call.setUsedRegister();
         curBlock.pushBack(call);
         node.nodeValue = reg;
         if(node.jumpto != null){//bool rettype
@@ -1055,17 +1065,20 @@ public class IRbuilder implements ASTVisitor {
         else if(name.equals("print")){
             funCall call = new funCall(curBlock, null, builtinFunction.builtinPrintString);
             call.parameters.add(node.parameters.get(0).nodeValue);
+            call.setUsedRegister();
             curBlock.pushBack(call);
         }
         else if(name.equals("println")){
             funCall call = new funCall(curBlock, null, builtinFunction.builtinPrintlnString);
             call.parameters.add(node.parameters.get(0).nodeValue);
+            call.setUsedRegister();
             curBlock.pushBack(call);
         }
         else if(name.equals("toString")){
             reg = new virturalRegister("toString");
             funCall call = new funCall(curBlock, reg, builtinFunction.builtintoString);
             call.parameters.add(node.parameters.get(0).nodeValue);
+            call.setUsedRegister();
             curBlock.pushBack(call);
         }
         node.nodeValue = reg;
@@ -1086,6 +1099,7 @@ public class IRbuilder implements ASTVisitor {
         for(expr p : node.parameters) {
             call.parameters.add(p.nodeValue);
         }
+        call.setUsedRegister();
         curBlock.pushBack(call);
         node.nodeValue = reg;
         if(node.jumpto != null){//bool rettype

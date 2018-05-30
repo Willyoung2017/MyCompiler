@@ -4,13 +4,11 @@ import MxCompiler.IR.IRVisitor;
 import MxCompiler.IR.IRnodes.physicRegister;
 
 public class x86Register extends physicRegister {
+    private int num;
 
-    public x86Register(String name, boolean isCallerSave, boolean isCalleeSave, boolean isGeneral){
-        super(name, isCallerSave, isCalleeSave, isGeneral);
-    }
-
-    public void accept(IRVisitor visitor) {
-        visitor.visit(this);
+    public x86Register(int num, String name, boolean isCallerSave, boolean isCalleeSave, boolean isGeneral){
+        super(name,isCallerSave,isCalleeSave,isGeneral);
+        this.num = num;
     }
 
 }

@@ -20,7 +20,6 @@ public class funCall extends instruction{
         this.itsBlock = itsBlock;
         this.returnReg = returnReg;
         this.function = function;
-        setUsedRegister();
     }
 
     @Override
@@ -43,9 +42,10 @@ public class funCall extends instruction{
     }
 
     public void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap){
-        for(intValue para : parameters){
+        for(int i = 0; i < parameters.size(); ++i){
+            intValue para = parameters.get(i);
             if(para instanceof virturalRegister){
-                para = allocateMap.get(para);
+                parameters.set(i, allocateMap.get(para));
             }
         }
         setUsedRegister();

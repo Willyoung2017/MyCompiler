@@ -32,7 +32,8 @@ public class load extends instruction{
 
     @Override
     public void setUsedRegister() {
-
+        usedRegister.clear();
+        if(addr instanceof register) usedRegister.add((register) addr);
     }
 
     public void setDefRegister(register reg){
@@ -40,7 +41,10 @@ public class load extends instruction{
     }
 
     public void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap){
-
+        if(addr instanceof virturalRegister){
+            addr = allocateMap.get(addr);
+        }
+        setUsedRegister();
     }
 
     public void accept(IRVisitor visitor){
