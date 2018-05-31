@@ -58,8 +58,8 @@ public class stackManager {
         instruction firstInstr = firstBlock.getHead();
         instruction lastInstr = lastBlock.getLast();
         firstInstr.linkPrev(new binaryOpInstr(firstBlock, binaryOp.SUB, x86RegisterSet.rsp, new intImd(info.totalSize), x86RegisterSet.rsp));
-        lastInstr.linkPrev(new pop(lastBlock, x86RegisterSet.rbp));
         lastInstr.linkPrev(new binaryOpInstr(lastBlock, binaryOp.ADD, x86RegisterSet.rsp, new intImd(info.totalSize), x86RegisterSet.rsp));
+        lastInstr.linkPrev(new pop(lastBlock, x86RegisterSet.rbp));
 
     }
 }

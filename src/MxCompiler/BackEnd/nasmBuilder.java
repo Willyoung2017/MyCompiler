@@ -364,7 +364,7 @@ public class nasmBuilder implements IRVisitor {
             out.print("\tmov\t r15, ");
             visit(node.leftOperand);
             out.println();
-            out.print("\tcmp \t r15");
+            out.print("\tcmp\t r15");
             out.print(", ");
             visit(node.rightOperand);
             out.println();
@@ -411,7 +411,7 @@ public class nasmBuilder implements IRVisitor {
     public void visit(load node) {
         if(node.addr instanceof staticData) {
             if (node.offset == 0) {
-                out.print("\tmov\t");
+                out.print("\tmov\t ");
                 visit(node.dest);
                 out.print(", ");
                 visit(node.addr);
@@ -534,7 +534,7 @@ public class nasmBuilder implements IRVisitor {
         out.print("\t");
         if(node.operand instanceof intImd){
             out.print("mov\t ");
-            visit(node.operand);
+            visit(node.result);
             out.print(", ");
             int lhs = ((intImd) node.operand).getValue();
             switch(node.operator){

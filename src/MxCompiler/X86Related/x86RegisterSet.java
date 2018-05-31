@@ -46,10 +46,10 @@ public class x86RegisterSet {
         allRegs.add(r14);
         allRegs.add(r15);
 
-        FuncParamRegs.add(rcx);
-        FuncParamRegs.add(rdx);
-        FuncParamRegs.add(rsi);
         FuncParamRegs.add(rdi);
+        FuncParamRegs.add(rsi);
+        FuncParamRegs.add(rdx);
+        FuncParamRegs.add(rcx);
         FuncParamRegs.add(r8);
         FuncParamRegs.add(r9);
 
