@@ -131,7 +131,7 @@ public class mxcompiler {
         //throw new Exception();
         allocateReg();
         manageStack();
-        printIR();
+        //printIR();
         printNasm();
 
     }
@@ -142,6 +142,8 @@ public class mxcompiler {
         String inFile = null;
         String outFile = null;
         String outFile1 = null;
+        InputStream in = null;
+        PrintStream outFile_NASM = null, outFile_IR = null;
 
         for(int i = 0; i <= 0; ++i) {
             String num = i + ".";
@@ -149,13 +151,13 @@ public class mxcompiler {
             outFile = "E:\\compiler\\MyCode\\phy\\" + num + "ir";
             outFile1 = "E:\\compiler\\MyCode\\NASM\\" + num + "nasm";
             // run compiler
-            InputStream in = new FileInputStream(inFile);
-            PrintStream outFile_IR = new PrintStream(new FileOutputStream(outFile));
-            PrintStream outFile_NASM = new PrintStream(new FileOutputStream(outFile1));
+            in = new FileInputStream(inFile);
+            outFile_IR = new PrintStream(new FileOutputStream(outFile));
+            outFile_NASM = new PrintStream(new FileOutputStream(outFile1));
             //throw new Exception();
-            new mxcompiler(in, outFile_IR, outFile_NASM).runMain();
+            //new mxcompiler(in, outFile_IR, outFile_NASM).runMain();
         }
-        */
+       */
         new mxcompiler(System.in, System.out).runMain();
     }
 }
