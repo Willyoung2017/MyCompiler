@@ -4,12 +4,6 @@
     <list default="true" id="a0f4a68e-9013-490c-8d4f-cdeb20d678dc" name="Default" comment="nasmBuilding - nasmBuilder">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MxCompiler/BackEnd/nasmBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/BackEnd/nasmBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MxCompiler/BackEnd/stackManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/BackEnd/stackManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MxCompiler/IR/IRVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/IR/IRVisitor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MxCompiler/IR/IRbuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/IR/IRbuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MxCompiler/IR/IRnodes/instructions/pop.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/IR/IRnodes/instructions/pop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MxCompiler/IR/IRnodes/instructions/push.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/IR/IRnodes/instructions/push.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MxCompiler/IR/IRprinter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/IR/IRprinter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MxCompiler/mxcompiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MxCompiler/mxcompiler.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -83,18 +77,18 @@
       <file leaf-file-name="nasmBuilder.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/MxCompiler/BackEnd/nasmBuilder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2701">
-              <caret line="599" column="27" selection-start-line="599" selection-start-column="27" selection-end-line="599" selection-end-column="27" />
+            <state relative-caret-position="-266">
+              <caret line="43" column="11" selection-start-line="43" selection-start-column="11" selection-end-line="43" selection-end-column="11" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#16100#16101#0" expanded="true" />
-                <element signature="e#16142#16143#0" expanded="true" />
-                <element signature="e#16391#16392#0" expanded="true" />
-                <element signature="e#16432#16433#0" expanded="true" />
-                <element signature="e#16766#16767#0" expanded="true" />
-                <element signature="e#16832#16833#0" expanded="true" />
-                <element signature="e#17175#17176#0" expanded="true" />
-                <element signature="e#17241#17242#0" expanded="true" />
+                <element signature="e#16751#16752#0" expanded="true" />
+                <element signature="e#16793#16794#0" expanded="true" />
+                <element signature="e#17042#17043#0" expanded="true" />
+                <element signature="e#17083#17084#0" expanded="true" />
+                <element signature="e#17906#17907#0" expanded="true" />
+                <element signature="e#17972#17973#0" expanded="true" />
+                <element signature="e#18030#18031#0" expanded="true" />
+                <element signature="e#18096#18097#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -441,7 +435,7 @@
       <workItem from="1525429163787" duration="1049000" />
       <workItem from="1525584480794" duration="28078000" />
       <workItem from="1525942828427" duration="67146000" />
-      <workItem from="1526999514172" duration="205920000" />
+      <workItem from="1526999514172" duration="207087000" />
     </task>
     <task id="LOCAL-00001" summary="AST building work">
       <created>1524575362052</created>
@@ -744,11 +738,25 @@
       <option name="project" value="LOCAL" />
       <updated>1527753206906</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="nasmBuilding - nasmBuilder">
+      <created>1527765011830</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1527765011830</updated>
+    </task>
+    <task id="LOCAL-00045" summary="nasmBuilding - nasmBuilder">
+      <created>1527766093743</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1527766093743</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="587547000" />
+    <option name="totallyTimeSpent" value="588714000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -783,7 +791,7 @@
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="2" />
       <window_info anchor="bottom" id="Version Control" order="4" />
-      <window_info anchor="right" id="Run" order="9" weight="0.44335938" />
+      <window_info active="true" anchor="right" id="Run" order="9" visible="true" weight="0.44335938" />
       <window_info anchor="bottom" id="Terminal" order="5" />
       <window_info content_ui="combo" id="Project" order="0" weight="0.21223958" />
       <window_info anchor="bottom" id="Find" order="8" sideWeight="0.49934897" weight="0.32857144" />
@@ -1299,18 +1307,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/MxCompiler/BackEnd/nasmBuilder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2701">
-          <caret line="599" column="27" selection-start-line="599" selection-start-column="27" selection-end-line="599" selection-end-column="27" />
+        <state relative-caret-position="-266">
+          <caret line="43" column="11" selection-start-line="43" selection-start-column="11" selection-end-line="43" selection-end-column="11" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#16100#16101#0" expanded="true" />
-            <element signature="e#16142#16143#0" expanded="true" />
-            <element signature="e#16391#16392#0" expanded="true" />
-            <element signature="e#16432#16433#0" expanded="true" />
-            <element signature="e#16766#16767#0" expanded="true" />
-            <element signature="e#16832#16833#0" expanded="true" />
-            <element signature="e#17175#17176#0" expanded="true" />
-            <element signature="e#17241#17242#0" expanded="true" />
+            <element signature="e#16751#16752#0" expanded="true" />
+            <element signature="e#16793#16794#0" expanded="true" />
+            <element signature="e#17042#17043#0" expanded="true" />
+            <element signature="e#17083#17084#0" expanded="true" />
+            <element signature="e#17906#17907#0" expanded="true" />
+            <element signature="e#17972#17973#0" expanded="true" />
+            <element signature="e#18030#18031#0" expanded="true" />
+            <element signature="e#18096#18097#0" expanded="true" />
           </folding>
         </state>
       </provider>
