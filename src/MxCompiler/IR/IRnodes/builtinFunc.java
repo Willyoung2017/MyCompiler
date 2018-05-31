@@ -15,7 +15,7 @@ public class builtinFunc {
     public func builtinGetString = new func("getString", new stringType());
     public func builtinGetInt = new func("getInt", new intType());
     public func builtintoString = new func("toString", new stringType());
-    public func builtinSubstring = new func("substring", new stringType());
+    public func builtinSubstring = new func("string.substring", new stringType());
     public func builtinParseInt = new func("string.parseInt", new intType());
     public func builtinStringAdd = new func("string.add", new stringType());
     public func builtinStringEqual = new func("string.eq", new boolType());

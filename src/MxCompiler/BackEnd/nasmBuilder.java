@@ -317,9 +317,14 @@ public class nasmBuilder implements IRVisitor {
 
     @Override
     public void visit(branch node) {
+        if(nextBlock == node.jumpto && !curFunction.preOrder.contains(node.jumpother)){
+            return;
+        }
+        else if(nextBlock == node.jumpother && !curFunction.preOrder.contains(node.jumpto)){
+            return;
+        }
         out.print("\t");
         String op = null;
-
         switch(node.operator) {
             case GEQ:
                 op = "jge";
@@ -343,7 +348,8 @@ public class nasmBuilder implements IRVisitor {
             if(nextBlock == node.jumpto){
                 if(cmpFlag == 1)
                     out.println();
-                else out.println("jmp"+" \t"+getBlockLabel(node.jumpother));
+                else
+                    out.println("jmp"+" \t"+getBlockLabel(node.jumpother));
             }
             else if(nextBlock == node.jumpother){
                 if(cmpFlag == 1){
