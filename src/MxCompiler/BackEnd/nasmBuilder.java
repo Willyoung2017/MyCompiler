@@ -409,7 +409,7 @@ public class nasmBuilder implements IRVisitor {
 
     @Override
     public void visit(load node) {
-    /*    if(node.addr instanceof staticData) {
+        if(node.addr instanceof staticData) {
             if (node.offset == 0) {
                 out.print("\tmov\t");
                 visit(node.dest);
@@ -436,7 +436,8 @@ public class nasmBuilder implements IRVisitor {
                 }
                 out.println();
             }
-        }*/
+        }
+        else{
         out.print("\tmov\t ");
         visit(node.dest);
         out.print(", qword [");
@@ -449,14 +450,14 @@ public class nasmBuilder implements IRVisitor {
             out.print("+" + node.offset + "]");
         }
         out.println();
-    //}
+    }
     }
 
     @Override
     public void visit(move node) {
-        if((node.srcReg instanceof staticData || node.destReg instanceof stackSlot) && (node.destReg instanceof staticData || node.destReg instanceof stackSlot)){
+        if((node.srcReg instanceof staticData || node.srcReg instanceof stackSlot) && (node.destReg instanceof staticData || node.destReg instanceof stackSlot)){
             out.print("\tmov \tr15, ");
-            visit(node.destReg);
+            visit(node.srcReg);
             out.println();
             out.print("\tmov\t ");
             visit(node.destReg);
@@ -485,7 +486,7 @@ public class nasmBuilder implements IRVisitor {
 
     @Override
     public void visit(store node) {
-     /*   if(node.addr instanceof staticData){
+        if(node.addr instanceof staticData){
             if(node.offset == 0){
                 out.print("\tmov\t ");
                 visit(node.addr);
@@ -511,7 +512,7 @@ public class nasmBuilder implements IRVisitor {
                 out.println();
             }
         }
-        else {*/
+        else {
             out.print("\tmov\t qword [");
             visit(node.addr);
             if (node.offset < 0) {
@@ -525,7 +526,7 @@ public class nasmBuilder implements IRVisitor {
             out.print(", ");
             visit(node.src);
             out.println();
-    //    }
+       }
     }
 
     @Override
@@ -556,9 +557,12 @@ public class nasmBuilder implements IRVisitor {
                     op = "neg";
                     break;
                 case BITWISE_NOT:
-                    op = "not";
+                    op = "xor";
             }
             out.print(op + "\t r15");
+            if(op.equals("xor")){
+                out.print(", 1");
+            }
             out.println();
             out.print("\tmov\t ");
             visit(node.result);

@@ -330,6 +330,6 @@ public class IRprinter implements IRVisitor{
 
     @Override
     public void visit(staticString node) {
-        out.printf("asciiz @%s %s", dataId(node), node.value);
+        out.printf("asciiz 222@%s %s", dataId(node), node.value);
     }
 }
