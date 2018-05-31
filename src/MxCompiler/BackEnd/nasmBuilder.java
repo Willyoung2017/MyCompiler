@@ -1,5 +1,6 @@
 package MxCompiler.BackEnd;
 
+import MxCompiler.Ast.Expression.BinaryExpression.binaryOp;
 import MxCompiler.IR.IRVisitor;
 import MxCompiler.IR.IRnodes.*;
 import MxCompiler.IR.IRnodes.instructions.*;
@@ -37,11 +38,11 @@ public class nasmBuilder implements IRVisitor {
         out.println("SECTION .text\n");
 
         funcMap.values().stream().forEach(this::visit);
-        /*try {
+        try {
             printBuiltin();
         }catch(Exception ex){
             System.err.println("File \"BuildinFunc.asm\" Not Found!");
-        }*/
+        }
         printStaticData();
     }
 
@@ -203,43 +204,62 @@ public class nasmBuilder implements IRVisitor {
             visit(node.leftOperand);
             out.println();
             out.print("\t");
-            switch (node.operator) {
-                case BITWISE_INCLUSIVE_OR:
-                    op = "or";
-                    break;
-                case BITWISE_EXCLUSIVE_OR:
-                    op = "xor";
-                    break;
-                case BITWISE_AND:
-                    op = "and";
-                    break;
-                case MOD:
-                    op = "mod";
-                    break;
-                case MUL:
-                    op = "imul";
-                    break;
-                case DIV:
-                    op = "div";
-                    break;
-                case SUB:
-                    op = "sub";
-                    break;
-                case ADD:
-                    op = "add";
-                    break;
-                case LEFT_SHIFT:
-                    op = "shl";
-                    break;
-                case RIGHT_SHIFT:
-                    op = "shr";
+            if (node.operator == binaryOp.DIV) {
+                out.print("mov \trdx, 0\n");
+                out.print("mov \trax ,");
+                visit(node.leftOperand);
+                out.println();
+                out.print("\tidiv \t");
+                visit(node.rightOperand);
+                out.println();
+                out.print("\tmov \t");
+                visit(node.result);
+                out.print(", rax\n");
+            } else if (node.operator == binaryOp.MOD) {
+                out.print("mov \trdx, 0\n");
+                out.print("mov \trax ,");
+                visit(node.leftOperand);
+                out.println();
+                out.print("\tidiv \t ");
+                visit(node.rightOperand);
+                out.println();
+                out.print("\tmov \t");
+                visit(node.result);
+                out.print(", rdx\n");
+            } else {
+                switch (node.operator) {
+                    case BITWISE_INCLUSIVE_OR:
+                        op = "or";
+                        break;
+                    case BITWISE_EXCLUSIVE_OR:
+                        op = "xor";
+                        break;
+                    case BITWISE_AND:
+                        op = "and";
+                        break;
+                    case MUL:
+                        op = "imul";
+                        break;
+                    case SUB:
+                        op = "sub";
+                        break;
+                    case ADD:
+                        op = "add";
+                        break;
+                    case LEFT_SHIFT:
+                        op = "shl";
+                        break;
+                    case RIGHT_SHIFT:
+                        op = "shr";
+                }
+
+                out.print(op + " \t");
+                visit(node.result);
+                out.print(", ");
+                visit(node.rightOperand);
+                out.println();
             }
         }
-        out.print(op + " \t");
-        visit(node.result);
-        out.print(", ");
-        visit(node.rightOperand);
-        out.println();
     }
 
     private String Reverse(String op){
@@ -283,10 +303,10 @@ public class nasmBuilder implements IRVisitor {
                 op = "jl";
                 break;
             case NOT_EQUAL:
-                op = "jz";
+                op = "jne";
                 break;
             case EQUAL:
-                op = "jnz";
+                op = "je";
         }
         if(cmpFlag != -1 && cmpFlag != 2){
             if(nextBlock == node.jumpto){
@@ -306,16 +326,16 @@ public class nasmBuilder implements IRVisitor {
         else{
             if(cmpFlag == -1) {
                 if (nextBlock == node.jumpto) {
-                    out.println(op + " \t" + getBlockLabel(node.jumpother));
+                    out.println(Reverse(op) + " \t" + getBlockLabel(node.jumpother));
                 } else if (nextBlock == node.jumpother) {
-                    out.println(Reverse(op) + " \t" + getBlockLabel(node.jumpto));
+                    out.println(op + " \t" + getBlockLabel(node.jumpto));
                 }
             }
             else{
                 if (nextBlock == node.jumpto) {
-                    out.println(Reverse(op) + " \t" + getBlockLabel(node.jumpother));
+                    out.println(op + " \t" + getBlockLabel(node.jumpother));
                 } else if (nextBlock == node.jumpother) {
-                    out.println(op + " \t" + getBlockLabel(node.jumpto));
+                    out.println(Reverse(op) + " \t" + getBlockLabel(node.jumpto));
                 }
             }
         }
