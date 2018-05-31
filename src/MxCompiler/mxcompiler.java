@@ -131,20 +131,19 @@ public class mxcompiler {
         //throw new Exception();
         allocateReg();
         manageStack();
-        printIR();
+        //printIR();
         printNasm();
 
     }
 
     public static void main(String[] argv) throws Exception {
         // check options
-
+    /*
         String inFile = null;
         String outFile = null;
         String outFile1 = null;
         InputStream in = null;
         PrintStream outFile_NASM = null, outFile_IR = null;
-
         for(int i = 0; i <= 0; ++i) {
             String num = i + ".";
             inFile = "E:\\compiler\\codgentest\\" + num + "mx";
@@ -157,7 +156,7 @@ public class mxcompiler {
             //throw new Exception();
             new mxcompiler(in, outFile_IR, outFile_NASM).runMain();
         }
-
-      //  new mxcompiler(System.in, System.out).runMain();
+    */
+        new mxcompiler(System.in, System.out).runMain();
     }
 }
