@@ -404,22 +404,31 @@ public class nasmBuilder implements IRVisitor {
 
     @Override
     public void visit(load node) {
-        if(node.addr instanceof staticData){
-            out.print("\tmove\t ");
-            visit(node.dest);
-            out.print(", ");
-            visit(node.addr);
-            out.println();
-            out.print("\tmov\t");
-            visit(node.dest);
-            out.print(", qword [");
-            visit(node.dest);
-            if(node.offset < 0){
-                out.print(node.offset + "]");
-            }else{
-                out.print("+" + node.offset + "]");
+        if(node.addr instanceof staticData) {
+            if (node.offset == 0) {
+                out.print("\tmove\t");
+                visit(node.dest);
+                out.print(", ");
+                visit(node.addr);
+                out.println();
             }
-            out.println();
+            else {
+                out.print("\tmove\t ");
+                visit(node.dest);
+                out.print(", ");
+                visit(node.addr);
+                out.println();
+                out.print("\tmov\t");
+                visit(node.dest);
+                out.print(", qword [");
+                visit(node.dest);
+                if (node.offset < 0) {
+                    out.print(node.offset + "]");
+                } else {
+                    out.print("+" + node.offset + "]");
+                }
+                out.println();
+            }
         }
         else {
             out.print("\tmov\t");
@@ -459,45 +468,79 @@ public class nasmBuilder implements IRVisitor {
     @Override
     public void visit(store node) {
         if(node.addr instanceof staticData){
-            out.print("\tmove\t ");
-            out.print("r15, ");
-            visit(node.addr);
-            out.println();
-            out.print("\tmov\t qword [r15");
+            if(node.offset == 0){
+                out.print("\tmove\t ");
+                visit(node.addr);
+                out.print(", ");
+                visit(node.src);
+                out.println();
+            }
+            else {
+                out.print("\tmove\t ");
+                out.print("r15, ");
+                visit(node.addr);
+                out.println();
+                out.print("\tmov\t qword [r15");
+                if (node.offset < 0) {
+                    out.print(node.offset + "]");
+                } else {
+                    out.print("+" + node.offset + "]");
+                }
+                out.print(", ");
+                visit(node.src);
+                out.println();
+            }
         }
         else {
             out.print("\tmov\t qword [");
             visit(node.addr);
+            if (node.offset < 0) {
+                out.print(node.offset + "]");
+            } else {
+                out.print("+" + node.offset + "]");
+            }
+            out.print(", ");
+            visit(node.src);
+            out.println();
         }
-        if(node.offset < 0){
-            out.print(node.offset + "]");
-        }else{
-            out.print("+" + node.offset + "]");
-        }
-        out.print(", ");
-        visit(node.src);
-        out.println();
     }
 
     @Override
     public void visit(unaryOpInstr node) {
         out.print("\t");
-        String op = null;
-        switch(node.operator){
-            case NEG:
-                op = "neg";
-                break;
-            case BITWISE_NOT:
-                op = "not";
+        if(node.operand instanceof intImd){
+            out.print("move\t ");
+            visit(node.operand);
+            out.print(", ");
+            int lhs = ((intImd) node.operand).getValue();
+            switch(node.operator){
+                case NEG:
+                    lhs = -lhs;
+                    break;
+                case BITWISE_NOT:
+                    if(lhs == 0) lhs = 1;
+                    else lhs = 0;
+            }
+            out.print(lhs + "\n");
         }
-        out.print(op+"\t ");
-        visit(node.operand);
-        out.println();
-        out.print("\tmove\t ");
-        visit(node.result);
-        out.print(", ");
-        visit(node.operand);
-        out.println();
+        else {
+            String op = null;
+            switch (node.operator) {
+                case NEG:
+                    op = "neg";
+                    break;
+                case BITWISE_NOT:
+                    op = "not";
+            }
+            out.print(op + "\t ");
+            visit(node.operand);
+            out.println();
+            out.print("\tmove\t ");
+            visit(node.result);
+            out.print(", ");
+            visit(node.operand);
+            out.println();
+        }
     }
 
     @Override
@@ -546,6 +589,6 @@ public class nasmBuilder implements IRVisitor {
 
     @Override
     public void visit(staticString node) {
-
+        out.println( "qword [rel " + node.getName() + "]");
     }
 }
