@@ -21,6 +21,8 @@ public interface IRVisitor {
     void visit(returnInstr node);
     void visit(store node);
     void visit(unaryOpInstr node);
+    void visit(pop node);
+    void visit(push node);
 
     void visit(intValue node);
     void visit(intImd node);

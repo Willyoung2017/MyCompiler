@@ -311,6 +311,18 @@ public class IRprinter implements IRVisitor{
         return name;
     }
 
+    public void visit(pop node){
+        out.print("pop");
+        visit(node.dest);
+        out.println();
+    }
+
+
+    public void visit(push node){
+        out.print("push");
+        visit(node.dest);
+        out.println();
+    }
     @Override
     public void visit(staticData node) {
         out.printf("space @%s %d", dataId(node), node.len);

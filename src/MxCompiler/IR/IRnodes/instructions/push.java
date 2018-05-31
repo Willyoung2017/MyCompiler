@@ -38,6 +38,6 @@ public class push extends instruction{
 
     @Override
     public void accept(IRVisitor visitor) {
-
+        visitor.visit(this);
     }
 }

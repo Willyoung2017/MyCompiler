@@ -54,11 +54,11 @@ public class nasmBuilder implements IRVisitor {
 
     private void printGlobal(){
         for(staticData data : dataList){
-            out.println("global"+data.getName());
+            out.println("global "+data.getName());
         }
 
         for(func function : funcMap.values()){
-            out.println("global"+function.getFuncName());
+            out.println("global "+function.getFuncName());
         }
     }
     private String getstaticString(String value){
@@ -161,7 +161,7 @@ public class nasmBuilder implements IRVisitor {
     public void visit(binaryOpInstr node) {
         String op = null;
 
-        out.print("\tmove \t");
+        out.print("\tmov \t");
         visit(node.result);
         out.print(", ");
         if(node.leftOperand instanceof intImd && node.rightOperand instanceof intImd){
@@ -364,6 +364,7 @@ public class nasmBuilder implements IRVisitor {
                 out.print(", ");
                 visit(node.rightOperand);
             }
+            out.println();
         }
     }
 
@@ -371,14 +372,14 @@ public class nasmBuilder implements IRVisitor {
     public void visit(funCall node) {
         //caller save
         for(int i = 0; i < node.parameters.size(); ++i){
-            out.println("\tmove \t"+ x86RegisterSet.FuncParamRegs.get(i).getName()+", ");
+            out.println("\tmov \t"+ x86RegisterSet.FuncParamRegs.get(i).getName()+", ");
             visit(node.parameters.get(i));
             out.println();
         }
 
         out.println("\tcall \t"+node.function.getFuncName());
         if(node.returnReg != null) {
-            out.print("\tmove \t");
+            out.print("\tmov \t");
             visit(node.returnReg);
             out.print(", rax\n");
         }
@@ -397,8 +398,8 @@ public class nasmBuilder implements IRVisitor {
 
     @Override
     public void visit(jump node) {
-        if(curFunction.preOrder.contains(node.jumpto)) {
-            out.println("\tjump \t" + getBlockLabel(node.jumpto));
+        if(curFunction.preOrder.contains(node.jumpto) && nextBlock != node.jumpto) {
+            out.println("\tjmp \t" + getBlockLabel(node.jumpto));
         }
     }
 
@@ -406,38 +407,42 @@ public class nasmBuilder implements IRVisitor {
     public void visit(load node) {
         if(node.addr instanceof staticData) {
             if (node.offset == 0) {
-                out.print("\tmove\t");
+                out.print("\tmov\t");
                 visit(node.dest);
                 out.print(", ");
                 visit(node.addr);
                 out.println();
             }
             else {
-                out.print("\tmove\t ");
+                out.print("\tmov\t ");
                 visit(node.dest);
                 out.print(", ");
                 visit(node.addr);
                 out.println();
-                out.print("\tmov\t");
+                out.print("\tmov\t ");
                 visit(node.dest);
                 out.print(", qword [");
                 visit(node.dest);
                 if (node.offset < 0) {
                     out.print(node.offset + "]");
-                } else {
+                }  else if (node.offset == 0){
+                    out.print("]");
+                }else {
                     out.print("+" + node.offset + "]");
                 }
                 out.println();
             }
         }
         else {
-            out.print("\tmov\t");
+            out.print("\tmov\t ");
             visit(node.dest);
             out.print(", qword [");
             visit(node.addr);
             if (node.offset < 0) {
                 out.print(node.offset + "]");
-            } else {
+            }  else if (node.offset == 0){
+                out.print("]");
+            }else {
                 out.print("+" + node.offset + "]");
             }
             out.println();
@@ -446,7 +451,7 @@ public class nasmBuilder implements IRVisitor {
 
     @Override
     public void visit(move node) {
-        out.print("\tmove \t");
+        out.print("\tmov \t");
         visit(node.destReg);
         out.print(", ");
         visit(node.srcReg);
@@ -457,7 +462,7 @@ public class nasmBuilder implements IRVisitor {
     public void visit(returnInstr node) {
         //callee restore
         if(node.retReg != null){
-            out.print("\tmove\t rax, ");
+            out.print("\tmov\t rax, ");
             visit(node.retReg);
             out.println();
         }
@@ -469,21 +474,23 @@ public class nasmBuilder implements IRVisitor {
     public void visit(store node) {
         if(node.addr instanceof staticData){
             if(node.offset == 0){
-                out.print("\tmove\t ");
+                out.print("\tmov\t ");
                 visit(node.addr);
                 out.print(", ");
                 visit(node.src);
                 out.println();
             }
             else {
-                out.print("\tmove\t ");
+                out.print("\tmov\t ");
                 out.print("r15, ");
                 visit(node.addr);
                 out.println();
                 out.print("\tmov\t qword [r15");
                 if (node.offset < 0) {
                     out.print(node.offset + "]");
-                } else {
+                }  else if (node.offset == 0){
+                    out.print("]");
+                }else {
                     out.print("+" + node.offset + "]");
                 }
                 out.print(", ");
@@ -496,7 +503,10 @@ public class nasmBuilder implements IRVisitor {
             visit(node.addr);
             if (node.offset < 0) {
                 out.print(node.offset + "]");
-            } else {
+            } else if (node.offset == 0){
+                out.print("]");
+            }
+            else{
                 out.print("+" + node.offset + "]");
             }
             out.print(", ");
@@ -509,7 +519,7 @@ public class nasmBuilder implements IRVisitor {
     public void visit(unaryOpInstr node) {
         out.print("\t");
         if(node.operand instanceof intImd){
-            out.print("move\t ");
+            out.print("mov\t ");
             visit(node.operand);
             out.print(", ");
             int lhs = ((intImd) node.operand).getValue();
@@ -535,7 +545,7 @@ public class nasmBuilder implements IRVisitor {
             out.print(op + "\t ");
             visit(node.operand);
             out.println();
-            out.print("\tmove\t ");
+            out.print("\tmov\t ");
             visit(node.result);
             out.print(", ");
             visit(node.operand);
@@ -578,23 +588,23 @@ public class nasmBuilder implements IRVisitor {
         }
         else{//var that has been allocated reg i.e. in mem
             int offset = curFunction.info.stackSlotOffsetMap.get(node);
-            out.print("qword [rbp ");
+            out.print("rbp");
             if(offset > 0)
-                out.print("+ " + offset + "]");
-            else
-                out.print(offset + "]");
+                out.print(" + " + offset);
+            else if (offset != 0)
+                out.print(" " +  offset);
         }
     }
 
     public void visit(pop node){
-        out.print("pop");
+        out.print("\tpop\t ");
         visit(node.dest);
         out.println();
     }
 
 
     public void visit(push node){
-        out.print("pop");
+        out.print("\tpush\t ");
         visit(node.dest);
         out.println();
     }
