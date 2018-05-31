@@ -36,13 +36,12 @@ public class nasmBuilder implements IRVisitor {
         printGlobal();
         out.println("SECTION .text\n");
 
+        funcMap.values().stream().forEach(this::visit);
         try {
             printBuiltin();
         }catch(Exception ex){
             System.err.println("File \"BuildinFunc.asm\" Not Found!");
         }
-
-        funcMap.values().stream().forEach(this::visit);
         printStaticData();
     }
 
