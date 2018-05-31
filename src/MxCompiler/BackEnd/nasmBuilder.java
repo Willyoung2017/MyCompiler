@@ -15,6 +15,7 @@ import java.util.Map;
 
 public class nasmBuilder implements IRVisitor {
     private int cmpFlag = -1;
+    private int cntLen = 0;
     private Map<String, func> funcMap;
     private List<staticData> dataList;
     private List<staticString> stringPool;
@@ -61,6 +62,31 @@ public class nasmBuilder implements IRVisitor {
             out.println("global "+function.getFuncName());
         }
     }
+
+    private String toInt(String value){
+        StringBuffer str = new StringBuffer();
+        int n = value.length();
+        for (int j = 0; j < n; j++) {
+            if (value.charAt(j) == '\\') {
+                ++j;
+                ++cntLen;
+                if (value.charAt(j) == 'n') {
+                    str.append("  10,");
+                }
+                if (value.charAt(j) == '\"') {
+                    str.append("  34,");
+                }
+                if (value.charAt(j) == '\\') {
+                    str.append("  92,");
+                }
+            } else {
+                ++cntLen;
+                str.append(String.format(" %3s,", (int) value.charAt(j)));
+            }
+        }
+        str.append("   0\n");
+        return str.toString();
+    }
     private String getstaticString(String value){
         StringBuilder sb  = new StringBuilder();
         value.chars().forEach(i->sb.append(String.format("%02X",i)).append("H, "));
@@ -74,9 +100,11 @@ public class nasmBuilder implements IRVisitor {
             out.print(data.getName() + ":\n\tdq\t 0\n");
         }
         for(staticString str : stringPool){
-            out.printf("\n\tdq\t %d\n", str.len);
+            cntLen = 0;
+            String tmp = toInt(str.value);
+            out.printf("\n\tdq\t %d\n", cntLen);
             out.print(str.getName()+ ":\n\tdb\t ");
-            out.print(getstaticString(str.value)+"\n");
+            out.print(tmp+"\n");
         }
         out.println("intbuffer:\n\tdq 0\n" +
                 "format1:\n\tdb\"%lld\",0\n" +
@@ -200,30 +228,34 @@ public class nasmBuilder implements IRVisitor {
             out.println();
         }
         else {
-            out.print("\tmov\t r15, ");
-            visit(node.leftOperand);
-            out.println();
             if (node.operator == binaryOp.DIV) {
-                out.print("\tmov \trdx, 0\n");
-                out.print("\tmov \trax, r15");
-                out.println();
-                out.print("\tidiv \t");
+                out.print("\tmov\t r15, ");
                 visit(node.rightOperand);
                 out.println();
+                out.print("\tmov \trdx, 0\n");
+                out.print("\tmov \trax, ");
+                visit(node.leftOperand);
+                out.println();
+                out.print("\tidiv \tr15\n");
                 out.print("\tmov \t");
                 visit(node.result);
                 out.print(", rax\n");
             } else if (node.operator == binaryOp.MOD) {
-                out.print("\tmov \trdx, 0\n");
-                out.print("\tmov \trax ,r15");
-                out.println();
-                out.print("\tidiv \t ");
+                out.print("\tmov\t r15, ");
                 visit(node.rightOperand);
                 out.println();
+                out.print("\tmov \trdx, 0\n");
+                out.print("\tmov \trax , ");
+                visit(node.leftOperand);
+                out.println();
+                out.print("\tidiv \tr15\n");
                 out.print("\tmov \t");
                 visit(node.result);
                 out.print(", rdx\n");
             } else {
+                out.print("\tmov\t r15, ");
+                visit(node.leftOperand);
+                out.println();
                 switch (node.operator) {
                     case BITWISE_INCLUSIVE_OR:
                         op = "or";
@@ -629,11 +661,11 @@ public class nasmBuilder implements IRVisitor {
 
     @Override
     public void visit(staticData node) {
-        out.print( "qword [rel " + node.getName() + "]");
+        out.print( "qword [ " + node.getName() + "]");
     }
 
     @Override
     public void visit(staticString node) {
-        out.print( "qword [rel " + node.getName() + "]");
+        out.print(node.getName());
     }
 }

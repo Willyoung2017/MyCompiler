@@ -1,5 +1,6 @@
 package MxCompiler.IR.IRnodes;
 
+import MxCompiler.IR.IRnodes.instructions.branch;
 import MxCompiler.IR.IRnodes.instructions.instruction;
 import MxCompiler.IR.IRnodes.instructions.jump;
 
@@ -12,7 +13,7 @@ public class basicBlock {
     private String name;
     private Set<basicBlock> pred = new HashSet<>();
     private Set<basicBlock> next = new HashSet<>();
-
+    private boolean ended = false;
     public basicBlock(){
         name = null;
     }
@@ -46,12 +47,17 @@ public class basicBlock {
     }
 
     public void pushBack(instruction next){
-        if(last == null){
-            head = last = next;
-        }
-        else{
-            last.linkNext(next);
-            last = next;
+        if(ended) return;
+        else {
+            if(next instanceof jump || next instanceof branch){
+                ended = true;
+            }
+            if (last == null) {
+                head = last = next;
+            } else {
+                last.linkNext(next);
+                last = next;
+            }
         }
     }
 

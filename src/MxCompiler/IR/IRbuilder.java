@@ -920,11 +920,14 @@ public class IRbuilder implements ASTVisitor {
         node.nodeValue = new intImd(0);
     }
 
+
+
     @Override
     public void visit(stringConstant node) {
-        staticString str = stringMap.get(node.value);
+        String tmp = node.value.substring(1,node.value.length()-1);
+        staticString str = stringMap.get(tmp);
         if(str == null){
-            str = new staticString(node.value, node.value.length());
+            str = new staticString(tmp, tmp.length());
             stringMap.put(node.value, str);
             stringPool.add(str);
         }
