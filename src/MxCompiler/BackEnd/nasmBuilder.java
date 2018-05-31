@@ -85,7 +85,7 @@ public class nasmBuilder implements IRVisitor {
     }
 
     private void printBuiltin() throws Exception{
-        String path = "src\\MxCompiler\\lib\\builtinFunc.asm";
+        String path = "src/MxCompiler/lib/builtinFunc.asm";
         FileReader reader = new FileReader(path);
         BufferedReader br = new BufferedReader(reader);
         String line = null;
@@ -630,11 +630,11 @@ public class nasmBuilder implements IRVisitor {
 
     @Override
     public void visit(staticData node) {
-        out.println( "qword [rel " + node.getName() + "]");
+        out.print( "qword [rel " + node.getName() + "]");
     }
 
     @Override
     public void visit(staticString node) {
-        out.println( "qword [rel " + node.getName() + "]");
+        out.print( "qword [rel " + node.getName() + "]");
     }
 }
