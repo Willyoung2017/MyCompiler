@@ -2,10 +2,14 @@ package MxCompiler;
 
 import MxCompiler.Ast.BuildAST.ASTBuilder;
 import MxCompiler.Ast.abstractSyntaxTree;
+import MxCompiler.BackEnd.nasmBuilder;
 import MxCompiler.BackEnd.registerAllocator;
+import MxCompiler.BackEnd.stackManager;
 import MxCompiler.IR.IRVisitor;
 import MxCompiler.IR.IRbuilder;
 import MxCompiler.IR.IRnodes.func;
+import MxCompiler.IR.IRnodes.staticData;
+import MxCompiler.IR.IRnodes.staticString;
 import MxCompiler.IR.IRprinter;
 import MxCompiler.Parser.MxLexer;
 import MxCompiler.Parser.MxParser;
@@ -23,19 +27,28 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.List;
 import java.util.Map;
 
 public class mxcompiler {
     private abstractSyntaxTree rootNode;
     private Map<String, func> funcMap;
+    private List<staticData> dataList;
+    private List<staticString> stringPool;
     private InputStream in;
-    private PrintStream out;
+    private PrintStream out_for_IR;
+    private PrintStream out_for_NASM;
 
-    public mxcompiler(InputStream in, PrintStream out){
+    public mxcompiler(InputStream in, PrintStream out_for_IR, PrintStream out_for_NASM){
         this.in = in;
-        this.out = out;
+        this.out_for_IR = out_for_IR;
+        this.out_for_NASM = out_for_NASM;
     }
 
+    public mxcompiler(InputStream in, PrintStream out_for_NASM){
+        this.in = in;
+        this.out_for_NASM = out_for_NASM;
+    }
     private void buildAST() throws Exception{
         InputStream is = in;
         ANTLRInputStream input = new ANTLRInputStream(is);
@@ -85,16 +98,28 @@ public class mxcompiler {
         IRbuilder iRBuilder = new IRbuilder();
         rootNode.accept(iRBuilder);
         funcMap = iRBuilder.getFuncMap();
+        dataList = iRBuilder.dataList;
+        stringPool = iRBuilder.stringPool;
     }
 
     private void printIR(){
-        IRprinter iRprinter = new IRprinter(funcMap, out);
+        IRprinter iRprinter = new IRprinter(funcMap, out_for_IR);
         iRprinter.runPrinter();
     }
 
     private void allocateReg(){
         registerAllocator allocator = new registerAllocator(funcMap, x86RegisterSet.GeneralRegs);
         allocator.runAllocator();
+    }
+
+    private void printNasm(){
+        nasmBuilder builder = new nasmBuilder(funcMap, dataList, stringPool, out_for_NASM);
+        builder.runBuilder();
+    }
+
+    private void manageStack(){
+        stackManager manager = new stackManager(funcMap);
+        manager.runManager();
     }
 
     private void runMain() throws Exception{
@@ -105,8 +130,9 @@ public class mxcompiler {
         //printIR();
         //throw new Exception();
         allocateReg();
-
-        printIR();
+        //printIR();
+        manageStack();
+        printNasm();
 
     }
 
@@ -114,16 +140,20 @@ public class mxcompiler {
         // check options
         String inFile = null;
         String outFile = null;
+        String outFile1 = null;/*
         for(int i = 0; i <= 0; ++i) {
             String num = i + ".";
             inFile = "E:\\compiler\\codgentest\\" + num + "mx";
             outFile = "E:\\compiler\\MyCode\\phy\\" + num + "ir";
+            outFile1 = "E:\\compiler\\MyCode\\NASM\\" + num + "nasm";
             // run compiler
             InputStream in = new FileInputStream(inFile);
-            PrintStream out = new PrintStream(new FileOutputStream(outFile));
+            PrintStream outFile_IR = new PrintStream(new FileOutputStream(outFile));
+            PrintStream outFile_NASM = new PrintStream(new FileOutputStream(outFile1));
             //throw new Exception();
-            new mxcompiler(in, out).runMain();
+            new mxcompiler(in, outFile_IR, outFile_NASM).runMain();
         }
-
+        */
+        new mxcompiler(System.in, System.out);
     }
 }

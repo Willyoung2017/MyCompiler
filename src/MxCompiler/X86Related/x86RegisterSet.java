@@ -13,8 +13,8 @@ public class x86RegisterSet {
     public static final x86Register rdi = new x86Register(5, "rdi", true, false, false);
     public static final x86Register rbp = new x86Register(6, "rbp", false, true, false);
     public static final x86Register rsp = new x86Register(7, "rsp", false, true, false);
-    public static final x86Register r8 = new x86Register(8, "r8", true, false, true);
-    public static final x86Register r9 = new x86Register(9, "r9", true, false, true);
+    public static final x86Register r8 = new x86Register(8, "r8", true, false, false);
+    public static final x86Register r9 = new x86Register(9, "r9", true, false, false);
     public static final x86Register r10 = new x86Register(10, "r10", true, false, true);
     public static final x86Register r11 = new x86Register(11, "r11", true, false, true);
     public static final x86Register r12 = new x86Register(12, "r12", false, true, true);

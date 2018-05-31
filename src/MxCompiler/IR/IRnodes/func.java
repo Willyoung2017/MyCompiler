@@ -2,6 +2,7 @@ package MxCompiler.IR.IRnodes;
 
 import MxCompiler.Ast.TypeSpecifier.typ;
 import MxCompiler.IR.IRnodes.instructions.returnInstr;
+import MxCompiler.X86Related.funcInfo;
 
 import java.util.*;
 
@@ -10,6 +11,10 @@ public class func {
     private basicBlock firstBlock = null;
     private basicBlock lastBlock = null;
     private typ funcType;
+    public funcInfo info;
+    public List<physicRegister> usedCallerSaved = new LinkedList<>();
+    public List<physicRegister> usedCalleeSaved = new LinkedList<>();
+    public List<stackSlot> varItemList = new LinkedList<>();
     public List<register> parameterList = new LinkedList<>();
     public List<returnInstr> returnInstrList = new LinkedList<>();
     public List<basicBlock> preOrder = null;

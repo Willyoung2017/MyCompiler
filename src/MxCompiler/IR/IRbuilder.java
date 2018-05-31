@@ -31,11 +31,11 @@ public class IRbuilder implements ASTVisitor {
     private Stack<basicBlock> breakLoopStack;
     private Stack<basicBlock> continueLoopStack;
     private Map<String, staticString> stringMap;
-    private List<staticData> dataList;
+    public List<staticData> dataList;
     private Map<staticData, globalVarDec> staticDataMap;
     private List<arrayType> dimList;
     private symbolTable symTable;
-    private List<staticString> stringPool;
+    public List<staticString> stringPool;
     public Map<String, func> funcMap;
 
     public IRbuilder(){
@@ -964,6 +964,7 @@ public class IRbuilder implements ASTVisitor {
             reg = new virturalRegister("ord");
             funCall call = new funCall(curBlock, reg, builtinFunction.builtinOrd);
             call.parameters.add(node.obj.nodeValue);
+            call.parameters.add(node.parameters.get(0).nodeValue);
             call.setUsedRegister();
             curBlock.pushBack(call);
            /* curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.ADD, node.obj.nodeValue, node.parameters.get(0).nodeValue, reg));

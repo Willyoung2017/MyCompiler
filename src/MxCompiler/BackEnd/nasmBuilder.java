@@ -34,7 +34,7 @@ public class nasmBuilder implements IRVisitor {
     public void runBuilder(){
         printExtern();
         printGlobal();
-        System.out.println("SECTION .text\n");
+        out.println("SECTION .text\n");
 
         try {
             printBuiltin();
@@ -577,9 +577,26 @@ public class nasmBuilder implements IRVisitor {
             out.print(phyReg.getName());
         }
         else{//var that has been allocated reg i.e. in mem
-
-
+            int offset = curFunction.info.stackSlotOffsetMap.get(node);
+            out.print("qword [rbp ");
+            if(offset > 0)
+                out.print("+ " + offset + "]");
+            else
+                out.print(offset + "]");
         }
+    }
+
+    public void visit(pop node){
+        out.print("pop");
+        visit(node.dest);
+        out.println();
+    }
+
+
+    public void visit(push node){
+        out.print("pop");
+        visit(node.dest);
+        out.println();
     }
 
     @Override
