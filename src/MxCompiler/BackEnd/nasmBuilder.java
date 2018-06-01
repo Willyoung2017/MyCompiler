@@ -470,7 +470,6 @@ public class nasmBuilder implements IRVisitor {
                 mov dest r15
 
         */
-
         if(node.dest instanceof staticData || node.addr instanceof staticData || node.addr instanceof stackSlot) {
             out.print("\tmov\t r15, ");
             if(node.addr instanceof stackSlot){

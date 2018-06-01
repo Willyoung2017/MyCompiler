@@ -965,6 +965,8 @@ public class IRbuilder implements ASTVisitor {
         else if(node.name.equals("ord")){
             //Question remains
             reg = new virturalRegister("ord");
+            //curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.ADD, node.obj.nodeValue, node.parameters.get(0).nodeValue, reg));
+            //curBlock.pushBack(new load(curBlock, reg, reg, 0,1));/*
             funCall call = new funCall(curBlock, reg, builtinFunction.builtinOrd);
             call.parameters.add(node.obj.nodeValue);
             call.parameters.add(node.parameters.get(0).nodeValue);

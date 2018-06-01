@@ -19,10 +19,10 @@ public class builtinFunc {
     public func builtinParseInt = new func("string.parseInt", new intType());
     public func builtinStringAdd = new func("string.add", new stringType());
     public func builtinStringEqual = new func("string.eq", new boolType());
-    public func builtinStringLess = new func("string.s", new boolType());
-    public func builtinStingLessEqual = new func("string.le", new boolType());
-    public func builtinStringGreater = new func("string.g", new boolType());
-    public func builtinStringGreaterEqual = new func("string.ge", new boolType());
+    public func builtinStringLess = new func("string.g", new boolType());
+    public func builtinStingLessEqual = new func("string.ge", new boolType());
+    public func builtinStringGreater = new func("string.s", new boolType());
+    public func builtinStringGreaterEqual = new func("string.le", new boolType());
     public List<func> builtinFunctions = new LinkedList<>();
 
 }

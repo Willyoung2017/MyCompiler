@@ -3,6 +3,7 @@ package MxCompiler.IR.IRnodes;
 import MxCompiler.IR.IRnodes.instructions.branch;
 import MxCompiler.IR.IRnodes.instructions.instruction;
 import MxCompiler.IR.IRnodes.instructions.jump;
+import MxCompiler.IR.IRnodes.instructions.returnInstr;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -49,7 +50,7 @@ public class basicBlock {
     public void pushBack(instruction next){
         if(ended) return;
         else {
-            if(next instanceof jump || next instanceof branch){
+            if(next instanceof jump || next instanceof branch || next instanceof returnInstr){
                 ended = true;
             }
             if (last == null) {
