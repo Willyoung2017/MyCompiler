@@ -579,6 +579,7 @@ public class nasmBuilder implements IRVisitor {
         //store addr        src
         //store stackSlot   register    PAT
         //store stackSlot   staticData  PAT
+        //store staticData  intImd      PAT
         //store register    staticData
         //store staticData  staticData
         //store staticData  register
@@ -595,6 +596,14 @@ public class nasmBuilder implements IRVisitor {
          */
 
         if(node.addr instanceof staticData || node.src instanceof staticData || node.addr instanceof stackSlot) {
+            if(node.src instanceof intImd){
+                out.print("\tmov\t ");
+                visit(node.addr);
+                out.print(", ");
+                visit(node.src);
+                out.println();
+                return;
+            }
             out.print("\tmov\t r15, ");
             if(node.addr instanceof stackSlot) {
                 visit(node.src);

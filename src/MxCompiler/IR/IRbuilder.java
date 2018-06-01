@@ -1036,6 +1036,7 @@ public class IRbuilder implements ASTVisitor {
         else{
             virturalRegister reg = new virturalRegister();
             curBlock.pushBack(new load(curBlock, addr, reg, offset, accessSize));
+            node.nodeValue = reg;
             if(node.jumpto != null){
                 cmp comparasion = new cmp(curBlock, binaryOp.EQUAL,node.nodeValue, new intImd(1), null);
                 curBlock.pushBack(comparasion);
@@ -1043,7 +1044,6 @@ public class IRbuilder implements ASTVisitor {
                 curBlock.addNext(node.jumpto);
                 curBlock.addNext(node.jumpother);
             }
-            node.nodeValue = reg;
         }
 
     }
