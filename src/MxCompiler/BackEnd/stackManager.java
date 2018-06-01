@@ -6,6 +6,7 @@ import MxCompiler.IR.IRnodes.func;
 import MxCompiler.IR.IRnodes.instructions.binaryOpInstr;
 import MxCompiler.IR.IRnodes.instructions.instruction;
 import MxCompiler.IR.IRnodes.instructions.pop;
+import MxCompiler.IR.IRnodes.instructions.store;
 import MxCompiler.IR.IRnodes.intImd;
 import MxCompiler.X86Related.funcInfo;
 import MxCompiler.X86Related.x86RegisterSet;
@@ -58,6 +59,9 @@ public class stackManager {
         instruction firstInstr = firstBlock.getHead();
         instruction lastInstr = lastBlock.getLast();
         firstInstr.linkPrev(new binaryOpInstr(firstBlock, binaryOp.SUB, x86RegisterSet.rsp, new intImd(info.totalSize), x86RegisterSet.rsp));
+        for(int i = 0; i < function.parameterList.size(); ++i){
+            firstInstr.linkPrev(new store(firstBlock, x86RegisterSet.FuncParamRegs.get(i), function.parameterList.get(i), 0,8));
+        }
         lastInstr.linkPrev(new binaryOpInstr(lastBlock, binaryOp.ADD, x86RegisterSet.rsp, new intImd(info.totalSize), x86RegisterSet.rsp));
         lastInstr.linkPrev(new pop(lastBlock, x86RegisterSet.rbp));
 

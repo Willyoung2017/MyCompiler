@@ -37,7 +37,7 @@ public class funcInfo {
             stackSlotOffsetMap.put(function.varItemList.get(i), localVarAddr - 8 * i);
         }
         for(int i = 0; i < function.parameterList.size(); ++i){
-            if(i > 5){
+            if(i <= 5){
                 stackSlotOffsetMap.put((stackSlot) function.parameterList.get(i), firstParaAddr - 8 * i);
             }
             else{

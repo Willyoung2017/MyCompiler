@@ -61,11 +61,8 @@ public class registerAllocator {
                                 allocateMap.put((virturalRegister) usedReg, allocatedReg);
                             }
                             stackSlot slot = getStackSlot((virturalRegister) usedReg, function);
-                            if(!function.parameterList.contains(slot)) {
-                                instr.linkPrev(new load(curBlock, slot, allocatedReg, 0, 8));
-                            }
-                            else
-                                instr.linkPrev(new move(curBlock, slot, allocatedReg));
+                            instr.linkPrev(new load(curBlock, slot, allocatedReg, 0, 8));
+
                         }
                     }
                     instr.resetUsedRegister(allocateMap);
@@ -82,12 +79,9 @@ public class registerAllocator {
                     instr.setDefRegister(allocatedReg);
                     stackSlot slot = getStackSlot((virturalRegister) defReg, function);
                     slotMap.put((virturalRegister)defReg, slot);
-                    if(!function.parameterList.contains(slot)) {
-                        instr.linkNext(new store(curBlock, allocatedReg, slot, 0, 8));
-                        //instr.linkNext(new move(curBlock, allocatedReg, slot));
-                    }
-                    else
-                        instr.linkNext(new move(curBlock, allocatedReg, slot));
+                    instr.linkNext(new store(curBlock, allocatedReg, slot, 0, 8));
+                    //instr.linkNext(new move(curBlock, allocatedReg, slot));
+
                     instr = instr.getNext();
                 }
             }
