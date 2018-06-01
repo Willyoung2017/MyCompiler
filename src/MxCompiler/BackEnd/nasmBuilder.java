@@ -97,7 +97,7 @@ public class nasmBuilder implements IRVisitor {
     private void printStaticData(){
         out.println("SECTION .data\talign=8");
         for(staticData data : dataList){
-            out.print(data.getName() + ":\n\tdq\t 0\n");
+            out.print("data_"+data.getName() + ":\n\tdq\t 0\n");
         }
         for(staticString str : stringPool){
             cntLen = 0;
@@ -483,6 +483,8 @@ public class nasmBuilder implements IRVisitor {
                 out.print(", r15\n");
             }
             else {
+                visit(node.addr);
+                out.println();
                 out.print("\tmov\t r14, ");
                 out.print("qword [ r15");
                 if (node.offset != 0) {
@@ -773,7 +775,7 @@ public class nasmBuilder implements IRVisitor {
 
     @Override
     public void visit(staticData node) {
-        out.print( "qword [ " + node.getName() + " ]");
+        out.print( "qword [ " + "data_" + node.getName() + " ]");
     }
 
     @Override
