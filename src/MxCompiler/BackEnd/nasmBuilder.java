@@ -23,7 +23,6 @@ public class nasmBuilder implements IRVisitor {
     private basicBlock nextBlock;
     private func curFunction;
     private PrintStream out;
-    private Map<stackSlot, physicRegister> slottoPhyMap = new HashMap<>();
     private Map<String, Integer> counter = new HashMap<>();
     private Map<basicBlock, String> labelMap = new HashMap<>();
 
@@ -132,10 +131,6 @@ public class nasmBuilder implements IRVisitor {
         out.println("\tpush\t rbp");
         out.println("\tmov\t rbp, rsp");
         //callee save
-        slottoPhyMap.clear();
-        for(int i = 0; i <node.parameterList.size(); ++i){
-            slottoPhyMap.put((stackSlot) node.parameterList.get(i), x86RegisterSet.FuncParamRegs.get(i));
-        }
 
        for(int i = 0; i < node.preOrder.size(); ++i){
            if(i < node.preOrder.size() - 1) {
@@ -412,11 +407,19 @@ public class nasmBuilder implements IRVisitor {
     @Override
     public void visit(funCall node) {
         //caller save
+        /*
         for(int i = 0; i < node.parameters.size(); ++i){
-            out.print("\tmov\t "+ x86RegisterSet.FuncParamRegs.get(i).getName()+", ");
-            visit(node.parameters.get(i));
+            if(i <= 5) {
+                out.print("\tmov\t " + x86RegisterSet.FuncParamRegs.get(i).getName() + ", ");
+                visit(node.parameters.get(i));
+            }
+            else {
+                out.print("\tpush\t ");
+                visit(node.parameters.get(node.parameters.size()-1-i+6));
+            }
+
             out.println();
-        }
+        }*/
 
         out.println("\tcall\t "+node.function.getFuncName());
         if(node.returnReg != null) {
@@ -749,7 +752,7 @@ public class nasmBuilder implements IRVisitor {
         int offset = curFunction.info.stackSlotOffsetMap.get(node);
         out.print("qword [ rbp");
         if(offset > 0)
-            out.print(" + " + plusOffset + offset);
+            out.print(" + " + (plusOffset + offset));
         else if (offset != 0)
             out.print(" - " +  (-(offset + plusOffset)));
             out.print(" ]");

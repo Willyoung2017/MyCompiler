@@ -26,6 +26,7 @@ public class funcInfo {
         returnAddr = 8;
         firstParaAddr = -8;
         int paraSize = function.parameterList.size();
+        lastParaAddr = paraSize > 6 ? (paraSize - 6) * 8 + returnAddr : returnAddr;
         calleeSaveAddr = paraSize > 6 ? -56 : -8 * (paraSize + 1);
         localVarAddr = calleeSaveAddr - 8 * function.usedCalleeSaved.size();
         callerSaveAddr = localVarAddr - 8 * function.varItemList.size();

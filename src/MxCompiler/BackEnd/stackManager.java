@@ -3,11 +3,9 @@ package MxCompiler.BackEnd;
 import MxCompiler.Ast.Expression.BinaryExpression.binaryOp;
 import MxCompiler.IR.IRnodes.basicBlock;
 import MxCompiler.IR.IRnodes.func;
-import MxCompiler.IR.IRnodes.instructions.binaryOpInstr;
-import MxCompiler.IR.IRnodes.instructions.instruction;
-import MxCompiler.IR.IRnodes.instructions.pop;
-import MxCompiler.IR.IRnodes.instructions.store;
+import MxCompiler.IR.IRnodes.instructions.*;
 import MxCompiler.IR.IRnodes.intImd;
+import MxCompiler.IR.IRnodes.register;
 import MxCompiler.X86Related.funcInfo;
 import MxCompiler.X86Related.x86RegisterSet;
 
@@ -60,10 +58,27 @@ public class stackManager {
         instruction lastInstr = lastBlock.getLast();
         firstInstr.linkPrev(new binaryOpInstr(firstBlock, binaryOp.SUB, x86RegisterSet.rsp, new intImd(info.totalSize), x86RegisterSet.rsp));
         for(int i = 0; i < function.parameterList.size(); ++i){
-            firstInstr.linkPrev(new store(firstBlock, x86RegisterSet.FuncParamRegs.get(i), function.parameterList.get(i), 0,8));
+            if(i <= 5) {
+                firstInstr.linkPrev(new store(firstBlock, x86RegisterSet.FuncParamRegs.get(i), function.parameterList.get(i), 0, 8));
+            }
+
         }
         lastInstr.linkPrev(new binaryOpInstr(lastBlock, binaryOp.ADD, x86RegisterSet.rsp, new intImd(info.totalSize), x86RegisterSet.rsp));
         lastInstr.linkPrev(new pop(lastBlock, x86RegisterSet.rbp));
-
+        for(basicBlock bb : function.preOrder){
+            for(instruction instr = bb.getHead(); instr != null; instr = instr.getNext()){
+                if(instr instanceof funCall){
+                    for(int i = 0; i < ((funCall)instr).parameters.size(); ++i){
+                        if(i <= 5) {
+                            instr.linkPrev(new move(bb, ((funCall)instr).parameters.get(i), x86RegisterSet.FuncParamRegs.get(i)));
+                        }
+                        else {
+                            instr.linkPrev(new push(bb,  ((funCall)instr).parameters.get(((funCall)instr).parameters.size()-1-i+6)));
+                            instr.linkNext(new pop(bb, x86RegisterSet.rax));
+                        }
+                    }
+                }
+            }
+        }
     }
 }
