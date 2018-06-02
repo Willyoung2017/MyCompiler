@@ -127,7 +127,7 @@ public class mxcompiler {
         //throw new Exception();
         buildIR();
         //throw new Exception();
-        printIR();
+        //printIR();
         //throw new Exception();
         allocateReg();
         manageStack();
@@ -138,7 +138,7 @@ public class mxcompiler {
 
     public static void main(String[] argv) throws Exception {
         // check options
-
+        /*
         String inFile = null;
         String outFile = null;
         String outFile1 = null;
@@ -156,7 +156,7 @@ public class mxcompiler {
             //throw new Exception();
             new mxcompiler(in, outFile_IR, outFile_NASM).runMain();
         }
-
-      //  new mxcompiler(System.in, System.out).runMain();
+        */
+        new mxcompiler(System.in, System.out).runMain();
     }
 }
