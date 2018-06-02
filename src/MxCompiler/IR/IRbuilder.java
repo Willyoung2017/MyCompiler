@@ -539,10 +539,10 @@ public class IRbuilder implements ASTVisitor {
             case ADD:
             case LEFT_SHIFT:
             case RIGHT_SHIFT:
-                if(node.leftOperand.type instanceof intType)
-                    processArithmeticExpr(node);
-                else
+                if(node.leftOperand.type instanceof stringType)
                     processStrExpr(node);
+                else
+                    processArithmeticExpr(node);
                 break;
 
             case GEQ:
@@ -551,9 +551,10 @@ public class IRbuilder implements ASTVisitor {
             case GREATER:
             case EQUAL:
             case NOT_EQUAL:
-                if(node.leftOperand.type instanceof intType)
+                if(node.leftOperand.type instanceof stringType)
+                    processStrExpr(node);
+                else
                     processComparisonExpr(node);
-                else processStrExpr(node);
                 break;
 
             case ASSIGN:
