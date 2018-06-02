@@ -239,7 +239,7 @@ public class IRbuilder implements ASTVisitor {
             curFunc.parameterList.add(thisReg);
         }
         //node.parameterList.stream().forEachOrdered(this::visit);
-        basicBlock startBlock = new basicBlock(node.name);
+        basicBlock startBlock = new basicBlock("Enter_"+node.name);
         curBlock = startBlock;
         curFunc.setFirstBlock(startBlock);
 
