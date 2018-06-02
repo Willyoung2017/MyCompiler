@@ -19,6 +19,9 @@ public class func {
     public List<returnInstr> returnInstrList = new LinkedList<>();
     public List<basicBlock> preOrder = null;
     public List<basicBlock> reversePreOrder = null;
+    public List<basicBlock> postOrder = null;
+    public List<basicBlock> reversePostOrder = null;
+
     public func(){
         funcName = null;
         funcType = null;
@@ -27,6 +30,24 @@ public class func {
     public func(String funcName, typ funcType){
         this.funcName = funcName;
         this.funcType = funcType;
+    }
+
+    private void postOrderVisit(basicBlock curBlock, Set<basicBlock> visited){
+        if(visited.contains(curBlock)) return;
+        visited.add(curBlock);
+        for(basicBlock nxtBlock : curBlock.getNext()){
+            postOrderVisit(nxtBlock, visited);
+        }
+        reversePostOrder.add(curBlock);
+    }
+
+    public List<basicBlock> getreversepostOrderVisit(){
+        if(reversePostOrder != null) return reversePostOrder;
+        Set<basicBlock> visited = new HashSet<>();
+        reversePostOrder = new LinkedList<>();
+        postOrderVisit(firstBlock, visited);
+        Collections.reverse(reversePostOrder);
+        return reversePostOrder;
     }
 
     private void preOrderVisit(basicBlock curBlock, Set<basicBlock> visited){

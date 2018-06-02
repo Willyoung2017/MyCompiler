@@ -132,14 +132,14 @@ public class nasmBuilder implements IRVisitor {
         out.println("\tmov\t rbp, rsp");
         //callee save
 
-       for(int i = 0; i < node.preOrder.size(); ++i){
-           if(i < node.preOrder.size() - 1) {
-               nextBlock = node.preOrder.get(i + 1);
+       for(int i = 0; i < node.getreversepostOrderVisit().size(); ++i){
+           if(i < node.reversePostOrder.size() - 1) {
+               nextBlock = node.reversePostOrder.get(i + 1);
            }
            else{
                nextBlock = null;
            }
-           visit(node.preOrder.get(i));
+           visit(node.reversePostOrder.get(i));
        }
     }
 
@@ -312,10 +312,10 @@ public class nasmBuilder implements IRVisitor {
 
     @Override
     public void visit(branch node) {
-        if(nextBlock == node.jumpto && !curFunction.preOrder.contains(node.jumpother)){
+        if(nextBlock == node.jumpto && !curFunction.reversePostOrder.contains(node.jumpother)){
             return;
         }
-        else if(nextBlock == node.jumpother && !curFunction.preOrder.contains(node.jumpto)){
+        else if(nextBlock == node.jumpother && !curFunction.reversePostOrder.contains(node.jumpto)){
             return;
         }
         out.print("\t");
@@ -443,7 +443,7 @@ public class nasmBuilder implements IRVisitor {
 
     @Override
     public void visit(jump node) {
-        if(curFunction.preOrder.contains(node.jumpto) && nextBlock != node.jumpto) {
+        if(curFunction.reversePostOrder.contains(node.jumpto) && nextBlock != node.jumpto) {
             out.println("\tjmp\t " + getBlockLabel(node.jumpto));
         }
     }
