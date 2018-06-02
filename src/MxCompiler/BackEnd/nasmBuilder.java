@@ -248,39 +248,49 @@ public class nasmBuilder implements IRVisitor {
                 out.print("\tmov\t ");
                 visit(node.result);
                 out.print(", rdx\n");
-            } else {
+            }
+            else {
                 out.print("\tmov\t r15, ");
                 visit(node.leftOperand);
                 out.println();
-                switch (node.operator) {
-                    case BITWISE_INCLUSIVE_OR:
-                        op = "or";
-                        break;
-                    case BITWISE_EXCLUSIVE_OR:
-                        op = "xor";
-                        break;
-                    case BITWISE_AND:
-                        op = "and";
-                        break;
-                    case MUL:
-                        op = "imul";
-                        break;
-                    case SUB:
-                        op = "sub";
-                        break;
-                    case ADD:
-                        op = "add";
-                        break;
-                    case LEFT_SHIFT:
-                        op = "shl";
-                        break;
-                    case RIGHT_SHIFT:
-                        op = "shr";
+                if(node.operator == binaryOp.LEFT_SHIFT || node.operator == binaryOp.RIGHT_SHIFT){
+                    out.print("\tmov\t rcx, ");
+                    visit(node.rightOperand);
+                    out.println();
+                    op = node.operator == binaryOp.LEFT_SHIFT ? "\tshl\t " : "\tshr\t ";
+                    out.print(op + "r15, cl\n");
                 }
+                else {
+                    switch (node.operator) {
+                        case BITWISE_INCLUSIVE_OR:
+                            op = "or";
+                            break;
+                        case BITWISE_EXCLUSIVE_OR:
+                            op = "xor";
+                            break;
+                        case BITWISE_AND:
+                            op = "and";
+                            break;
+                        case MUL:
+                            op = "imul";
+                            break;
+                        case SUB:
+                            op = "sub";
+                            break;
+                        case ADD:
+                            op = "add";
+                            break;
+                        case LEFT_SHIFT:
+                            op = "shl";
+                            break;
+                        case RIGHT_SHIFT:
+                            op = "shr";
+                    }
 
-                out.print("\t" + op + "\t r15, ");
-                visit(node.rightOperand);
-                out.println();
+                    out.print("\t" + op + "\t r15, ");
+                    visit(node.rightOperand);
+                    out.println();
+                }
                 out.print("\tmov\t ");
                 visit(node.result);
                 out.print(", r15\n");
@@ -692,8 +702,7 @@ public class nasmBuilder implements IRVisitor {
                     lhs = -lhs;
                     break;
                 case BITWISE_NOT:
-                    if(lhs == 0) lhs = 1;
-                    else lhs = 0;
+                    lhs = ~lhs;
             }
             out.print(lhs + "\n");
         }
@@ -707,13 +716,10 @@ public class nasmBuilder implements IRVisitor {
                     op = "neg";
                     break;
                 case BITWISE_NOT:
-                    op = "xor";
+                    op = "not";
             }
-            out.print("\t" + op + "\t r15");
-            if(op.equals("xor")){
-                out.print(", 1");
-            }
-            out.println();
+            out.print("\t" + op + "\t r15\n");
+            //out.println();
             out.print("\tmov\t ");
             visit(node.result);
             out.print(", r15");
