@@ -851,14 +851,17 @@ public class IRbuilder implements ASTVisitor {
             virturalRegister leftAddrReg = new virturalRegister();
             curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.MUL, init_reg, new intImd(prvBaseType.size),leftAddrReg));
             curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.ADD, leftAddrReg, reg, leftAddrReg)); //reg is the baseAddr of the prvNewArray
-                                                                                               // & leftAddrReg + offset(8) is the place to store the addr of newArray
+                                                                                                         // & leftAddrReg + offset(8) is the place to store the addr of newArray
             virturalRegister rightAddrReg= new virturalRegister();
             curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.MUL, index.nodeValue, new intImd(baseType.size), rightAddrReg));
             //allocate space for storing size
-            curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.ADD, reg, new intImd(8), rightAddrReg));
+            curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.ADD, rightAddrReg, new intImd(8), rightAddrReg));
             curBlock.pushBack(new heapAllocate(curBlock, rightAddrReg, rightAddrReg)); //rightAddrReg is baseAddr of the NewArray
             curBlock.pushBack(new store(curBlock, index.nodeValue, rightAddrReg, 0, 8)); //store size in rightAddrReg
             curBlock.pushBack(new store(curBlock, rightAddrReg, leftAddrReg, 8, 8));
+
+            //construct next for
+            newArray(order + 1, rightAddrReg);
             curBlock.pushBack(new jump(curBlock, stepBlock));
             curBlock.addNext(stepBlock);
 
@@ -867,11 +870,9 @@ public class IRbuilder implements ASTVisitor {
             curBlock.pushBack(new binaryOpInstr(curBlock, binaryOp.ADD, init_reg, new intImd(1), init_reg));
             curBlock.pushBack(new jump(curBlock, condBlock));
             curBlock.addNext(condBlock);
-            curBlock = endBlock;
 
             //end
-            newArray(order + 1, rightAddrReg);
-
+            curBlock = endBlock;
         }
     }
 
