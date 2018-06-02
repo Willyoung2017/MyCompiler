@@ -80,10 +80,12 @@ public class IRbuilder implements ASTVisitor {
                     func function = null;
                     if(memDec instanceof funcDec){
                         function = new func(memDec.name, ((funcDec)memDec).functionType);
+                        function.isInClass = true;
                         funcMap.put(memDec.name, function);
                     }
                     else if(memDec instanceof constructFuncDec){
                         function = new func(memDec.name, new voidType());
+                        function.isInClass = true;
                         funcMap.put(memDec.name, function);
                     }
                 }
@@ -1113,6 +1115,11 @@ public class IRbuilder implements ASTVisitor {
         for(expr p : node.parameters) {
             call.parameters.add(p.nodeValue);
         }
+
+        if(function.isInClass){
+            call.parameters.add(thisReg);
+        }
+
         call.setUsedRegister();
         curBlock.pushBack(call);
         node.nodeValue = reg;

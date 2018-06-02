@@ -22,6 +22,8 @@ public class func {
     public List<basicBlock> postOrder = null;
     public List<basicBlock> reversePostOrder = null;
 
+    public boolean isInClass = false;
+
     public func(){
         funcName = null;
         funcType = null;
