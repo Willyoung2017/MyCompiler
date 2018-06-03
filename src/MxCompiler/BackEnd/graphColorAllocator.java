@@ -233,7 +233,7 @@ public class graphColorAllocator {
             curFunction.parameterList.set(i, allocated);
             if(i >= 6) {
                 stackSlot slot = new stackSlot(para.getName(), curFunction);
-                curFunction.paraSlotList.set(i - 6, slot);
+                curFunction.paraSlotList.add(slot);
             }
         }
 

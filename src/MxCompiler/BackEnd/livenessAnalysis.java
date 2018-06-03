@@ -59,10 +59,13 @@ public class livenessAnalysis {
                     }
                     */
                     if(instr instanceof branch){
+                        if(((branch) instr).jumpto.getHead() != null)
                         instr.liveOut.addAll(((branch) instr).jumpto.getHead().liveIn);
+                        if(((branch) instr).jumpother.getHead() != null)
                         instr.liveOut.addAll(((branch) instr).jumpother.getHead().liveIn);
                     }
                     else if(instr instanceof jump){
+                        if(((jump) instr).jumpto.getHead() != null)
                         instr.liveOut.addAll(((jump)instr).jumpto.getHead().liveIn);
                     }
                     else if(!(instr instanceof returnInstr)){
