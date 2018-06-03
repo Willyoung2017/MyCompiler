@@ -133,7 +133,7 @@ public class mxcompiler {
         //throw new Exception();
         allocateReg();
         manageStack();
-        printIR();
+        //printIR();
         printNasm();
 
     }
