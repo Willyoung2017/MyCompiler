@@ -44,6 +44,7 @@ public class graphColorAllocator {
                colorNode();
                allocateRegister();
                function.vrMap = vrMap;
+               vrMap = new HashMap<>();
         }
 
     }
@@ -142,7 +143,6 @@ public class graphColorAllocator {
                         if (reg != definedReg) {
                             linkVRegs(reg, (virtualRegister) definedReg);
                         }
-
                     }
             //    }
             }
