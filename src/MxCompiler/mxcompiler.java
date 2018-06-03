@@ -2,6 +2,7 @@ package MxCompiler;
 
 import MxCompiler.Ast.BuildAST.ASTBuilder;
 import MxCompiler.Ast.abstractSyntaxTree;
+import MxCompiler.BackEnd.graphColorAllocator;
 import MxCompiler.BackEnd.nasmBuilder;
 import MxCompiler.BackEnd.registerAllocator;
 import MxCompiler.BackEnd.stackManager;
@@ -10,6 +11,7 @@ import MxCompiler.IR.IRbuilder;
 import MxCompiler.IR.IRnodes.func;
 import MxCompiler.IR.IRnodes.staticData;
 import MxCompiler.IR.IRnodes.staticString;
+import MxCompiler.IR.IRnodes.virtualRegister;
 import MxCompiler.IR.IRprinter;
 import MxCompiler.Parser.MxLexer;
 import MxCompiler.Parser.MxParser;
@@ -38,7 +40,6 @@ public class mxcompiler {
     private InputStream in;
     private PrintStream out_for_IR;
     private PrintStream out_for_NASM;
-
     public mxcompiler(InputStream in, PrintStream out_for_IR, PrintStream out_for_NASM){
         this.in = in;
         this.out_for_IR = out_for_IR;
@@ -108,7 +109,8 @@ public class mxcompiler {
     }
 
     private void allocateReg(){
-        registerAllocator allocator = new registerAllocator(funcMap, x86RegisterSet.GeneralRegs);
+        //registerAllocator allocator = new registerAllocator(funcMap, x86RegisterSet.GeneralRegs);
+        graphColorAllocator allocator = new graphColorAllocator(funcMap, x86RegisterSet.GeneralRegs);
         allocator.runAllocator();
     }
 
@@ -131,7 +133,7 @@ public class mxcompiler {
         //throw new Exception();
         allocateReg();
         manageStack();
-        //printIR();
+        printIR();
         printNasm();
 
     }
@@ -146,7 +148,7 @@ public class mxcompiler {
         PrintStream outFile_NASM = null, outFile_IR = null;
         for(int i = 1; i <= 1; ++i) {
             String num = i + ".";
-            inFile = "E:\\compiler\\codgentest\\" + "1." + "mx";
+            inFile = "E:\\compiler\\codgentest\\" + "0." + "mx";
             outFile = "E:\\compiler\\MyCode\\phy\\" + num + "ir";
             outFile1 = "E:\\compiler\\MyCode\\NASM\\" + num + "nasm";
             // run compiler

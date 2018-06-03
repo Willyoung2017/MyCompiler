@@ -82,8 +82,8 @@ public class stackManager {
                         }
                     }
                     for(virtualRegister reg : instr.liveOut){
-                        if(function.vrMap == null) continue;
-                        if(function.vrMap.get(reg) == null) continue;
+                        //if(function.vrMap == null) continue;
+                        //if(function.vrMap.get(reg) == null) continue;
                         register toPush = function.vrMap.get(reg).color;
                         if(toPush == instr.getDefRegister()) continue;
                         if(toPush instanceof physicRegister){

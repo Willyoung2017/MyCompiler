@@ -23,7 +23,7 @@ public class func {
     public List<basicBlock> reversePreOrder = null;
     public List<basicBlock> postOrder = null;
     public List<basicBlock> reversePostOrder = null;
-    public Map<virtualRegister, graphColorAllocator.graphNode> vrMap;
+    public Map<virtualRegister, graphColorAllocator.graphNode> vrMap = null;
     public boolean isInClass = false;
 
     public func(){
