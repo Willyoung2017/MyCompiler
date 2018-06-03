@@ -43,7 +43,7 @@ public class graphColorAllocator {
                construcGraph();
                colorNode();
                allocateRegister();
-               function.vrMap =vrMap;
+               function.vrMap = vrMap;
         }
 
     }
