@@ -1,6 +1,7 @@
 package MxCompiler.IR.IRnodes;
 
 import MxCompiler.Ast.TypeSpecifier.typ;
+import MxCompiler.BackEnd.graphColorAllocator;
 import MxCompiler.IR.IRnodes.instructions.returnInstr;
 import MxCompiler.X86Related.funcInfo;
 
@@ -16,12 +17,13 @@ public class func {
     public List<physicRegister> usedCalleeSaved = new LinkedList<>();
     public List<stackSlot> varItemList = new LinkedList<>();
     public List<register> parameterList = new LinkedList<>();
+    public List<stackSlot> paraSlotList = new LinkedList<>();
     public List<returnInstr> returnInstrList = new LinkedList<>();
     public List<basicBlock> preOrder = null;
     public List<basicBlock> reversePreOrder = null;
     public List<basicBlock> postOrder = null;
     public List<basicBlock> reversePostOrder = null;
-
+    public Map<virtualRegister, graphColorAllocator.graphNode> vrMap;
     public boolean isInClass = false;
 
     public func(){

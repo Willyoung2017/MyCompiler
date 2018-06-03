@@ -35,8 +35,8 @@ public class move extends instruction {
         destReg = reg;
     }
 
-    public void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap){
-        if(srcReg instanceof virturalRegister){
+    public void resetUsedRegister(Map<virtualRegister, physicRegister> allocateMap){
+        if(srcReg instanceof virtualRegister){
             srcReg = allocateMap.get(srcReg);
         }
         setUsedRegister();

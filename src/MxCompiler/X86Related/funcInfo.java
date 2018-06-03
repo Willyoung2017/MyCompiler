@@ -39,10 +39,12 @@ public class funcInfo {
         }
         for(int i = 0; i < function.parameterList.size(); ++i){
             if(i <= 5){
-                stackSlotOffsetMap.put((stackSlot) function.parameterList.get(i), firstParaAddr - 8 * i);
+                //stackSlotOffsetMap.put((stackSlot) function.parameterList.get(i), firstParaAddr - 8 * i);
             }
             else{
-                stackSlotOffsetMap.put((stackSlot) function.parameterList.get(i), lastParaAddr - 8 * (function.parameterList.size()-i-1));
+                //stackSlotOffsetMap.put((stackSlot) function.parameterList.get(i), lastParaAddr - 8 * (function.parameterList.size()-i-1));
+                stackSlotOffsetMap.put((stackSlot) function.paraSlotList.get(i-6), lastParaAddr - 8 * (function.parameterList.size()-i-1));
+
             }
         }
     }

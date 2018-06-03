@@ -41,11 +41,11 @@ public class store extends instruction{
 
     }
 
-    public void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap){
-        if(src instanceof  virturalRegister){
+    public void resetUsedRegister(Map<virtualRegister, physicRegister> allocateMap){
+        if(src instanceof virtualRegister){
             src = allocateMap.get(src);
         }
-        if(addr instanceof virturalRegister){
+        if(addr instanceof virtualRegister){
             addr = allocateMap.get(addr);
         }
         setUsedRegister();

@@ -34,8 +34,8 @@ public class returnInstr extends instruction{
 
     }
 
-    public void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap){
-        if(retReg instanceof virturalRegister){
+    public void resetUsedRegister(Map<virtualRegister, physicRegister> allocateMap){
+        if(retReg instanceof virtualRegister){
             retReg = allocateMap.get(retReg);
         }
         setUsedRegister();

@@ -7,13 +7,14 @@ import MxCompiler.IR.IRnodes.instructions.instruction;
 import MxCompiler.IR.IRnodes.instructions.jump;
 import MxCompiler.IR.IRnodes.instructions.returnInstr;
 import MxCompiler.IR.IRnodes.register;
-import MxCompiler.IR.IRnodes.virturalRegister;
+import MxCompiler.IR.IRnodes.virtualRegister;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
+
+// refer to http://www.cs.colostate.edu/~mstrout/CS553/slides/lecture03.pdf
 
 public class livenessAnalysis {
     private Map<String, func> funcMap;
@@ -38,8 +39,9 @@ public class livenessAnalysis {
             }
         }
 
-        Set<virturalRegister> in = new HashSet<>();
-        Set<virturalRegister> out = new HashSet<>();
+        Set<virtualRegister> in = new HashSet<>();
+        Set<virtualRegister> out = new HashSet<>();
+
         boolean changed = true;
         while(changed){
             changed = false;
@@ -69,12 +71,12 @@ public class livenessAnalysis {
                     }
 
                     for(register usedReg : instr.usedRegister) {
-                        if(usedReg instanceof virturalRegister)
-                            instr.liveIn.add((virturalRegister) usedReg);
+                        if(usedReg instanceof virtualRegister)
+                            instr.liveIn.add((virtualRegister) usedReg);
                     }
                     instr.liveIn.addAll(instr.liveOut);
                     register defRegister = instr.getDefRegister();
-                    if(defRegister instanceof virturalRegister){
+                    if(defRegister instanceof virtualRegister && !instr.usedRegister.contains(defRegister)){
                         instr.liveIn.remove(defRegister);
                     }
 

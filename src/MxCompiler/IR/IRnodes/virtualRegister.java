@@ -2,18 +2,18 @@ package MxCompiler.IR.IRnodes;
 
 import MxCompiler.IR.IRVisitor;
 
-public class virturalRegister extends register{
+public class virtualRegister extends register{
     //private static int arrangedNum = 0;
     //private int num;
     private String name;
 
-    public virturalRegister(){
+    public virtualRegister(){
         name = null;
         //num = arrangedNum;
         //arrangedNum++;
     }
 
-    public virturalRegister(String name){
+    public virtualRegister(String name){
         this.name = name;
         //num = arrangedNum;
         //arrangedNum++;

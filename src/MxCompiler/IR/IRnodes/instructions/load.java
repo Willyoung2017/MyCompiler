@@ -40,8 +40,8 @@ public class load extends instruction{
         dest = reg;
     }
 
-    public void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap){
-        if(addr instanceof virturalRegister){
+    public void resetUsedRegister(Map<virtualRegister, physicRegister> allocateMap){
+        if(addr instanceof virtualRegister){
             addr = allocateMap.get(addr);
         }
         setUsedRegister();

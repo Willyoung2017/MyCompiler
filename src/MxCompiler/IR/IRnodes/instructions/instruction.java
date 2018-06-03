@@ -4,7 +4,7 @@ import MxCompiler.IR.IRVisitor;
 import MxCompiler.IR.IRnodes.basicBlock;
 import MxCompiler.IR.IRnodes.physicRegister;
 import MxCompiler.IR.IRnodes.register;
-import MxCompiler.IR.IRnodes.virturalRegister;
+import MxCompiler.IR.IRnodes.virtualRegister;
 
 import java.util.*;
 
@@ -15,8 +15,8 @@ public abstract class instruction {
 
     //for liveness
     public List<register> usedRegister = new LinkedList<>();
-    public Set<virturalRegister> liveIn = null;
-    public Set<virturalRegister> liveOut = null;
+    public Set<virtualRegister> liveIn = null;
+    public Set<virtualRegister> liveOut = null;
 
     public instruction(){
         prev = null;
@@ -74,9 +74,12 @@ public abstract class instruction {
         return usedRegister;
     }
 
+    //to get defed & used Reg
     public abstract register getDefRegister();
     public abstract void setUsedRegister();
-    public abstract void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap);
+
+    //to change vReg in instr to allocatedReg
+    public abstract void resetUsedRegister(Map<virtualRegister, physicRegister> allocateMap);
     public abstract void setDefRegister(register reg);
     public abstract void accept(IRVisitor visitor);
 }

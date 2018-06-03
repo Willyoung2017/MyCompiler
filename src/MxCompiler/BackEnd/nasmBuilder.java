@@ -745,7 +745,7 @@ public class nasmBuilder implements IRVisitor {
     }
 
     @Override
-    public void visit(virturalRegister node) {
+    public void visit(virtualRegister node) {
 
     }
 

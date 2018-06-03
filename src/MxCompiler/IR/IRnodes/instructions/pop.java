@@ -24,7 +24,7 @@ public class pop extends instruction{
     }
 
     @Override
-    public void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap) {
+    public void resetUsedRegister(Map<virtualRegister, physicRegister> allocateMap) {
 
     }
 

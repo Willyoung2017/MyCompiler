@@ -44,9 +44,9 @@ public class cmp extends instruction{
 
     }
 
-    public void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap){
-        if(leftOperand instanceof  virturalRegister)  leftOperand = allocateMap.get(leftOperand);
-        if(rightOperand instanceof virturalRegister) rightOperand = allocateMap.get(rightOperand);
+    public void resetUsedRegister(Map<virtualRegister, physicRegister> allocateMap){
+        if(leftOperand instanceof virtualRegister)  leftOperand = allocateMap.get(leftOperand);
+        if(rightOperand instanceof virtualRegister) rightOperand = allocateMap.get(rightOperand);
         setUsedRegister();
     }
 

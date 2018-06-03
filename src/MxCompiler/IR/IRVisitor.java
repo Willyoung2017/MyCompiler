@@ -3,8 +3,6 @@ package MxCompiler.IR;
 import MxCompiler.IR.IRnodes.*;
 import MxCompiler.IR.IRnodes.instructions.*;
 
-import java.util.Map;
-
 public interface IRVisitor {
     void visit(func node);
     void visit(basicBlock node);
@@ -27,7 +25,7 @@ public interface IRVisitor {
     void visit(intValue node);
     void visit(intImd node);
     void visit(register node);
-    void visit(virturalRegister node);
+    void visit(virtualRegister node);
     void visit(physicRegister node);
     void visit(stackSlot node);
     void visit(staticData node);

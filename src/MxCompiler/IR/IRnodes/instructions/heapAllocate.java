@@ -32,8 +32,8 @@ public class heapAllocate extends instruction{
         destReg = reg;
     }
 
-    public void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap){
-        if(allocSize instanceof virturalRegister){
+    public void resetUsedRegister(Map<virtualRegister, physicRegister> allocateMap){
+        if(allocSize instanceof virtualRegister){
             allocSize = allocateMap.get(allocSize);
         }
         setUsedRegister();

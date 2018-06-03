@@ -19,8 +19,8 @@ public class x86RegisterSet {
     public static final x86Register r11 = new x86Register(11, "r11", true, false, true);
     public static final x86Register r12 = new x86Register(12, "r12", false, true, true);
     public static final x86Register r13 = new x86Register(13, "r13", false, true, true);
-    public static final x86Register r14 = new x86Register(14, "r14", false, true, true);
-    public static final x86Register r15 = new x86Register(15, "r15", false, true, true);
+    public static final x86Register r14 = new x86Register(14, "r14", false, true, false);
+    public static final x86Register r15 = new x86Register(15, "r15", false, true, false);
 
     public static Set<physicRegister> CallerSavedRegs = new HashSet<>();
     public static Set<physicRegister> CalleeSavedRegs = new HashSet<>();

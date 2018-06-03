@@ -278,7 +278,7 @@ public class IRprinter implements IRVisitor{
     }
 
     @Override
-    public void visit(virturalRegister node) {
+    public void visit(virtualRegister node) {
         out.print("$" + getRegName(node));
     }
 

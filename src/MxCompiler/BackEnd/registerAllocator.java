@@ -2,7 +2,6 @@ package MxCompiler.BackEnd;
 
 import MxCompiler.IR.IRnodes.*;
 import MxCompiler.IR.IRnodes.instructions.*;
-import MxCompiler.X86Related.x86RegisterSet;
 
 import java.util.*;
 
@@ -10,8 +9,8 @@ public class registerAllocator {
     private int count = 0;
     private Map<String, func> funcMap;
     private List<physicRegister> physicRegisterList;
-    private Map<virturalRegister, physicRegister> allocateMap = new HashMap<>();
-    private Map<virturalRegister, stackSlot> slotMap = new HashMap<>();
+    private Map<virtualRegister, physicRegister> allocateMap = new HashMap<>();
+    private Map<virtualRegister, stackSlot> slotMap = new HashMap<>();
     public registerAllocator(Map<String, func> funcMap, List<physicRegister> physicRegisterList){
         this.funcMap = funcMap;
         this.physicRegisterList = physicRegisterList;
@@ -21,7 +20,7 @@ public class registerAllocator {
         funcMap.values().stream().forEach(this::allocateRegister);
     }
 
-    private stackSlot getStackSlot(virturalRegister reg, func function){
+    private stackSlot getStackSlot(virtualRegister reg, func function){
         stackSlot slot = slotMap.get(reg);
         if(slot == null){
             if(reg.getName() == null){
@@ -41,7 +40,7 @@ public class registerAllocator {
         int cnt = 0;
         for(register para : function.parameterList){
             stackSlot slot = new stackSlot(para.getName(), function);
-            slotMap.put((virturalRegister) para, slot);
+            slotMap.put((virtualRegister) para, slot);
             function.parameterList.set(cnt++, slot);
         }
 
@@ -54,13 +53,13 @@ public class registerAllocator {
                 if(!used.isEmpty()) {
                     allocateMap.clear();
                     for (register usedReg : instr.usedRegister) {
-                        if (usedReg instanceof virturalRegister) {
+                        if (usedReg instanceof virtualRegister) {
                             physicRegister allocatedReg = allocateMap.get(usedReg);
                             if (allocatedReg == null) {
                                 allocatedReg = physicRegisterList.get(cnt++);
-                                allocateMap.put((virturalRegister) usedReg, allocatedReg);
+                                allocateMap.put((virtualRegister) usedReg, allocatedReg);
                             }
-                            stackSlot slot = getStackSlot((virturalRegister) usedReg, function);
+                            stackSlot slot = getStackSlot((virtualRegister) usedReg, function);
                             instr.linkPrev(new load(curBlock, slot, allocatedReg, 0, 8));
 
                         }
@@ -70,15 +69,15 @@ public class registerAllocator {
 
                 register defReg = instr.getDefRegister();
 
-                if(defReg instanceof virturalRegister) {
+                if(defReg instanceof virtualRegister) {
                     physicRegister allocatedReg = allocateMap.get(defReg);
                     if(allocatedReg == null) {
                         allocatedReg = physicRegisterList.get(cnt++);
-                        allocateMap.put((virturalRegister) defReg, allocatedReg);
+                        allocateMap.put((virtualRegister) defReg, allocatedReg);
                     }
                     instr.setDefRegister(allocatedReg);
-                    stackSlot slot = getStackSlot((virturalRegister) defReg, function);
-                    slotMap.put((virturalRegister)defReg, slot);
+                    stackSlot slot = getStackSlot((virtualRegister) defReg, function);
+                    slotMap.put((virtualRegister)defReg, slot);
                     instr.linkNext(new store(curBlock, allocatedReg, slot, 0, 8));
                     //instr.linkNext(new move(curBlock, allocatedReg, slot));
 

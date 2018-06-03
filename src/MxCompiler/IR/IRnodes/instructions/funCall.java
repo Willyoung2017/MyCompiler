@@ -41,10 +41,10 @@ public class funCall extends instruction{
         returnReg = reg;
     }
 
-    public void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap){
+    public void resetUsedRegister(Map<virtualRegister, physicRegister> allocateMap){
         for(int i = 0; i < parameters.size(); ++i){
             intValue para = parameters.get(i);
-            if(para instanceof virturalRegister){
+            if(para instanceof virtualRegister){
                 parameters.set(i, allocateMap.get(para));
             }
         }

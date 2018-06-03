@@ -5,7 +5,7 @@ import MxCompiler.IR.IRVisitor;
 import MxCompiler.IR.IRnodes.basicBlock;
 import MxCompiler.IR.IRnodes.physicRegister;
 import MxCompiler.IR.IRnodes.register;
-import MxCompiler.IR.IRnodes.virturalRegister;
+import MxCompiler.IR.IRnodes.virtualRegister;
 
 import java.util.Map;
 
@@ -42,7 +42,7 @@ public class branch extends instruction{
 
     }
 
-    public void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap){
+    public void resetUsedRegister(Map<virtualRegister, physicRegister> allocateMap){
 
     }
 

@@ -40,8 +40,8 @@ public class unaryOpInstr extends instruction{
         result = reg;
     }
 
-    public void resetUsedRegister(Map<virturalRegister, physicRegister> allocateMap){
-        if(operand instanceof virturalRegister){
+    public void resetUsedRegister(Map<virtualRegister, physicRegister> allocateMap){
+        if(operand instanceof virtualRegister){
             operand = allocateMap.get(operand);
         }
         setUsedRegister();
