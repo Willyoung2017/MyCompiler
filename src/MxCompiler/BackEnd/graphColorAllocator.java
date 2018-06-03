@@ -31,7 +31,7 @@ public class graphColorAllocator {
         this.physicRegisterList = physicRegisterList;
     }
 
-    public void runAllocator() throws Exception{
+    public void runAllocator(){
         new livenessAnalysis(funcMap).runAnlysis();
 
         for(func function : funcMap.values()){
@@ -225,7 +225,7 @@ public class graphColorAllocator {
         }
     }
 
-    private void allocateRegister() throws Exception{
+    private void allocateRegister(){
 
         for(int i = 0; i < curFunction.parameterList.size(); ++i){
             register para = curFunction.parameterList.get(i);
