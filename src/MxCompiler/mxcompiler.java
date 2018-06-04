@@ -141,7 +141,7 @@ public class mxcompiler {
         //printIR();
         printNasm();
         //runError();
-        printError();
+        //printError();
     }
 
     private void printError() throws Exception{
