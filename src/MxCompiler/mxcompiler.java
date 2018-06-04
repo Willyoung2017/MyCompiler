@@ -40,15 +40,18 @@ public class mxcompiler {
     private InputStream in;
     private PrintStream out_for_IR;
     private PrintStream out_for_NASM;
+    private PrintStream out_for_err;
+    /*
     public mxcompiler(InputStream in, PrintStream out_for_IR, PrintStream out_for_NASM){
         this.in = in;
         this.out_for_IR = out_for_IR;
         this.out_for_NASM = out_for_NASM;
-    }
+    }*/
 
-    public mxcompiler(InputStream in, PrintStream out_for_NASM){
+    public mxcompiler(InputStream in, PrintStream out_for_NASM,PrintStream out_for_err){
         this.in = in;
         this.out_for_NASM = out_for_NASM;
+        this.out_for_err = out_for_err;
     }
     private void buildAST() throws Exception{
         InputStream is = in;
@@ -124,6 +127,11 @@ public class mxcompiler {
         manager.runManager();
     }
 
+    private void runError(){
+        errorBuilder builder = new errorBuilder(funcMap, dataList, stringPool, out_for_err);
+        builder.runBuilder();
+    }
+
     private void runMain() throws Exception{
         buildAST();
         //throw new Exception();
@@ -135,7 +143,7 @@ public class mxcompiler {
         manageStack();
         //printIR();
         printNasm();
-
+        runError();
     }
 
     public static void main(String[] argv) throws Exception {
@@ -156,9 +164,9 @@ public class mxcompiler {
             outFile_IR = new PrintStream(new FileOutputStream(outFile));
             outFile_NASM = new PrintStream(new FileOutputStream(outFile1));
             //throw new Exception();
-            new mxcompiler(in, outFile_IR, outFile_NASM).runMain();
+            new mxcompiler(in,  outFile_NASM, System.err).runMain();
         }
         */
-        new mxcompiler(System.in, System.out).runMain();
+        new mxcompiler(System.in, System.out, System.err).runMain();
     }
 }
