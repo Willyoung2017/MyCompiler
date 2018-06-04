@@ -92,6 +92,18 @@ public class stackManager {
                         }
                     }
                 }
+                if(instr  instanceof heapAllocate){
+                    for(virtualRegister reg : instr.liveOut){
+                        //if(function.vrMap == null) continue;
+                        //if(function.vrMap.get(reg) == null) continue;
+                        register toPush = function.vrMap.get(reg).color;
+                        if(toPush == instr.getDefRegister()) continue;
+                        if(toPush instanceof physicRegister){
+                            instr.linkPrev(new push(bb, toPush));
+                            instr.linkNext(new pop(bb, toPush));
+                        }
+                    }
+                }
             }
         }
     }
