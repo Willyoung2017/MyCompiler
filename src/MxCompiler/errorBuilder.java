@@ -41,18 +41,7 @@ public class errorBuilder implements IRVisitor {
         int cnt =0;
         for(func fun : funcMap.values()){
             curFunction = fun;
-            if(fun.getFuncName().equals("main")){
-                for(basicBlock bb : fun.getPreOrder()){
-                    for(instruction instr = bb.getHead(); instr != null; instr = instr.getNext()){
-                        if(instr instanceof funCall && ((funCall) instr).function.getFuncName().equals("println")){
-                            ++cnt;
-                        }
-                        if(cnt >= 2){
-                            visit(instr);
-                        }
-                    }
-                }
-                if(cnt == 2)
+            if(fun.getFuncName().equals("sqrLen")){
                     flag = false;
             }
             if(flag){
