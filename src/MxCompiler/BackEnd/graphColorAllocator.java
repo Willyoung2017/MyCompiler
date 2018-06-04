@@ -240,34 +240,40 @@ public class graphColorAllocator {
         for(basicBlock bb : curFunction.getPreOrder()){
             for(instruction instr = bb.getHead(); instr != null; instr = instr.getNext()){
                 Collection<register> used = instr.usedRegister;
-                if(!used.isEmpty()) {
-                    allocateMap.clear();
-                    boolean flag = false;
-                    for (register usedReg : instr.usedRegister) {
-                        if (usedReg instanceof virtualRegister) {
-                            physicRegister allocatedReg = null;
-                            register color = vrMap.get(usedReg).color;
-                            if (color instanceof physicRegister) {
-                                allocatedReg = (physicRegister) color;
-                            }
-                            else if(color instanceof stackSlot){
-                                allocatedReg = flag ? x86RegisterSet.rbx :x86RegisterSet.rax;
-                                flag = true;
-                                instr.linkPrev(new load(bb, color, allocatedReg, 0,8));
-                            }
-
-                            allocateMap.put((virtualRegister) usedReg, allocatedReg);
-
-                            //stackSlot slot = getStackSlot((virtualRegister) usedReg, curFunction);
-                            //instr.linkPrev(new load(curBlock, slot, allocatedReg, 0, 8));
-
-                        }
+                if(instr instanceof funCall){ //there is not enough reg to allocate for funcall!!
+                    List<intValue> para = ((funCall) instr).parameters;
+                    for (int i = 0; i < para.size(); ++i) {
+                        intValue val = para.get(i);
+                        if (val instanceof virtualRegister) para.set(i, vrMap.get(val).color);
                     }
-                    instr.resetUsedRegister(allocateMap);
+                }else {
+                    if (!used.isEmpty()) {
+                        allocateMap.clear();
+                        boolean flag = false;
+                        for (register usedReg : instr.usedRegister) {
+                            if (usedReg instanceof virtualRegister) {
+                                physicRegister allocatedReg = null;
+                                register color = vrMap.get(usedReg).color;
+                                if (color instanceof physicRegister) {
+                                    allocatedReg = (physicRegister) color;
+                                } else if (color instanceof stackSlot) {
+                                    allocatedReg = flag ? x86RegisterSet.rbx : x86RegisterSet.rax;
+                                    flag = true;
+                                    instr.linkPrev(new load(bb, color, allocatedReg, 0, 8));
+                                }
+
+                                allocateMap.put((virtualRegister) usedReg, allocatedReg);
+
+                                //stackSlot slot = getStackSlot((virtualRegister) usedReg, curFunction);
+                                //instr.linkPrev(new load(curBlock, slot, allocatedReg, 0, 8));
+
+                            }
+                        }
+                        instr.resetUsedRegister(allocateMap);
+                    }
                 }
-
                 register defReg = instr.getDefRegister();
-
+                //boolean flagg = false;
                 if(defReg instanceof virtualRegister) {
                     physicRegister allocatedReg = null;
                     register color = vrMap.get(defReg).color;
@@ -277,7 +283,8 @@ public class graphColorAllocator {
                        instr.setDefRegister(allocatedReg);
                     }
                     else if(color instanceof stackSlot){
-                        allocatedReg = x86RegisterSet.rbx;
+                       allocatedReg = x86RegisterSet.rbx;
+                        //flagg = true;
                         instr.linkNext(new store(bb, allocatedReg, color, 0, 8));
                         instr.setDefRegister(allocatedReg);
                         instr = instr.getNext();

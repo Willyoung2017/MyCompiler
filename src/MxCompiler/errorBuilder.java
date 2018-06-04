@@ -41,7 +41,7 @@ public class errorBuilder implements IRVisitor {
         int cnt =0;
         for(func fun : funcMap.values()){
             curFunction = fun;
-            if(fun.getFuncName().equals("sqrLen")){
+            if(fun.getFuncName().equals("cross")){
                     flag = false;
             }
             if(flag){
