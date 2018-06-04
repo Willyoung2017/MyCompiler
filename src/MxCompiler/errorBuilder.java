@@ -39,7 +39,7 @@ public class errorBuilder implements IRVisitor {
         out.println("SECTION .text\n");
         boolean flag = true;
         for(func fun : funcMap.values()){
-            if(fun.getFuncName().equals("set")){
+            if(fun.getFuncName().equals("main")){
                 flag = false;
             }
             if(flag){
