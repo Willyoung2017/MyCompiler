@@ -5,6 +5,7 @@ import MxCompiler.IR.IRVisitor;
 import MxCompiler.IR.IRnodes.*;
 import MxCompiler.IR.IRnodes.instructions.*;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.PrintStream;
