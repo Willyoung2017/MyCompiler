@@ -40,6 +40,7 @@ public class errorBuilder implements IRVisitor {
         boolean flag = true;
         int cnt =0;
         for(func fun : funcMap.values()){
+            curFunction = fun;
             if(fun.getFuncName().equals("main")){
                 for(basicBlock bb : fun.getPreOrder()){
                     for(instruction instr = bb.getHead(); instr != null; instr = instr.getNext()){
