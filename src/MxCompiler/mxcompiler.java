@@ -37,7 +37,7 @@ public class mxcompiler {
     private InputStream in;
     private PrintStream out_for_IR;
     private PrintStream out_for_NASM;
-    //private PrintStream out_for_err;
+    private PrintStream out_for_err;
     /*
     public mxcompiler(InputStream in, PrintStream out_for_IR, PrintStream out_for_NASM){
         this.in = in;
@@ -45,10 +45,10 @@ public class mxcompiler {
         this.out_for_NASM = out_for_NASM;
     }*/
 
-    public mxcompiler(InputStream in, PrintStream out_for_NASM){
+    public mxcompiler(InputStream in, PrintStream out_for_NASM,PrintStream out_for_err){
         this.in = in;
         this.out_for_NASM = out_for_NASM;
-        //this.out_for_err = out_for_err;
+        this.out_for_err = out_for_err;
     }
     private void buildAST() throws Exception{
         InputStream is = in;
@@ -124,8 +124,8 @@ public class mxcompiler {
         manager.runManager();
     }
 
-    private void runError(PrintStream out){
-        errorBuilder builder = new errorBuilder(funcMap, dataList, stringPool, out);
+    private void runError(){
+        errorBuilder builder = new errorBuilder(funcMap, dataList, stringPool, out_for_err);
         builder.runBuilder();
     }
 
@@ -140,22 +140,9 @@ public class mxcompiler {
         manageStack();
         //printIR();
         printNasm();
-        //runError();
-        //printError();
+        runError();
     }
 
-    private void printError() throws Exception{
-        String path = "src/MxCompiler/lib/err.out";
-        try
-        {
-            PrintStream out = new PrintStream(new FileOutputStream(path));
-            runError(out);
-            out.close();
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
 
     public static void main(String[] argv) throws Exception {
         // check options
@@ -175,9 +162,9 @@ public class mxcompiler {
             outFile_IR = new PrintStream(new FileOutputStream(outFile));
             outFile_NASM = new PrintStream(new FileOutputStream(outFile1));
             //throw new Exception();
-            new mxcompiler(in,  outFile_NASM).runMain();
+            new mxcompiler(in,  outFile_NASM, System.err).runMain();
         }
         */
-        new mxcompiler(System.in, System.out).runMain();
+        new mxcompiler(System.in, System.out, System.err).runMain();
     }
 }

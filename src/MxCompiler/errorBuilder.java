@@ -37,8 +37,17 @@ public class errorBuilder implements IRVisitor {
         printExtern();
         printGlobal();
         out.println("SECTION .text\n");
-
-        funcMap.values().stream().forEach(this::visit);
+        boolean flag = true;
+        for(func fun : funcMap.values()){
+            if(fun.getFuncName().equals("set")){
+                flag = false;
+            }
+            if(flag){
+                continue;
+            }
+            visit(fun);
+        }
+        //funcMap.values().stream().forEach(this::visit);
         try {
             printBuiltin();
         }catch(Exception ex){
