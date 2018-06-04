@@ -34,9 +34,9 @@ public class errorBuilder implements IRVisitor {
     }
 
     public void runBuilder(){
-        printExtern();
-        printGlobal();
-        out.println("SECTION .text\n");
+        //printExtern();
+        //printGlobal();
+       //out.println("SECTION .text\n");
         boolean flag = true;
         for(func fun : funcMap.values()){
             if(fun.getFuncName().equals("main")){
@@ -48,11 +48,11 @@ public class errorBuilder implements IRVisitor {
             visit(fun);
         }
         //funcMap.values().stream().forEach(this::visit);
-        try {
+       /* try {
             printBuiltin();
         }catch(Exception ex){
             System.err.println("File \"BuildinFunc.asm\" Not Found!");
-        }
+        }*/
         printStaticData();
     }
 
