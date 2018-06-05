@@ -108,7 +108,9 @@ public class nasmBuilder implements IRVisitor {
         }
         out.println("intbuffer:\n\tdq 0\n" +
                 "format1:\n\tdb\"%lld\",0\n" +
-                "format2:\n\tdb\"%s\",0\n\n");
+                "format2:\n\tdb\"%s\",0\n" +
+                "L_001:\n\tdb 25H, 64H, 0AH, 00H\n" +
+                "L_002:\n\tdb 25H, 64H, 00H\n\n");
         out.println( "SECTION .bss\nstringbuffer:\n\tresb 256\n");
     }
 

@@ -1051,16 +1051,27 @@ public class IRbuilder implements ASTVisitor {
 
     }
 
-    private void processPrint(expr para, boolean println){
+    private void processPrint(expr para, boolean is_println){
         //Todo
-        if(para instanceof binaryExpr){
-
+        if(para instanceof binaryExpr){//string add
+            processPrint(((binaryExpr) para).leftOperand, false);
+            processPrint(((binaryExpr) para).rightOperand, is_println);
         }
-        else if(para instanceof funcCall && ((funcCall)para).obj.name.equals("toString")){
-
+        else if(para instanceof funcCall && ((funcCall)para).obj.name.equals("toString")){ //toString
+            visit(((funcCall) para).parameters.get(0));
+            func builtinFunc = is_println ? builtinFunction.builtinPrintlnInt : builtinFunction.builtinPrintInt;
+            funCall call = new funCall(curBlock, null, builtinFunc);
+            call.parameters.add(((funcCall) para).parameters.get(0).nodeValue);
+            call.setUsedRegister();
+            curBlock.pushBack(call);
         }
-        else{
-
+        else{ //str
+            visit(para);
+            func builtinFunc = is_println ? builtinFunction.builtinPrintlnString : builtinFunction.builtinPrintString;
+            funCall call = new funCall(curBlock, null, builtinFunc);
+            call.parameters.add(para.nodeValue);
+            call.setUsedRegister();
+            curBlock.pushBack(call);
         }
     }
     private void processBuiltinFunc(funcCall node){
@@ -1075,7 +1086,7 @@ public class IRbuilder implements ASTVisitor {
             reg = new virtualRegister("getString");
             funCall call = new funCall(curBlock, reg, builtinFunction.builtinGetString);
             curBlock.pushBack(call);
-        }
+        }/*
         else if(name.equals("print")){
             funCall call = new funCall(curBlock, null, builtinFunction.builtinPrintString);
             call.parameters.add(node.parameters.get(0).nodeValue);
@@ -1087,8 +1098,13 @@ public class IRbuilder implements ASTVisitor {
             call.parameters.add(node.parameters.get(0).nodeValue);
             call.setUsedRegister();
             curBlock.pushBack(call);
+        }*/
+        else if(name.equals("print")||name.equals(("println"))){
+            boolean flag = name.equals("println");
+            processPrint(node.parameters.get(0),flag);
         }
         else if(name.equals("toString")){
+            node.parameters.stream().forEachOrdered(this::visit);
             reg = new virtualRegister("toString");
             funCall call = new funCall(curBlock, reg, builtinFunction.builtintoString);
             call.parameters.add(node.parameters.get(0).nodeValue);
@@ -1100,12 +1116,12 @@ public class IRbuilder implements ASTVisitor {
 
     @Override
     public void visit(funcCall node) {
-        node.parameters.stream().forEachOrdered(this::visit);
+        //node.parameters.stream().forEachOrdered(this::visit);
         if (node.obj.name.equals("getInt")||node.obj.name.equals("print") || node.obj.name.equals("println")||node.obj.name.equals("toString")||node.obj.name.equals("getString")){
             processBuiltinFunc(node);
             return;
         }
-
+        node.parameters.stream().forEachOrdered(this::visit);
         func function = funcMap.get(node.obj.name);
 
         virtualRegister reg = new virtualRegister();

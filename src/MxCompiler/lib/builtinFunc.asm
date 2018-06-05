@@ -1,3 +1,17 @@
+printInt:
+        mov     rsi, rdi
+        xor     rax, rax
+        mov     rdi, L_002
+        call    printf
+        ret
+		
+printlnInt:
+        mov     rsi, rdi
+        xor     rax, rax
+        mov     rdi, L_001
+        call     printf
+        ret
+		
 toString:
 	push rbp
 	mov rbp,rsp

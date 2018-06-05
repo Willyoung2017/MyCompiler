@@ -23,6 +23,8 @@ public class builtinFunc {
     public func builtinStingLessEqual = new func("string.ge", new boolType());
     public func builtinStringGreater = new func("string.s", new boolType());
     public func builtinStringGreaterEqual = new func("string.le", new boolType());
+    public func builtinPrintInt = new func("printInt", new voidType());
+    public func builtinPrintlnInt = new func("printlnInt", new voidType());
     public List<func> builtinFunctions = new LinkedList<>();
 
 }
