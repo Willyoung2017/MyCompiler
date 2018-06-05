@@ -565,6 +565,49 @@ public class IRbuilder implements ASTVisitor {
                 processLogicalExpr(node);
                 break;
         }
+        int value = 0;
+        if(node.leftOperand.nodeValue instanceof intImd && node.rightOperand.nodeValue instanceof intImd){
+            boolean flag = true;
+            int lhs = ((intImd) node.leftOperand.nodeValue).getValue();
+            int rhs = ((intImd) node.rightOperand.nodeValue).getValue();
+            switch(node.operator){
+                case BITWISE_INCLUSIVE_OR:
+                   value = lhs | rhs;
+                   break;
+                case BITWISE_EXCLUSIVE_OR:
+                    value = lhs ^ rhs;
+                    break;
+                case BITWISE_AND:
+                    value = lhs & rhs;
+                    break;
+                case MOD:
+                    value = lhs % rhs;
+                    break;
+                case MUL:
+                    value = lhs * rhs;
+                    break;
+                case DIV:
+                    value = lhs / rhs;
+                    break;
+                case SUB:
+                    value = lhs - rhs;
+                    break;
+                case ADD:
+                    value = lhs + rhs;
+                    break;
+                case LEFT_SHIFT:
+                    value = lhs << rhs;
+                    break;
+                case RIGHT_SHIFT:
+                    value = lhs >> rhs;
+                    break;
+                default:
+                    flag = false;
+            }
+            if(flag){
+                node.nodeValue = new intImd(value);
+            }
+        }
     }
 
     private void processArithmeticExpr(binaryExpr node){
