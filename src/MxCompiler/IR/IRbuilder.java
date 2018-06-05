@@ -613,6 +613,9 @@ public class IRbuilder implements ASTVisitor {
     private void processArithmeticExpr(binaryExpr node){
         visit(node.leftOperand);
         visit(node.rightOperand);
+        if(node.leftOperand.nodeValue instanceof intImd && node.rightOperand.nodeValue instanceof intImd){
+            return;
+        }
         virtualRegister reg = new virtualRegister();
         binaryOpInstr instr = new binaryOpInstr(curBlock, node.operator, node.leftOperand.nodeValue, node.rightOperand.nodeValue, reg);
         node.nodeValue = reg;
