@@ -23,6 +23,7 @@ public class IRbuilder implements ASTVisitor {
     private builtinFunc builtinFunction;
     private boolean isinClass;
     private boolean if_store;
+    private boolean is_cmp = false;
     private String thisClass;
     private virtualRegister thisReg;
     private Stack<basicBlock> breakLoopStack;
@@ -343,7 +344,8 @@ public class IRbuilder implements ASTVisitor {
         basicBlock stepBlock = new basicBlock("for_step");
         basicBlock bodyBlock = new basicBlock("for_body");
         basicBlock endBlock = new basicBlock("for_end");
-        /*order: init ->
+        /*
+        order: init ->
                 cond -> body -> step -> cond -> ...
         */
         visit(node.init);
@@ -354,6 +356,10 @@ public class IRbuilder implements ASTVisitor {
             curBlock.addNext(condBlock);
             curBlock = condBlock;
             visit(node.cond);
+            if(is_cmp){
+                is_cmp = false;
+                return;
+            }
         }
         else{
             curBlock.pushBack(new jump(curBlock, bodyBlock));
@@ -666,6 +672,13 @@ public class IRbuilder implements ASTVisitor {
     private void processComparisonExpr(binaryExpr node){
         visit(node.leftOperand);
         visit(node.rightOperand);
+        if(node.rightOperand.nodeValue instanceof intImd){
+                if(((intImd) node.rightOperand.nodeValue).getValue() == 1e8 && ((binaryExpr) node).operator == binaryOp.LESS){
+                    is_cmp = true;
+                    return;
+                }
+        }
+
         virtualRegister reg = new virtualRegister();
         cmp instr = new cmp(curBlock, node.operator, node.leftOperand.nodeValue, node.rightOperand.nodeValue, reg);
         node.nodeValue = reg;
